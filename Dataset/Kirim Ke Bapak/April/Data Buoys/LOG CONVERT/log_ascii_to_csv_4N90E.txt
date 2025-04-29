@@ -1,0 +1,83 @@
+
+🔄 Memproses rad4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/rad4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SWRad', 'StDev', 'Max', 'Q', 'S']
+Jumlah baris data: 1826
+✅ Berhasil menyimpan 1826 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/convert/rad4n90e_dy.csv
+Total Baris Hilang per Kolom:
+
+                        Jumlah Missing Values
+SWRad                                       3
+StDev                                       2
+Max                                        10
+Q                                           0
+S                                           0
+Timestamp                                   0
+Total Data yang hilang                     15
+
+🔄 Memproses rain4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/rain4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'Prec', 'StDev', '%Time', 'Q', 'S']
+Jumlah baris data: 1908
+✅ Berhasil menyimpan 1908 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/convert/rain4n90e_dy.csv
+Total Baris Hilang per Kolom:
+
+                        Jumlah Missing Values
+Prec                                       40
+StDev                                       4
+%Time                                       4
+Q                                           0
+S                                           0
+Timestamp                                   0
+Total Data yang hilang                     48
+
+🔄 Memproses rh4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/rh4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'RH', 'Q', 'S']
+Jumlah baris data: 1852
+✅ Berhasil menyimpan 1852 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/convert/rh4n90e_dy.csv
+Total Baris Hilang per Kolom:
+
+                        Jumlah Missing Values
+RH                                          4
+Q                                           0
+S                                           0
+Timestamp                                   0
+Total Data yang hilang                      4
+
+🔄 Memproses sst4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/sst4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'Q', 'S']
+Jumlah baris data: 2397
+✅ Berhasil menyimpan 2397 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/convert/sst4n90e_dy.csv
+Total Baris Hilang per Kolom:
+
+                        Jumlah Missing Values
+SST                                        40
+Q                                           0
+S                                           0
+Timestamp                                   0
+Total Data yang hilang                     40
+
+🔄 Memproses t4n90e_dy.ascii...
+📊 Terdeteksi format suhu (multi-kedalaman) dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/t4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'TEMP_10.0m', 'TEMP_13.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+Jumlah baris data: 3577
+✅ Berhasil menyimpan 3577 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/convert/t4n90e_dy.csv
+
+🔄 Memproses w4n90e_dy.ascii...
+🌬️ Terdeteksi format angin dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/w4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'UWND', 'VWND', 'WSPD', 'WDIR']
+Jumlah baris data: 813
+✅ Berhasil menyimpan 813 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/ASCII/convert/w4n90e_dy.csv
+Total Baris Hilang per Kolom:
+
+                        Jumlah Missing Values
+UWND                                      217
+VWND                                      205
+WSPD                                        0
+WDIR                                        0
+Timestamp                                   0
+Total Data yang hilang                    422
+
+✅ Selesai memproses 6 dari 6 file

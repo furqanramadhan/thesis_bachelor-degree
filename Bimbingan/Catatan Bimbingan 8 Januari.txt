@@ -1,0 +1,27 @@
+8 / 1 / 25
+
+Kita fokus olah data ini untuk bidang pertanian.
+Data harian
+- 10 hari, jangan terlalu panjang rentang nya
+- 5 harian sudah oke
+- bila terjadi hujan tidak akan efektif
+- misalnya data penerbangan, harus lebih cepat rentangnya (dalam menit)
+- navigasi, per jam lebih bagus per menit
+- jika data dipotong menjadi rata rata maka akan bias
+- Bouys fokus ke harian
+- Data dinamis, serta grafik juga dinamis
+- Jika sukses bisa dialihkan ke bidang lain misal penyakit tanaman
+- Kuasai betul sifat data ini tidak perlu bangu nmodel
+- Kuasai hingga dapat memprediksi pola data selanjutnya
+- Data BMKG : Aceh Besar, Aceh Utara, Aceh Timur, Bireun, Pidie
+- Data Bouys : Samudra Hindia
+- Deskripsi, persentase data hilang, sampai bisa menentukan hari apa yang hujan untuk merencanakan penanaman tani
+- Setahun tidak selalu 365, bisa ada tahun kabisat
+- Untuk ngecek kekonsistenan data coba cek perkiraan tahun yang ada bencana
+- copernicus climate data store
+- bisa gabungkan 3 data misalnya bmkg buoys ataupun copernicus
+- Diharapkan bisa memprediksi terjadinya bencana atau penyakit
+
+Pertanian, khusus nya ke padi
+- Padi itu musiman, <= 100 hari
+
