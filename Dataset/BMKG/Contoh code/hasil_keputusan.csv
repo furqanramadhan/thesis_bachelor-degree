@@ -1,0 +1,366 @@
+Tanggal;Peramalan Curah Hujan;Permalan Suhu Udara;Peramalan Kelembaban Udara Relatif;Kategori Curah Hujan;Keputusan Curah Hujan;Keputusan Suhu Udara;Keputusan Kelembaban Udara;Keputusan
+11/01/2024;2.91;27.62;77.11;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/02/2024;2.8;28;75.88;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/03/2024;3.58;27.96;76.11;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/04/2024;4.43;27.88;75.34;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/05/2024;3.75;27.97;74.76;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/06/2024;2.6;28;74.8;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/07/2024;2.57;27.91;75.84;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/08/2024;3.82;27.72;76.72;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/09/2024;2.86;28.16;75.08;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/10/2024;3.71;27.59;76.6;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/11/2024;6.47;27.29;78.56;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+11/12/2024;3.63;27.31;78.97;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/13/2024;10.89;26.99;78.15;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+11/14/2024;10.36;26.79;80.96;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+11/15/2024;7.37;27.11;77.88;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+11/16/2024;3.79;27.73;75.4;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/17/2024;2.93;27.71;77.37;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/18/2024;2.72;27.78;77;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/19/2024;3.89;27.39;77.02;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/20/2024;3.8;27.33;77.18;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/21/2024;3;28.13;73.33;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/22/2024;2.92;28.08;73.76;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/23/2024;2.66;28.26;73.16;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/24/2024;3.89;28.11;74.26;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/25/2024;5.36;28.18;72.34;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/26/2024;6.88;27.55;75.75;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+11/27/2024;3.83;28.19;74.33;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/28/2024;3.87;27.95;73.69;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+11/29/2024;7.9;28.07;74.34;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+11/30/2024;10.48;27.51;76.92;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/01/2024;7.89;26.85;78.74;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/02/2024;6.01;27.68;76.76;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/03/2024;15.61;26.87;82.26;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/04/2024;8.25;26.69;81.02;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/05/2024;6.9;26.96;80.1;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/06/2024;7.73;27.11;79.53;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/07/2024;7.54;27.06;79.19;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/08/2024;6.06;27.65;77.91;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/09/2024;4.16;27.44;78.38;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+12/10/2024;3.31;28.17;76.96;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+12/11/2024;3.55;28.22;77.23;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+12/12/2024;5.71;28.13;77.6;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/13/2024;4.87;27.43;81.28;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+12/14/2024;11.69;27.29;79.09;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/15/2024;7.48;27.56;78.33;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/16/2024;5.01;27.21;80.54;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+12/17/2024;10.88;27.42;79.57;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/18/2024;8.18;27.25;79.28;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/19/2024;8.4;27.41;80.04;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/20/2024;7.01;27.26;77.77;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/21/2024;6.33;27.25;78.07;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/22/2024;9.33;26.96;81.2;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/23/2024;14.02;27.37;80.17;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/24/2024;14.25;27.01;83.22;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/25/2024;9.26;26.7;82.88;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/26/2024;6.32;26.97;83.19;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/27/2024;6.35;26.76;82.62;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/28/2024;5.08;27.1;79.22;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+12/29/2024;5.84;26.89;81.31;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/30/2024;14.31;26.72;81.59;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+12/31/2024;6.63;26.93;79.78;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/01/2025;7.66;26.31;82.26;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/02/2025;5.15;26.46;82.58;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+01/03/2025;7.46;26.82;81.8;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/04/2025;6.02;26.64;81.78;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/05/2025;5.13;26.81;82.16;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+01/06/2025;12.89;26.79;81.77;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/07/2025;5.46;26.98;79.87;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+01/08/2025;8.26;26.54;83.08;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/09/2025;6.15;26.79;82.35;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/10/2025;9.65;26.32;85.97;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/11/2025;13.98;26.71;82.93;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+01/12/2025;19.74;26.61;81.7;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/13/2025;7.66;27.06;80.1;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/14/2025;5.76;26.76;83.05;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/15/2025;5.7;26.74;82.98;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/16/2025;10.04;27.23;82.38;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/17/2025;6.31;27.17;81.23;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/18/2025;5.05;26.96;82.65;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/19/2025;5.29;26.94;81.86;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/20/2025;4.57;26.84;84.07;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/21/2025;4.27;26.54;83.82;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/22/2025;4.39;26.73;81.94;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/23/2025;6.78;26.85;82.44;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/24/2025;4.62;26.69;81.37;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/25/2025;5.3;26.43;84.71;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/26/2025;10.2;26.87;84.37;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/27/2025;9.95;26.74;85.42;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/28/2025;9.63;26.59;84.97;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/29/2025;7.33;27.02;85.25;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+1/30/2025;4.79;26.94;83.79;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+1/31/2025;5.67;26.49;83.15;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+02/01/2025;3.94;26.48;82.88;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+02/02/2025;9.5;26.49;83.93;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/03/2025;8.36;26.34;84.33;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/04/2025;21.77;26.69;81.76;Hujan Sedang;Tidak Sesuai;Sesuai;Sesuai;Tanam
+02/05/2025;12.79;26.24;84.09;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/06/2025;15.38;26.02;85.92;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/07/2025;16.59;26.35;86.31;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/08/2025;16.97;26.59;85.83;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+02/09/2025;11.37;26.36;85.35;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/10/2025;9.89;26.3;85.08;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/11/2025;9.83;26.55;86.65;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+02/12/2025;7.04;26.22;87.17;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/13/2025;9.67;26.7;81.96;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/14/2025;6.46;26.67;83.07;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/15/2025;9.47;26.67;82.07;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/16/2025;7.02;26.52;84.23;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/17/2025;5.12;26.72;84.96;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+2/18/2025;7.2;27.09;85.64;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/19/2025;8.4;26.79;86.34;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/20/2025;8.21;26.96;81.24;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/21/2025;10.8;26.38;83.33;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/22/2025;8.9;26.82;82.46;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/23/2025;6.06;26.6;85.54;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/24/2025;7.27;26.79;85.87;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/25/2025;9.93;26.93;86.15;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/26/2025;9.2;26.71;83.82;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/27/2025;7.09;26.8;85.59;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+2/28/2025;4.88;27.17;83.48;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+03/01/2025;7.09;27.11;85.09;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/02/2025;5.33;27.12;85;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+03/03/2025;4.76;27.16;83.93;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+03/04/2025;5.4;27.11;84;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+03/05/2025;22.19;26.64;86.71;Hujan Sedang;Tidak Sesuai;Sesuai;Sesuai;Tanam
+03/06/2025;15.14;26.35;87.54;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/07/2025;14.93;26.39;86.9;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/08/2025;12.08;26.87;85.9;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/09/2025;6.54;26.74;86.65;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/10/2025;7.55;26.72;85.77;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/11/2025;9.12;26.41;87.82;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+03/12/2025;7.15;26.41;84.82;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/13/2025;5.42;26.55;85.87;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/14/2025;6.18;26.86;84.38;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/15/2025;5.81;26.75;85.51;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/16/2025;5.25;26.88;84.73;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/17/2025;6.14;27.04;84;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/18/2025;4.17;26.99;83.49;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/19/2025;4.44;26.66;85.65;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/20/2025;6.9;26.95;85.88;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/21/2025;5.33;26.92;85.97;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/22/2025;6.12;26.94;85.25;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/23/2025;3.82;26.91;84.39;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/24/2025;2.94;26.93;83.82;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/25/2025;2.75;26.84;83.17;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/26/2025;2.61;27.05;82.4;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/27/2025;2.54;27.27;81.91;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/28/2025;5.73;27.22;84.14;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/29/2025;15.72;26.73;86.05;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+3/30/2025;5.48;26.84;84.02;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+3/31/2025;3.49;26.74;84.22;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/01/2025;3.47;27.12;82.79;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/02/2025;3.34;27.11;83.52;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/03/2025;2.81;27.31;82.12;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/04/2025;2.7;26.92;82.94;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/05/2025;4.12;27.1;83.34;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/06/2025;15.89;27.03;83.08;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+04/07/2025;13.96;26.8;85.73;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+04/08/2025;17.68;26.56;85.43;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+04/09/2025;13.44;26.85;84.32;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+04/10/2025;12.49;27.08;82.8;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+04/11/2025;6.34;27.2;82.63;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+04/12/2025;4.02;27.15;82.69;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/13/2025;3.24;26.88;83.92;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/14/2025;3.05;26.91;83.38;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/15/2025;2.88;27.26;80.66;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/16/2025;3.55;27.11;82.73;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/17/2025;3.87;27.23;82.05;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/18/2025;3.06;27.32;82.48;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/19/2025;2.67;27.39;82.44;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/20/2025;2.59;27.59;81.33;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/21/2025;3.02;27.68;82.38;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/22/2025;2.76;27.83;81.18;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/23/2025;3.11;27.89;80.59;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/24/2025;4.86;27.36;79.71;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/25/2025;3.58;27.58;80.59;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/26/2025;3.08;27.65;81.49;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/27/2025;4.1;27.5;82.87;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/28/2025;3.85;27.45;81.65;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/29/2025;3.48;27.32;82.64;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+4/30/2025;3;27.41;81.97;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/01/2025;8.04;27.38;80.72;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+05/02/2025;9.47;27.1;83.47;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+05/03/2025;4.83;27.7;80.11;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/04/2025;3.84;27.84;81.06;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/05/2025;4.8;27.83;81.2;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/06/2025;3.12;28.13;79.67;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/07/2025;3.02;27.92;79.71;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/08/2025;3.07;28.07;79.56;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/09/2025;3.01;27.9;79.89;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/10/2025;2.74;27.88;80.33;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/11/2025;4.71;27.88;80.63;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+05/12/2025;3.57;27.99;79.2;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/13/2025;2.69;27.86;80.3;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/14/2025;2.74;27.8;81.26;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/15/2025;3.74;27.94;81.91;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/16/2025;6.05;27.7;82.6;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+5/17/2025;3.43;27.92;78.53;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/18/2025;3.8;27.62;79.96;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/19/2025;6;27.44;78.21;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+5/20/2025;3.89;27.53;77.95;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/21/2025;3.59;27.64;79.05;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/22/2025;2.75;28;79.12;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/23/2025;2.43;28.14;76.3;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/24/2025;2.28;28.09;75.95;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/25/2025;2.61;28.13;76.73;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/26/2025;3.26;28.36;77.58;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/27/2025;3.11;28.18;78.05;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/28/2025;2.39;28.51;75.89;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/29/2025;3.39;28.28;77;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/30/2025;2.91;28.14;77.14;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+5/31/2025;3.46;28.17;77.56;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/01/2025;2.58;28.5;76.78;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/02/2025;2.59;28.51;77.24;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/03/2025;2.36;28.55;76.97;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/04/2025;2.25;28.66;76.29;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/05/2025;2.57;28.75;76.78;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/06/2025;2.56;28.85;77.06;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/07/2025;14.65;28.23;78.12;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+06/08/2025;5.19;28.68;75.88;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/09/2025;4.59;28.6;75.86;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/10/2025;9.95;28.02;78.87;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+06/11/2025;4.43;28.51;78.9;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+06/12/2025;10.12;28.7;75.56;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+6/13/2025;11.7;28.84;75.9;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+6/14/2025;6.61;28.56;79.15;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+6/15/2025;4.63;28.55;77.91;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/16/2025;3.8;28.8;75.98;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/17/2025;3.33;29.13;78.17;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+6/18/2025;2.98;28.78;80.35;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/19/2025;3.51;28.91;75.7;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/20/2025;11.2;28.72;76.85;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+6/21/2025;5.92;28.2;78.56;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+6/22/2025;5.36;28.76;77.24;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/23/2025;4.73;28.6;78.95;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/24/2025;5.03;28.64;77.36;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/25/2025;3.75;28.76;75.88;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/26/2025;4.1;28.89;75.8;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/27/2025;4.71;28.41;78.25;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/28/2025;5.22;28.57;77.09;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/29/2025;4.43;28.79;77.38;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+6/30/2025;7.14;28.35;78.59;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+07/01/2025;6.58;28.78;76.09;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+07/02/2025;4.44;28.86;76.55;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/03/2025;4.47;28.94;76.07;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/04/2025;3.6;28.97;75.64;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/05/2025;3;28.95;77.74;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/06/2025;5.59;28.78;79.68;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/07/2025;3.47;28.94;77.02;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/08/2025;3.28;28.71;78.81;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+07/09/2025;4.17;29.18;76.01;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+07/10/2025;3.04;29.28;78.19;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+07/11/2025;6.72;29.31;80.5;Hujan Ringan;Sesuai;Tidak Sesuai;Sesuai;Tanam
+07/12/2025;3.56;28.98;79.89;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+7/13/2025;3.05;29.31;76.27;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+7/14/2025;5.46;28.99;80.81;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+7/15/2025;6.52;29.1;77.8;Hujan Ringan;Sesuai;Tidak Sesuai;Sesuai;Tanam
+7/16/2025;3.46;29.27;77.33;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+7/17/2025;4.38;29.37;76.91;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+7/18/2025;6.97;28.97;78.71;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/19/2025;4.55;28.99;77.47;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+7/20/2025;3.01;29.2;75.95;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+7/21/2025;8.8;28.96;78.28;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/22/2025;7.97;28.42;80.65;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/23/2025;15.62;28.25;80.09;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/24/2025;7.13;28.64;75.74;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/25/2025;9.87;28.67;77.62;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/26/2025;5.75;28.46;78.72;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/27/2025;5.63;28.37;80.67;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+7/28/2025;8.24;28;84.32;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/29/2025;4.82;28.03;83.92;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+7/30/2025;6.84;27.96;83.34;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+7/31/2025;13.02;28.15;85.42;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+08/01/2025;11.93;27.83;83.46;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+08/02/2025;6.76;27.86;82.07;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+08/03/2025;4.23;28.46;78.19;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/04/2025;3.89;28.16;77.98;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/05/2025;3.69;28.67;76.79;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/06/2025;3.5;28.84;78.07;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/07/2025;3.08;28.97;75.22;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/08/2025;2.75;28.96;76.75;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/09/2025;2.82;29.02;77.26;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+08/10/2025;3.07;28.9;77.57;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/11/2025;4.88;28.37;79.58;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+08/12/2025;3.35;28.41;76.69;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/13/2025;2.61;28.78;74.12;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/14/2025;2.52;28.66;74.92;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/15/2025;2.39;29.25;73.55;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+8/16/2025;2.45;28.94;74.34;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/17/2025;3.15;29.01;73.04;Hujan Ringan;Tidak Sesuai;Tidak Sesuai;Sesuai;Bera
+8/18/2025;2.57;28.75;73.57;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/19/2025;2.36;28.42;77.2;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/20/2025;2.26;28.46;77.35;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/21/2025;2.37;28.51;75.14;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/22/2025;2.42;28.76;74.03;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/23/2025;2.53;28.76;73.7;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/24/2025;2.92;28.71;75.03;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/25/2025;3.48;28.65;75.82;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/26/2025;4.8;28.36;78.43;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/27/2025;5.35;27.79;79.32;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/28/2025;3.54;28.21;75.08;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/29/2025;2.79;28.27;75.09;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/30/2025;2.65;28.27;75.48;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+8/31/2025;3.45;28.25;76.43;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/01/2025;5.05;27.91;76.36;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/02/2025;3.76;27.8;75.68;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/03/2025;4.57;27.53;77.57;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/04/2025;4.54;27.95;75.92;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/05/2025;3.07;28.48;72.92;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/06/2025;2.74;28.47;73.67;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/07/2025;7.43;28.58;73.91;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+09/08/2025;4.13;28.6;73.71;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/09/2025;5.22;28;76.56;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/10/2025;5.64;27.34;76.29;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/11/2025;3.06;27.84;75.25;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+09/12/2025;2.45;27.94;74.79;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/13/2025;2.53;28.08;75.6;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/14/2025;5.49;27.85;76.61;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/15/2025;5.53;27.15;77.15;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/16/2025;5.25;27.71;77.38;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/17/2025;5.96;27.32;78.5;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/18/2025;3.9;27.82;77.01;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/19/2025;5.79;27.7;76.75;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/20/2025;8.23;27.04;77.71;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/21/2025;6.63;27.39;78.73;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/22/2025;6.77;27.14;78.34;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/23/2025;6.77;27.14;78.34;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/24/2025;6.79;27.12;78.39;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/25/2025;4.16;27.81;78.11;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/26/2025;10.01;27.84;78.42;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+9/27/2025;4.17;27.89;76.55;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/28/2025;4.27;27.86;78.33;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/29/2025;3.79;27.97;77.99;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+9/30/2025;3.65;28.26;77.03;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/01/2025;3.12;28.54;75.82;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/02/2025;3.04;28.4;77.43;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/03/2025;3.37;28.52;76.94;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/04/2025;4.35;28.37;77.92;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/05/2025;5.14;28.39;78.63;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/06/2025;4.73;28.38;78.51;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/07/2025;6.95;28.57;78.2;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/08/2025;10.42;28.14;79.47;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/09/2025;6.56;27.72;77.94;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/10/2025;4.17;28.15;75.85;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/11/2025;4.79;28.06;77.57;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/12/2025;5.03;28.28;76.21;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/13/2025;4.4;28.35;75.55;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/14/2025;4.51;28.15;76.42;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/15/2025;8.37;27.63;78.36;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/16/2025;5.52;27.34;78.42;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/17/2025;8.81;27.08;79.71;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/18/2025;5.82;27.64;77.36;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/19/2025;5.19;28.15;75.68;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/20/2025;15.95;27.34;80.37;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/21/2025;10.68;26.89;81.37;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/22/2025;18.16;27.07;82.39;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/23/2025;6.34;27.24;78.22;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/24/2025;4.45;27.85;75.49;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/25/2025;4.85;27.57;79.54;Hujan Ringan;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/26/2025;6.41;27.48;79.88;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/27/2025;20.66;27.84;78.99;Hujan Sedang;Tidak Sesuai;Sesuai;Sesuai;Tanam
+10/28/2025;12.09;27.45;78.98;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/29/2025;15.46;26.86;82.24;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/30/2025;7.3;27;80.37;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
+10/31/2025;10.63;27.71;75.91;Hujan Ringan;Sesuai;Sesuai;Sesuai;Tanam
