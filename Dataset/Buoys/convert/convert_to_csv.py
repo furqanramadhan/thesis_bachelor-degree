@@ -260,7 +260,6 @@ def convert_general_ascii_to_csv(input_file, output_file):
     if not header_line:
         print("❌ Tidak dapat menemukan header untuk file")
         return None
-    
     # Ekstrak header
     headers = header_line.strip().split()
     
@@ -314,66 +313,98 @@ def convert_general_ascii_to_csv(input_file, output_file):
     
     return output_file
 
-def process_multiple_files(input_directory, output_directory=None, file_pattern='*.ascii'):
+def process_multiple_files_with_excel(input_directory, csv_directory=None, excel_directory=None, file_pattern='*.ascii'):
     """
-    Memproses banyak file ASCII dalam satu direktori.
+    Memproses banyak file ASCII dalam satu direktori dan menghasilkan file CSV dan Excel
+    di direktori terpisah.
     
     Parameters:
     input_directory (str): Path ke direktori yang berisi file ASCII
-    output_directory (str, optional): Path direktori untuk menyimpan file CSV hasil
+    csv_directory (str, optional): Path direktori untuk menyimpan file CSV hasil
+    excel_directory (str, optional): Path direktori untuk menyimpan file Excel hasil
     file_pattern (str, optional): Pola file yang akan diproses (default: *.ascii)
     
     Returns:
-    list: Daftar path file CSV yang dihasilkan
+    tuple: (list of CSV files, list of Excel files)
     """
-
     if not os.path.exists(input_directory):
-        print(f"❌ Direktori tidak ditemukan: {input_directory}")
-        return []
+        print(f"❌ Direktori input tidak ditemukan: {input_directory}")
+        return [], []
     
-    # Buat output directory jika belum ada
-    if output_directory is None:
-        output_directory = os.path.join(input_directory, 'convert')
-    elif not os.path.exists(output_directory):
-        os.makedirs(output_directory)
-        print(f"📁 Membuat direktori output: {output_directory}")
+    # Pastikan direktori CSV ada
+    os.makedirs(csv_directory, exist_ok=True)
+    print(f"📁 Menggunakan direktori CSV: {csv_directory}")
     
+    # Tampilkan info direktori Excel jika ditentukan
+    if excel_directory:
+        os.makedirs(excel_directory, exist_ok=True)
+        print(f"📊 Menggunakan direktori Excel: {excel_directory}")
     
-    # Pastikan folder output ada
-    os.makedirs(output_directory, exist_ok=True)
-
-    processed_files = []
+    total_files = len(glob.glob(os.path.join(input_directory, file_pattern)))
+    print(f"🔍 Menemukan {total_files} file dengan pola '{file_pattern}' di direktori input")
+    
+    if total_files == 0:
+        print("⚠️ Tidak ada file yang ditemukan untuk diproses.")
+        return [], []
+    
+    processed_csv_files = []
+    processed_excel_files = []
     
     # Cari semua file yang sesuai pola
-    for input_file in glob.glob(os.path.join(input_directory, file_pattern)):
+    for i, input_file in enumerate(glob.glob(os.path.join(input_directory, file_pattern)), 1):
         filename = os.path.basename(input_file)
-        output_file = os.path.join(output_directory, os.path.splitext(filename)[0] + '.csv')
+        base_name = os.path.splitext(filename)[0]
+        csv_output = os.path.join(csv_directory, base_name + '.csv')
         
-        print(f"\n🔄 Memproses {filename}...")
+        print(f"\n🔄 Memproses file {i}/{total_files}: {filename}...")
         try:
-            result = convert_ascii_to_csv(input_file, output_file)
-            if result:
-                processed_files.append(result)
+            # Konversi ke CSV dan Excel dengan format tanggal baru
+            excel_file = convert_ascii_to_excel(input_file, csv_output, excel_directory)
+            if excel_file:
+                processed_excel_files.append(excel_file)
+                processed_csv_files.append(csv_output)
+                print(f"✅ Berhasil mengkonversi {filename}")
+            else:
+                print(f"⚠️ Gagal mengkonversi {filename}")
+                
         except Exception as e:
             print(f"❌ Error saat memproses {filename}: {str(e)}")
-            
     
-    print(f"\n✅ Selesai memproses {len(processed_files)} dari {len(glob.glob(os.path.join(input_directory, file_pattern)))} file")
-    return processed_files
+    # Ringkasan hasil proses
+    print(f"\n✅ Selesai memproses {len(processed_csv_files)}/{total_files} file")
+    print(f"📄 File CSV yang dihasilkan: {len(processed_csv_files)} (disimpan di {csv_directory})")
+    
+    if excel_directory:
+        print(f"📊 File Excel yang dihasilkan: {len(processed_excel_files)} (disimpan di {excel_directory})")
+    else:
+        print(f"📊 File Excel yang dihasilkan: {len(processed_excel_files)} (disimpan bersama file CSV)")
+    
+    return processed_csv_files, processed_excel_files
 
-def save_to_excel(df, output_file):
+def save_to_excel(df, output_file, excel_directory=None):
     """
     Menyimpan DataFrame ke format Excel dengan penyesuaian lebar kolom otomatis.
     
     Parameters:
     df (pandas.DataFrame): DataFrame yang akan disimpan
-    output_file (str): Path untuk menyimpan file Excel
+    output_file (str): Path untuk menyimpan file CSV (digunakan sebagai referensi nama)
+    excel_directory (str, optional): Direktori untuk menyimpan file Excel
     
     Returns:
     str: Path ke file Excel yang dihasilkan
     """
-    # Ganti ekstensi file dari .csv ke .xlsx
-    excel_file = output_file.replace('.csv', '.xlsx')
+    # Dapatkan nama file saja tanpa path
+    filename = os.path.basename(output_file)
+    basename = os.path.splitext(filename)[0]
+    
+    # Tentukan lokasi output Excel
+    if excel_directory:
+        # Pastikan direktori Excel ada
+        os.makedirs(excel_directory, exist_ok=True)
+        excel_file = os.path.join(excel_directory, basename + '.xlsx')
+    else:
+        # Jika tidak ada direktori Excel, simpan di lokasi yang sama dengan CSV
+        excel_file = output_file.replace('.csv', '.xlsx')
     
     # Buat Excel writer dengan xlsxwriter engine
     writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
@@ -416,10 +447,11 @@ def save_to_excel(df, output_file):
         print(f"❌ Error saat menyimpan Excel: {str(e)}")
         writer.close()
         return None
-
+    
 def process_date_columns(df):
     """
     Memproses kolom timestamp menjadi komponen tanggal terpisah
+    dengan format bulan numerik (1-12)
     
     Parameters:
     df (pandas.DataFrame): DataFrame untuk diproses
@@ -437,13 +469,8 @@ def process_date_columns(df):
         # Tambah kolom tahun, bulan (angka), dan hari
         df['Year'] = df['Timestamp'].dt.year
         
-        # Buat kolom Month dengan nama bulan (Januari, Februari, dst)
-        bulan_indonesia = {
-            1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April',
-            5: 'Mei', 6: 'Juni', 7: 'Juli', 8: 'Agustus',
-            9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
-        }
-        df['Month'] = df['Timestamp'].dt.month.map(bulan_indonesia)
+        # Ubah bulan menjadi numerik (1-12) bukan nama bulan
+        df['Month'] = df['Timestamp'].dt.month
         
         # Tambah kolom Day
         df['Day'] = df['Timestamp'].dt.day
@@ -458,13 +485,14 @@ def process_date_columns(df):
     
     return df
 
-def convert_ascii_to_excel(input_file, output_file=None):
+def convert_ascii_to_excel(input_file, output_file=None, excel_directory=None):
     """
     Mengkonversi file ASCII ke format Excel (.xlsx)
     
     Parameters:
     input_file (str): Path ke file ASCII
-    output_file (str, optional): Path untuk menyimpan file Excel
+    output_file (str, optional): Path untuk menyimpan file CSV
+    excel_directory (str, optional): Direktori untuk menyimpan file Excel
     
     Returns:
     str: Path ke file Excel yang dihasilkan
@@ -483,8 +511,8 @@ def convert_ascii_to_excel(input_file, output_file=None):
         df.to_csv(csv_file, index=False)
         print(f"✅ Berhasil memperbarui CSV dengan format tanggal baru: {csv_file}")
         
-        # Simpan ke Excel
-        excel_file = save_to_excel(df, csv_file)
+        # Simpan ke Excel di direktori terpisah jika diminta
+        excel_file = save_to_excel(df, csv_file, excel_directory)
         return excel_file
     
     return None
@@ -502,42 +530,98 @@ def process_multiple_files_with_excel(input_directory, output_directory=None, fi
     tuple: (list of CSV files, list of Excel files)
     """
     if not os.path.exists(input_directory):
-        print(f"❌ Direktori tidak ditemukan: {input_directory}")
+        print(f"❌ Direktori input tidak ditemukan: {input_directory}")
         return [], []
     
-    # Buat output directory jika belum ada
+    # Pastikan output directory disediakan dan dibuat jika belum ada
     if output_directory is None:
         output_directory = os.path.join(input_directory, 'convert')
+        print(f"⚠️ Direktori output tidak ditentukan, menggunakan default: {output_directory}")
     
+    # Pastikan direktori output ada
     os.makedirs(output_directory, exist_ok=True)
     print(f"📁 Menggunakan direktori output: {output_directory}")
+    
+    total_files = len(glob.glob(os.path.join(input_directory, file_pattern)))
+    print(f"🔍 Menemukan {total_files} file dengan pola '{file_pattern}' di direktori input")
+    
+    if total_files == 0:
+        print("⚠️ Tidak ada file yang ditemukan untuk diproses.")
+        return [], []
     
     processed_csv_files = []
     processed_excel_files = []
     
     # Cari semua file yang sesuai pola
-    for input_file in glob.glob(os.path.join(input_directory, file_pattern)):
+    for i, input_file in enumerate(glob.glob(os.path.join(input_directory, file_pattern)), 1):
         filename = os.path.basename(input_file)
         base_output = os.path.join(output_directory, os.path.splitext(filename)[0])
         
-        print(f"\n🔄 Memproses {filename}...")
+        print(f"\n🔄 Memproses file {i}/{total_files}: {filename}...")
         try:
             # Konversi ke CSV dan Excel dengan format tanggal baru
             excel_file = convert_ascii_to_excel(input_file, base_output + '.csv')
             if excel_file:
                 processed_excel_files.append(excel_file)
                 processed_csv_files.append(base_output + '.csv')
+                print(f"✅ Berhasil mengkonversi {filename}")
+            else:
+                print(f"⚠️ Gagal mengkonversi {filename}")
                 
         except Exception as e:
             print(f"❌ Error saat memproses {filename}: {str(e)}")
     
-    print(f"\n✅ Selesai memproses {len(processed_csv_files)} file CSV dan {len(processed_excel_files)} file Excel")
+    # Ringkasan hasil proses
+    print(f"\n✅ Selesai memproses {len(processed_csv_files)}/{total_files} file")
+    print(f"📄 File CSV yang dihasilkan: {len(processed_csv_files)}")
+    print(f"📊 File Excel yang dihasilkan: {len(processed_excel_files)}")
+    
     return processed_csv_files, processed_excel_files
 
-
 if __name__ == "__main__":
-    # Untuk single file
-    # convert_ascii_to_excel('/path/to/your/file.ascii')
+    # Definisikan direktori input, output CSV, dan output Excel
+    input_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/8N90E/ASCII'
+    csv_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/8N90E/CSV'
+    excel_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/8N90E/EXCEL'
     
-    # Untuk banyak file
-    csv_files, excel_files = process_multiple_files_with_excel('/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/8N90E/ASCII')
+    print("\n📋 KONVERSI DATA BUOY RAMA ASCII KE CSV DAN EXCEL 📋")
+    print("=" * 50)
+    print(f"📂 Direktori input: {input_directory}")
+    print(f"📄 Direktori output CSV: {csv_directory}")
+    print(f"📊 Direktori output Excel: {excel_directory}")
+    print("=" * 50)
+    
+    # Proses semua file ASCII dalam direktori input
+    csv_files, excel_files = process_multiple_files_with_excel(
+        input_directory=input_directory,
+        csv_directory=csv_directory,
+        excel_directory=excel_directory,
+        file_pattern='*.ascii'
+    )
+    
+    # Menampilkan ringkasan lengkap jika ada banyak file yang diproses
+    if len(csv_files) > 0:
+        print("\n📋 Ringkasan Hasil Konversi:")
+        print(f"✅ Berhasil mengkonversi {len(csv_files)} dari {len(glob.glob(os.path.join(input_directory, '*.ascii')))} file ASCII")
+        
+        # Hanya tampilkan 5 file pertama jika ada banyak file
+        if len(csv_files) > 5:
+            print(f"\n📄 Beberapa file CSV yang dihasilkan (5 dari {len(csv_files)}):")
+            for i, file in enumerate(csv_files[:5], 1):
+                print(f"   {i}. {os.path.basename(file)}")
+            print(f"   ... dan {len(csv_files) - 5} file lainnya")
+            
+            print(f"\n📊 Beberapa file Excel yang dihasilkan (5 dari {len(excel_files)}):")
+            for i, file in enumerate(excel_files[:5], 1):
+                print(f"   {i}. {os.path.basename(file)}")
+            print(f"   ... dan {len(excel_files) - 5} file lainnya")
+        else:
+            print("\n📄 File CSV yang dihasilkan:")
+            for i, file in enumerate(csv_files, 1):
+                print(f"   {i}. {os.path.basename(file)}")
+            
+            print("\n📊 File Excel yang dihasilkan:")
+            for i, file in enumerate(excel_files, 1):
+                print(f"   {i}. {os.path.basename(file)}")
+    
+    print("\n✨ Proses konversi selesai! ✨")
