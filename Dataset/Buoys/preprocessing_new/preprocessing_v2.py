@@ -7,6 +7,7 @@ import seaborn as sns
 import os
 from scipy import stats
 from datetime import datetime
+import matplotlib.dates as mdates
 import glob
 
 def load_and_combine_buoy_data(location_code, data_dir):
@@ -612,49 +613,61 @@ def plot_seasonal_patterns(df, variable, var_name, unit, location_code, output_d
 
 def plot_annual_trends(df, variable, var_name, unit, location_code, output_dir):
     """Plot annual trends for a variable."""
-    # Skip if not enough data
     if len(df) < 365:
         print(f"Skipping annual trend analysis for {variable}: insufficient data")
         return
     
     try:
-        # Resample to annual data
         annual_data = df[variable].resample('YE').mean()
-        
-        # Skip if we have too few years
         if len(annual_data) < 3:
             print(f"Skipping annual trend analysis for {variable}: less than 3 years of data")
             return
         
-        # Plot annual trend
-        plt.figure(figsize=(14, 6))
-        annual_data.plot()
+        fig, ax = plt.subplots(figsize=(14, 6))
         
-        plt.title(f'Annual {var_name} Trend at {location_code}')
-        plt.ylabel(f'{var_name} ({unit})')
-        plt.xlabel('Year')
-        plt.grid(True)
+        # Clear any existing formatters
+        ax.xaxis.set_major_formatter(plt.NullFormatter())
         
-        # Add trend line
-        years_numeric = np.arange(len(annual_data))
+        # Set date formatter explicitly
+        date_formatter = mdates.DateFormatter('%Y')
+        ax.xaxis.set_major_formatter(date_formatter)
         
-        # Only calculate trend if we have enough valid data points
+        # Plot annual data
+        ax.plot(annual_data.index, annual_data.values, 'b-', label='Annual Average')
+        
         valid_data = annual_data.dropna()
         if len(valid_data) >= 3:
             numeric_idx = np.arange(len(valid_data))
             slope, intercept, r_value, p_value, std_err = stats.linregress(numeric_idx, valid_data)
             
+            # Calculate trend line
             trend_line = intercept + slope * numeric_idx
-            plt.plot(valid_data.index, trend_line, 'r--', 
-                    label=f'Trend: {slope:.4f} per year (p={p_value:.4f}, R²={r_value**2:.4f})')
-            plt.legend()
+            
+            # Plot trend line in one go instead of segments
+            ax.plot(valid_data.index, trend_line, 
+                   'r--', linewidth=2,
+                   label=f'Trend: {slope:.4f} per year (p={p_value:.4f}, R²={r_value**2:.4f})')
+        
+        ax.set_title(f'Annual {var_name} Trend at {location_code}')
+        ax.set_ylabel(f'{var_name} ({unit})')
+        ax.set_xlabel('Year')
+        ax.grid(True)
+        ax.legend()
+        
+        # Rotate x-axis labels
+        plt.setp(ax.get_xticklabels(), rotation=45)
         
         plt.tight_layout()
-        var_file = variable.replace('(', '').replace(')', '').replace('.', '_')
-        plt.savefig(f'{output_dir}/{var_file}_annual_trend.png')
-        plt.close()
+        plt.savefig(os.path.join(output_dir, f'annual_trend_{variable}_{location_code}.png'))
+        
+    except ValueError as ve:
+        print(f"Error processing {variable}: {ve}")
+    except RuntimeError as re:
+        print(f"Runtime error while plotting {variable}: {re}")
     except Exception as e:
-        print(f"Error in annual trend analysis for {variable}: {e}")
+        print(f"Unexpected error processing {variable}: {e}")
+    finally:
+        plt.close()
 
 def plot_temperature_profile(df, temp_cols, location_code, output_dir):
     """Plot temperature profile at different depths."""
