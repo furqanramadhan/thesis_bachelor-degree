@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 from scipy import stats
+from windrose import WindroseAxes
 from datetime import datetime
 import matplotlib.dates as mdates
 import glob
@@ -710,17 +711,14 @@ def plot_wind_rose(df, location_code, output_dir):
         if 'WSPD' not in df.columns or 'WDIR' not in df.columns:
             if 'UWND' in df.columns and 'VWND' in df.columns:
                 # Calculate wind speed and direction from U and V components
-                uwnd = df['UWND'].values
-                vwnd = df['VWND'].values
-                
-                # Skip rows with missing values
-                mask = ~(np.isnan(uwnd) | np.isnan(vwnd))
-                uwnd = uwnd[mask]
-                vwnd = vwnd[mask]
-                
-                if len(uwnd) < 30:
-                    print("Skipping wind rose plot: insufficient valid data")
+                # First ensure we only work with rows that have both components
+                valid_mask = ~(df['UWND'].isna() | df['VWND'].isna())
+                if valid_mask.sum() < 30:
+                    print("Skipping wind rose plot: insufficient valid wind component data")
                     return
+                
+                uwnd = df.loc[valid_mask, 'UWND'].values
+                vwnd = df.loc[valid_mask, 'VWND'].values
                 
                 wspd = np.sqrt(uwnd**2 + vwnd**2)
                 wdir = (270 - np.arctan2(vwnd, uwnd) * 180 / np.pi) % 360
@@ -734,9 +732,14 @@ def plot_wind_rose(df, location_code, output_dir):
                 print("Skipping wind rose plot: required wind components not available")
                 return
         else:
-            # Use available wind speed and direction
-            wspd = df['WSPD'].dropna().values
-            wdir = df['WDIR'].dropna().values
+            # For existing wind speed and direction, only use rows that have both values
+            valid_mask = ~(df['WSPD'].isna() | df['WDIR'].isna())
+            if valid_mask.sum() < 30:
+                print("Skipping wind rose plot: insufficient valid wind data")
+                return
+            
+            wspd = df.loc[valid_mask, 'WSPD'].values
+            wdir = df.loc[valid_mask, 'WDIR'].values
             
             # Create temporary DataFrame with values
             temp_df = pd.DataFrame({
@@ -744,18 +747,75 @@ def plot_wind_rose(df, location_code, output_dir):
                 'wdir': wdir
             })
         
-        # Create wind rose
-        plt.figure(figsize=(10, 10))
-        ax = WindroseAxes.from_ax()
-        ax.bar(temp_df['wdir'], temp_df['wspd'], normed=True, opening=0.8, edgecolor='white')
-        ax.set_legend(title='Wind Speed (m/s)')
-        plt.title(f'Wind Rose at {location_code}')
+        # Verify we have data to plot
+        if len(temp_df) < 30:
+            print("Skipping wind rose plot: insufficient valid data after filtering")
+            return
+            
+        # Create figure with more space around it
+        fig = plt.figure(figsize=(12, 10))
         
-        plt.tight_layout()
-        plt.savefig(f'{output_dir}/wind_rose.png')
+        # Create wind rose with adjusted position to make room for labels
+        rect = [0.1, 0.1, 0.8, 0.8]  # [left, bottom, width, height]
+        ax = WindroseAxes(fig, rect)
+        fig.add_axes(ax)
+        
+        # Define custom wind speed bins for better visualization
+        bins = np.array([0, 2.2, 4.2, 6.3, 8.3, 10.4, 15])
+        
+        # Generate a better color palette
+        cmap = plt.cm.viridis_r  # Or try: plt.cm.turbo, plt.cm.jet
+        
+        # Plot the wind rose with improved parameters
+        ax.bar(
+            temp_df['wdir'], 
+            temp_df['wspd'], 
+            normed=True, 
+            opening=0.8, 
+            edgecolor='white',
+            nsector=16,  # Use 16 sectors for smoother appearance
+            bins=bins,
+            cmap=cmap
+        )
+        
+        # Improve legend appearance and position
+        legend = ax.set_legend(
+            title='Wind Speed (m/s)', 
+            loc='lower left',
+            bbox_to_anchor=(-0.1, -0.15),  # Position legend outside the plot
+            ncol=3,  # Use multiple columns for more compact legend
+            fontsize=9,
+            frameon=True,
+            fancybox=True,
+            shadow=True
+        )
+        legend.get_title().set_fontsize(10)  # Adjust title font size
+        
+        # Improve title positioning and appearance
+        ax.set_title(f'Wind Rose at {location_code}', y=1.08, fontsize=14, fontweight='bold')
+        
+        # Make directional labels (N, S, E, W) bolder and larger
+        ax.set_rgrids([3.0, 6.0, 9.0, 12.0, 15.0], angle=0, fontsize=9, fontweight='bold')
+        ax.set_radii_angle(angle=45)  # Angle for radius labels
+        
+        # Adjust cardinal direction text size and weight
+        for text in ax.get_xticklabels():
+            text.set_fontsize(12)
+            text.set_fontweight('bold')
+        
+        # Add tight layout but with padding to prevent cutting off labels
+        plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+        
+        # Save figure with higher DPI for clearer labels
+        plt.savefig(f'{output_dir}/wind_rose.png', dpi=300, bbox_inches='tight')
         plt.close()
+        
+        print(f"Wind rose plot created successfully for {location_code}")
+        
     except Exception as e:
         print(f"Error creating wind rose plot: {e}")
+        import traceback
+        traceback.print_exc()  # This will print the detailed error stack
 
 def combine_key_variables(cleaned_data, location_code, cleaned_dir):
     """Combine key variables into a single dataset."""
