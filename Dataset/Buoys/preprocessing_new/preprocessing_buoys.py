@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from windrose import WindroseAxes
 import os
 from scipy import stats
 from datetime import datetime
@@ -516,18 +517,19 @@ def plot_wind_rose(df, location_code, output_dir):
         # Calculate wind speed and direction if not available
         if 'WSPD' not in df.columns or 'WDIR' not in df.columns:
             if 'UWND' in df.columns and 'VWND' in df.columns:
-                # Calculate wind speed and direction from U and V components
-                uwnd = df['UWND'].values
-                vwnd = df['VWND'].values
+                # Create a copy of the dataframe to avoid warnings
+                wind_df = df[['UWND', 'VWND']].copy()
                 
-                # Skip rows with missing values
-                mask = ~(np.isnan(uwnd) | np.isnan(vwnd))
-                uwnd = uwnd[mask]
-                vwnd = vwnd[mask]
+                # Skip rows where either U or V is missing
+                wind_df = wind_df.dropna()
                 
-                if len(uwnd) < 30:
+                if len(wind_df) < 30:
                     print("Skipping wind rose plot: insufficient valid data")
                     return
+                
+                # Calculate wind speed and direction from U and V components
+                uwnd = wind_df['UWND'].values
+                vwnd = wind_df['VWND'].values
                 
                 wspd = np.sqrt(uwnd**2 + vwnd**2)
                 wdir = (270 - np.arctan2(vwnd, uwnd) * 180 / np.pi) % 360
@@ -541,9 +543,19 @@ def plot_wind_rose(df, location_code, output_dir):
                 print("Skipping wind rose plot: required wind components not available")
                 return
         else:
+            # Create a new dataframe with only the columns we need
+            wind_df = df[['WSPD', 'WDIR']].copy()
+            
+            # Drop rows where either speed or direction is missing
+            wind_df = wind_df.dropna()
+            
+            if len(wind_df) < 30:
+                print("Skipping wind rose plot: insufficient valid data after removing NaNs")
+                return
+            
             # Use available wind speed and direction
-            wspd = df['WSPD'].dropna().values
-            wdir = df['WDIR'].dropna().values
+            wspd = wind_df['WSPD'].values
+            wdir = wind_df['WDIR'].values
             
             # Create temporary DataFrame with values
             temp_df = pd.DataFrame({
@@ -551,6 +563,11 @@ def plot_wind_rose(df, location_code, output_dir):
                 'wdir': wdir
             })
         
+        # Final check to ensure we have valid data
+        if len(temp_df) < 30:
+            print("Skipping wind rose plot: insufficient valid data for plotting")
+            return
+            
         # Create wind rose
         plt.figure(figsize=(10, 10))
         ax = WindroseAxes.from_ax()
@@ -563,6 +580,8 @@ def plot_wind_rose(df, location_code, output_dir):
         plt.close()
     except Exception as e:
         print(f"Error creating wind rose plot: {e}")
+        import traceback
+        traceback.print_exc()  # This will print the full traceback for debugging
 
 def combine_key_variables(cleaned_data, location_code, cleaned_dir):
     """Combine key variables into a single dataset."""
