@@ -861,9 +861,9 @@ if __name__ == "__main__":
     
     # Define data directories for each location
     data_dirs = {
-        '0N90E': '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/0N90E/CSV',
-        '4N90E': '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/4N90E/CSV',
-        '8N90E': '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Buoys/8N90E/CSV'
+        '0N90E': '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/0N90E/CSV',
+        '4N90E': '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV',
+        '8N90E': '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV'
     }
     
     # Define variable information (name and unit)
