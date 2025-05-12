@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -818,9 +816,7 @@ def plot_wind_rose(df, location_code, output_dir):
         traceback.print_exc()  # This will print the detailed error stack
 
 def combine_key_variables(cleaned_data, location_code, cleaned_dir):
-    """Combine key variables into a single dataset."""
     try:
-        # Get key variables
         key_vars = ['SST', 'Prec', 'RH', 'WSPD', 'SWRad']
         available_vars = [var for var in key_vars if var in cleaned_data]
         
@@ -828,14 +824,21 @@ def combine_key_variables(cleaned_data, location_code, cleaned_dir):
             print("Not enough variables available to create combined dataset")
             return
         
-        # Combine into single DataFrame
+        # Combine into single DataFrame with source priority
         combined_df = pd.DataFrame()
         
         for var in available_vars:
+            # Prioritize higher source priority rows
+            df_var = cleaned_data[var].copy()
+            
+            # Optional: Add source priority filtering
+            if 'source_priority' in df_var.columns:
+                df_var = df_var.sort_values('source_priority', ascending=False).groupby(df_var.index).first()
+            
             if combined_df.empty:
-                combined_df = cleaned_data[var].copy()
+                combined_df = df_var
             else:
-                combined_df = combined_df.join(cleaned_data[var], how='outer')
+                combined_df = combined_df.join(df_var, how='outer')
         
         # Save combined dataset
         combined_file = f"{cleaned_dir}/{location_code}_combined_clean.csv"
