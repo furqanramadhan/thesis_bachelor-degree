@@ -1,14 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# arrays and dataframes
 import pandas as pd
 import numpy as np
-
 # visualization imports
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 try:
     from IPython import get_ipython
     ipython = get_ipython()
@@ -48,16 +42,12 @@ def save_plt(filename):
 
 # Menekan warning yang tidak perlu
 warnings.filterwarnings('ignore')
-
 # BKKG Preprocessing 
 bmkg_data = pd.read_csv('/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv', index_col=0,parse_dates=True)
 # Print 20 data teratas
 bmkg_data.head(20)
-
 # Check tipe data 
 print(bmkg_data.dtypes)
-
-
 # List kolom yang harus diperbaiki, kecuali DDD_CAR karena wind direction
 cols_to_fix = ['TN', 'TX', 'TAVG', 'RH_AVG', 'RR', 'SS', 'FF_X', 'DDD_X', 'FF_AVG']
 
@@ -71,25 +61,19 @@ for col in bmkg_data.columns:
     if bmkg_data[col].dtype != 'object':  # Hanya ubah kolom numerik
         bmkg_data[col] = bmkg_data[col].replace([8888, 9999], np.nan)
 
-
-
 # Mengecek persentase missing values di setiap kolom
 missing_percentage = bmkg_data.isna().mean() * 100
 print("Persentase Missing Values per Kolom:")
 print(missing_percentage)
 
-
-
 # Menampilkan data setelah penanganan missing values
 print("\nData setelah penanganan missing values:")
 print(bmkg_data.head())
-
 
 # Memilih kolom numerik untuk smoothing (exclude DDD_CAR karena arah mata angin)
 numeric_cols = bmkg_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 if 'DDD_CAR' in numeric_cols:
     numeric_cols.remove('DDD_CAR')
-
 
 # Fungsi untuk menerapkan SMA (Simple Moving Average)
 def apply_sma(series, window):
@@ -127,12 +111,10 @@ for col in columns_to_visualize:
     plt.tight_layout()
     save_plt('01_sma_ewma_comparison_' + col)
 
-
 # Membandingkan SMA dan EWMA pada satu kolom (misalnya RH_AVG)
 col_to_compare = 'RH_AVG'
 window_size = 30
 span_value = 30
-
 plt.figure(figsize=(14, 7))
 plt.plot(bmkg_data.index, bmkg_data[col_to_compare], label='Original Data', color='gray', alpha=0.5)
 plt.plot(bmkg_data.index, apply_sma(bmkg_data[col_to_compare], window_size), 
@@ -177,7 +159,6 @@ plt.ylabel('Frequency')
 plt.tight_layout()
 save_plt('03_residual_distribution_' + col_for_residual)
 
-
 # 1. Imputasi Missing Values untuk analisis time series
 # Menggunakan forward fill dan backward fill untuk data yang akan dianalisis
 bmkg_data_filled = bmkg_data.fillna(method='ffill').fillna(method='bfill')
@@ -190,10 +171,8 @@ col_for_decomp = 'RH_AVG'
 # Untuk data harian, nilai lambda yang lebih besar seperti 129600 bisa digunakan
 cycle, trend = hpfilter(bmkg_data_filled[col_for_decomp], lamb=250000)
 
-
 # Visualisasi hasil dekomposisi HP Filter
 plt.figure(figsize=(14, 10))
-
 plt.subplot(3, 1, 1)
 plt.plot(bmkg_data_filled.index, bmkg_data_filled[col_for_decomp])
 plt.title(f'{col_for_decomp} - Original Time Series')
@@ -215,46 +194,36 @@ save_plt('04_hp_filter_decomposition_' + col_for_decomp)
 
 # 3. Seasonal Decomposition (alternatif HP Filter)
 # Seasonal decomposition menggunakan model additive
-
 # Apa beda multiplikatif dan aditive?
 decomposition = seasonal_decompose(bmkg_data_filled[col_for_decomp], model='multiplicative', period=30)
-
-
 # Visualisasi hasil seasonal decomposition
 plt.figure(figsize=(14, 12))
-
 plt.subplot(4, 1, 1)
 plt.plot(bmkg_data_filled.index, bmkg_data_filled[col_for_decomp])
 plt.title(f'{col_for_decomp} - Original Time Series')
 plt.grid(True, alpha=0.3)
-
 plt.subplot(4, 1, 2)
 plt.plot(bmkg_data_filled.index, decomposition.trend)
 plt.title(f'{col_for_decomp} - Trend Component')
 plt.grid(True, alpha=0.3)
-
 plt.subplot(4, 1, 3)
 plt.plot(bmkg_data_filled.index, decomposition.seasonal)
 plt.title(f'{col_for_decomp} - Seasonal Component')
 plt.grid(True, alpha=0.3)
-
 plt.subplot(4, 1, 4)
 plt.plot(bmkg_data_filled.index, decomposition.resid)
 plt.title(f'{col_for_decomp} - Residual Component')
 plt.grid(True, alpha=0.3)
-
 plt.tight_layout()
 save_plt('05_seasonal_decomposition_' + col_for_decomp)
 
 # Triple Exponential Smoothing (Holt-Winters Method) - Multiplicative
 print("\n=== Triple Exponential Smoothing (Holt-Winters Method) ===")
-
 # Daftar seasonal periods yang akan dicoba
 seasonal_periods_list = [7, 30, 365]  # Mingguan, bulanan, tahunan
 tes_models = {}
 tes_fitted_values = {}
 tes_mse_dict = {}
-
 for seasonal_period in seasonal_periods_list:
     try:
         print(f"\nAnalisis dengan seasonal period: {seasonal_period}")
@@ -281,8 +250,6 @@ for seasonal_period in seasonal_periods_list:
         
     except Exception as e:
         print(f"Error dengan seasonal period {seasonal_period}: {str(e)}")
-
-
 # Temukan seasonal period terbaik berdasarkan MSE
 best_period = None
 if tes_mse_dict:
@@ -529,9 +496,7 @@ if not is_stationary:
 # Grid search untuk parameter SARIMA
 # Untuk kesederhanaan, kita hanya mencoba beberapa parameter
 # Pada praktiknya, grid search yang lebih ekstensif dapat dilakukan
-
 print("\nMencoba berbagai parameter SARIMA...")
-
 # Konfigurasi parameter yang akan dicoba
 sarima_configs = [
     # (p, d, q, P, D, Q, S)
