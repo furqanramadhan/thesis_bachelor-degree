@@ -391,49 +391,72 @@ def visualize_decisions(decision_df):
     plt.tight_layout()
     save_plt('rice_planting_decisions_timeline')
     
-    # Plot weather parameters distribution by decision
-    plt.figure(figsize=(16, 12))
-    
-    # Check if there are any categories to plot
-    # Filter out empty categories first
-    decision_groups = decision_df.groupby('Keputusan').filter(lambda x: len(x) > 0)
-    
-    if len(decision_groups) > 0:
-        # Rainfall by decision - only create if we have data to plot
-        plt.subplot(2, 2, 1)
-        sns.boxplot(x='Keputusan', y='RR', data=decision_groups)
-        plt.title('Curah Hujan Berdasarkan Keputusan')
-        plt.axhline(y=2, color='orange', linestyle='--', label='Batas Kering (2mm)')
-        plt.axhline(y=15, color='red', linestyle='--', label='Batas Banjir (15mm)')
-        plt.legend()
+    # Create a second visualization for parameter distributions
+    try:
+        # Get unique decisions and skip plotting if we don't have at least one value for each
+        unique_decisions = decision_df['Keputusan'].unique()
         
-        # Temperature by decision
-        plt.subplot(2, 2, 2)
-        sns.boxplot(x='Keputusan', y='TAVG', data=decision_groups)
-        plt.title('Suhu Rata-rata Berdasarkan Keputusan')
-        plt.axhline(y=20, color='blue', linestyle='--', label='Batas Dingin (20°C)')
-        plt.axhline(y=35, color='red', linestyle='--', label='Batas Panas (35°C)')
-        plt.legend()
+        if len(unique_decisions) > 0:
+            plt.figure(figsize=(16, 12))
+            
+            # Use manual plotting instead of seaborn for more control
+            plt.subplot(2, 2, 1)
+            for i, decision in enumerate(unique_decisions):
+                subset = decision_df[decision_df['Keputusan'] == decision]['RR']
+                if len(subset) > 0:  # Only plot if we have data
+                    plt.boxplot(subset, positions=[i+1], widths=0.6)
+            plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
+            plt.title('Curah Hujan Berdasarkan Keputusan')
+            plt.axhline(y=2, color='orange', linestyle='--', label='Batas Kering (2mm)')
+            plt.axhline(y=15, color='red', linestyle='--', label='Batas Banjir (15mm)')
+            plt.legend()
+            
+            # Temperature by decision
+            plt.subplot(2, 2, 2)
+            for i, decision in enumerate(unique_decisions):
+                subset = decision_df[decision_df['Keputusan'] == decision]['TAVG']
+                if len(subset) > 0:  # Only plot if we have data
+                    plt.boxplot(subset, positions=[i+1], widths=0.6)
+            plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
+            plt.title('Suhu Rata-rata Berdasarkan Keputusan')
+            plt.axhline(y=20, color='blue', linestyle='--', label='Batas Dingin (20°C)')
+            plt.axhline(y=35, color='red', linestyle='--', label='Batas Panas (35°C)')
+            plt.legend()
+            
+            # Humidity by decision
+            plt.subplot(2, 2, 3)
+            for i, decision in enumerate(unique_decisions):
+                subset = decision_df[decision_df['Keputusan'] == decision]['RH_AVG']
+                if len(subset) > 0:  # Only plot if we have data
+                    plt.boxplot(subset, positions=[i+1], widths=0.6)
+            plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
+            plt.title('Kelembaban Relatif Berdasarkan Keputusan')
+            plt.axhline(y=60, color='orange', linestyle='--', label='Batas Kering (60%)')
+            plt.axhline(y=90, color='blue', linestyle='--', label='Batas Lembab (90%)')
+            plt.legend()
+            
+            # Score by decision
+            plt.subplot(2, 2, 4)
+            for i, decision in enumerate(unique_decisions):
+                subset = decision_df[decision_df['Keputusan'] == decision]['Skor']
+                if len(subset) > 0:  # Only plot if we have data
+                    plt.boxplot(subset, positions=[i+1], widths=0.6)
+            plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
+            plt.title('Distribusi Skor Berdasarkan Keputusan')
+            
+            plt.tight_layout()
+            save_plt('decision_parameters_distribution')
+        else:
+            print("Warning: No unique decisions found for boxplot visualization")
+    except Exception as e:
+        print(f"Error in boxplot visualization: {str(e)}")
+        # Create a simple figure with error message
+        plt.figure(figsize=(10, 6))
+        plt.text(0.5, 0.5, f'Visualisasi boxplot gagal: {str(e)}',
+                ha='center', va='center', fontsize=12)
+        plt.tight_layout()
+        save_plt('decision_parameters_distribution_error')
         
-        # Humidity by decision
-        plt.subplot(2, 2, 3)
-        sns.boxplot(x='Keputusan', y='RH_AVG', data=decision_groups)
-        plt.title('Kelembaban Relatif Berdasarkan Keputusan')
-        plt.axhline(y=60, color='orange', linestyle='--', label='Batas Kering (60%)')
-        plt.axhline(y=90, color='blue', linestyle='--', label='Batas Lembab (90%)')
-        plt.legend()
-        
-        # Score by decision
-        plt.subplot(2, 2, 4)
-        sns.boxplot(x='Keputusan', y='Skor', data=decision_groups)
-        plt.title('Distribusi Skor Berdasarkan Keputusan')
-    else:
-        plt.text(0.5, 0.5, 'Tidak ada data keputusan yang cukup untuk visualisasi',
-                ha='center', va='center', fontsize=16)
-    
-    plt.tight_layout()
-    save_plt('decision_parameters_distribution')
-
 def main():
     """Main function to run the Rice Planting Decision Support System."""
     print("=" * 80)
