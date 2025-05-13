@@ -816,48 +816,139 @@ def plot_wind_rose(df, location_code, output_dir):
         traceback.print_exc()  # This will print the detailed error stack
 
 def combine_key_variables(cleaned_data, location_code, cleaned_dir):
+    """
+    Combine key meteorological variables into a single dataset with improved join strategy.
+    This function ensures that all data points from individual cleaned files are properly
+    preserved in the combined dataset.
+    
+    Parameters:
+    -----------
+    cleaned_data : dict
+        Dictionary containing DataFrames for each variable type
+    location_code : str
+        Location identifier (e.g., '0N90E')
+    cleaned_dir : str
+        Directory for saving cleaned data
+    """
     try:
-        key_vars = ['SST', 'Prec', 'RH', 'WSPD', 'SWRad']
+        key_vars = ['SST', 'Prec', 'RH', 'WSPD', 'SWRad', 'UWND', 'VWND']
         available_vars = [var for var in key_vars if var in cleaned_data]
         
         if len(available_vars) <= 1:
             print("Not enough variables available to create combined dataset")
             return
         
-        # Combine into single DataFrame with source priority
-        combined_df = pd.DataFrame()
+        print(f"\nCombining data for {len(available_vars)} variables: {', '.join(available_vars)}")
+        
+        # STEP 1: Build a universal index from all variables
+        all_timestamps = set()
+        for var in available_vars:
+            all_timestamps.update(cleaned_data[var].index)
+        
+        # Create a sorted master index
+        master_index = pd.DatetimeIndex(sorted(list(all_timestamps)))
+        print(f"Created master index with {len(master_index)} unique timestamps")
+        
+        # STEP 2: Initialize the combined DataFrame with the master index
+        combined_df = pd.DataFrame(index=master_index)
+        combined_df.index.name = 'Date'
+        
+        # Add date component columns for convenience
+        combined_df['year'] = combined_df.index.year
+        combined_df['month'] = combined_df.index.month
+        combined_df['day'] = combined_df.index.day
+        
+        # STEP 3: Add each variable with appropriate handling of quality and source info
+        for var in available_vars:
+            # Get the variable's DataFrame
+            df_var = cleaned_data[var]
+            
+            # Only use the actual data column, not any metadata columns
+            if var in df_var.columns:
+                print(f"  Adding variable {var}...")
+                
+                # First add the main data column
+                combined_df[var] = df_var[var]
+                
+                # Check for quality information
+                if 'data_quality' in df_var.columns:
+                    combined_df[f'{var}_quality'] = df_var['data_quality']
+                
+                # Check for source code information
+                if 'source_priority' in df_var.columns:
+                    combined_df[f'{var}_priority'] = df_var['source_priority']
+                
+                # Add original source code if available
+                if 'S' in df_var.columns:
+                    combined_df[f'{var}_source'] = df_var['S']
+                
+                # Add original quality code if available
+                if 'Q' in df_var.columns:
+                    combined_df[f'{var}_Q'] = df_var['Q']
+                    
+                print(f"    Added {df_var[var].count()} data points out of {len(df_var)} records")
+            else:
+                print(f"  Warning: Variable {var} not found in its DataFrame")
+        
+        # STEP 4: Save the combined data
+        combined_file = f"{cleaned_dir}/{location_code}_combined_clean.csv" 
+        combined_df.to_csv(combined_file)
+        print(f"Saved combined dataset to {combined_file}")
+        
+        # STEP 5: Create a detailed coverage report
+        coverage_report = pd.DataFrame(index=available_vars, 
+                                      columns=['Total_Records', 'Available_Records', 'Coverage_Pct'])
         
         for var in available_vars:
-            # Prioritize higher source priority rows
-            df_var = cleaned_data[var].copy()
-            
-            # Optional: Add source priority filtering
-            if 'source_priority' in df_var.columns:
-                df_var = df_var.sort_values('source_priority', ascending=False).groupby(df_var.index).first()
-            
-            if combined_df.empty:
-                combined_df = df_var
-            else:
-                combined_df = combined_df.join(df_var, how='outer')
+            if var in combined_df.columns:
+                total = len(combined_df)
+                available = combined_df[var].count()
+                coverage = (available / total) * 100
+                
+                coverage_report.loc[var, 'Total_Records'] = total
+                coverage_report.loc[var, 'Available_Records'] = available
+                coverage_report.loc[var, 'Coverage_Pct'] = coverage
+                
+                print(f"  {var}: {available}/{total} records ({coverage:.2f}% coverage)")
         
-        # Save combined dataset
-        combined_file = f"{cleaned_dir}/{location_code}_combined_clean.csv"
-        combined_df.to_csv(combined_file)
-        print(f"Saved combined dataset with {len(available_vars)} variables to {combined_file}")
+        # Save the coverage report
+        coverage_file = f"{cleaned_dir}/{location_code}_coverage_report.csv"
+        coverage_report.to_csv(coverage_file)
+        print(f"Saved coverage report to {coverage_file}")
         
-        # Create correlation matrix if we have enough variables
-        if len(available_vars) >= 2:
-            plt.figure(figsize=(10, 8))
-            corr_matrix = combined_df.corr()
-            sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
-            plt.title(f'Correlation Matrix for {location_code}')
-            plt.tight_layout()
-            plt.savefig(f"{cleaned_dir}/{location_code}_correlation_matrix.png")
-            plt.close()
-            
-            print("Created correlation matrix visualization")
+        # STEP 6: Create a correlation matrix if we have enough variables
+        numeric_vars = [var for var in available_vars if var in combined_df.columns]
+        
+        if len(numeric_vars) >= 2:
+            try:
+                import matplotlib.pyplot as plt
+                import seaborn as sns
+                
+                # Only include rows that have data for at least 2 variables
+                valid_rows = combined_df[numeric_vars].dropna(thresh=2)
+                
+                if len(valid_rows) > 10:  # Ensure we have enough data for a meaningful correlation
+                    plt.figure(figsize=(10, 8))
+                    corr_matrix = valid_rows.corr()
+                    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+                    plt.title(f'Correlation Matrix for {location_code}')
+                    plt.tight_layout()
+                    plt.savefig(f"{cleaned_dir}/{location_code}_correlation_matrix.png")
+                    plt.close()
+                    
+                    print("Created correlation matrix visualization")
+                else:
+                    print("Not enough overlapping data for correlation analysis")
+            except Exception as e:
+                print(f"Error creating correlation visualization: {e}")
+        
+        return combined_df
+        
     except Exception as e:
-        print(f"Error creating combined dataset: {e}")
+        print(f"Error combining variables: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
 
 if __name__ == "__main__":
 
