@@ -21,17 +21,41 @@ def save_plt(filename):
 import warnings
 warnings.filterwarnings('ignore')
 
-# Load preprocessed BMKG data
 def load_data(file_path):
-    """Load and prepare BMKG data."""
+    """Load and prepare BMKG data with proper date handling."""
     try:
-        data = pd.read_csv(file_path, index_col=0, parse_dates=True)
-        print(f"Successfully loaded data with shape: {data.shape}")
-        return data
+        # Read data with Date column present
+        data = pd.read_csv(file_path)
+        print(f"Raw data shape: {data.shape}")
+        
+        # Check if necessary columns exist
+        required_columns = ['Date', 'TN', 'TX', 'TAVG', 'RH_AVG', 'RR']
+        missing_columns = [col for col in required_columns if col not in data.columns]
+        
+        if missing_columns:
+            print(f"Warning: Missing required columns: {missing_columns}")
+            
+        # Check if Date column exists, if not try to create it from Year, Month, Day
+        if 'Date' not in data.columns and all(col in data.columns for col in ['Year', 'Month', 'Day']):
+            print("Creating Date column from Year, Month, Day columns")
+            data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
+        
+        # Convert Date to datetime and set as index
+        if 'Date' in data.columns:
+            data['Date'] = pd.to_datetime(data['Date'])
+            data.set_index('Date', inplace=True)
+            print(f"Successfully loaded data with shape: {data.shape}")
+            
+            # Display sample of loaded data
+            print("Sample of loaded data:")
+            print(data.head(3))
+            return data
+        else:
+            print("Error: No Date column found or could be created")
+            return None
     except Exception as e:
         print(f"Error loading data: {str(e)}")
         return None
-
 # Function to handle missing values with improved methods
 def preprocess_data(data):
     """Clean and preprocess the data with improved methods."""
@@ -47,7 +71,7 @@ def preprocess_data(data):
     for col in data.columns:
         if data[col].dtype != 'object':  # Only change numeric columns
             data[col] = data[col].replace([8888, 9999], np.nan)
-    
+
     # Check missing values percentage
     missing_percentage = data.isna().mean() * 100
     print("Missing Values Percentage by Column:")
@@ -168,7 +192,9 @@ def forecast_variable(data, variable, period, forecast_days=120, seasonal_type='
 # Classification functions for the three main variables
 def classify_rr(value):
     """Classify rainfall values."""
-    if value < 2:
+    if pd.isna(value):  # Handle NaN values
+        return 'Tidak Ada Data (Risiko)'
+    elif value < 2:
         return 'Kering (Risiko)'
     elif 2 <= value <= 15:
         return 'Optimal'
@@ -177,7 +203,9 @@ def classify_rr(value):
 
 def classify_tavg(value):
     """Classify average temperature values."""
-    if value < 20:
+    if pd.isna(value):  # Handle NaN values
+        return 'Tidak Ada Data (Risiko)'
+    elif value < 20:
         return 'Dingin (Risiko)'
     elif 20 <= value <= 35:
         return 'Optimal'
@@ -186,7 +214,9 @@ def classify_tavg(value):
 
 def classify_rh(value):
     """Classify relative humidity values."""
-    if value < 60:
+    if pd.isna(value):  # Handle NaN values
+        return 'Tidak Ada Data (Risiko)'
+    elif value < 60:
         return 'Kering (Risiko)'
     elif 60 <= value <= 90:
         return 'Optimal'
@@ -214,6 +244,10 @@ def calculate_decision(rr_value, tavg_value, rh_value, ss_value=None):
     tuple
         (score, category, decision)
     """
+    # Check if we have valid data
+    if pd.isna(rr_value) and pd.isna(tavg_value) and pd.isna(rh_value):
+        return 0, 'Tidak Ada Data', 'Bera'
+    
     # Get classifications
     rr_status = classify_rr(rr_value)
     tavg_status = classify_tavg(tavg_value)
@@ -223,22 +257,28 @@ def calculate_decision(rr_value, tavg_value, rh_value, ss_value=None):
     score = 0
     
     # Apply weighted scoring: RR (40%), TAVG (40%), RH_AVG (20%)
-    if 'Optimal' in rr_status:
-        score += 40
-    elif 'Kering' in rr_status and rr_value >= 1:  # Some rain is better than none
-        score += 20
+    # Rainfall scoring
+    if not pd.isna(rr_value):  # Only score if we have data
+        if 'Optimal' in rr_status:
+            score += 40
+        elif 'Kering' in rr_status and rr_value >= 1:  # Some rain is better than none
+            score += 20
     
-    if 'Optimal' in tavg_status:
-        score += 40
-    elif tavg_value >= 18 and tavg_value < 20:  # Close to optimal
-        score += 30
-    elif tavg_value > 35 and tavg_value <= 37:  # Close to optimal
-        score += 30
+    # Temperature scoring
+    if not pd.isna(tavg_value):  # Only score if we have data
+        if 'Optimal' in tavg_status:
+            score += 40
+        elif tavg_value >= 18 and tavg_value < 20:  # Close to optimal
+            score += 30
+        elif tavg_value > 35 and tavg_value <= 37:  # Close to optimal
+            score += 30
     
-    if 'Optimal' in rh_status:
-        score += 20
-    elif rh_value > 90 and rh_value <= 95:  # Slightly high but manageable
-        score += 10
+    # Humidity scoring
+    if not pd.isna(rh_value):  # Only score if we have data
+        if 'Optimal' in rh_status:
+            score += 20
+        elif rh_value > 90 and rh_value <= 95:  # Slightly high but manageable
+            score += 10
     
     # Build category description
     category_parts = []
@@ -255,7 +295,9 @@ def calculate_decision(rr_value, tavg_value, rh_value, ss_value=None):
         category = 'Optimal'
     
     # Determine decision
-    if 'Banjir' in rr_status or 'Panas' in tavg_status or ('Lembab Ekstrem' in rh_status and rr_value > 10):
+    if ('Banjir' in rr_status and not pd.isna(rr_value)) or \
+       ('Panas' in tavg_status and not pd.isna(tavg_value)) or \
+       (('Lembab Ekstrem' in rh_status) and not pd.isna(rh_value) and not pd.isna(rr_value) and rr_value > 10):
         decision = 'Bera'  # Don't plant due to high risk
     elif score >= 70:
         decision = 'Tanam'  # Optimal conditions for planting
@@ -402,7 +444,7 @@ def visualize_decisions(decision_df):
             # Use manual plotting instead of seaborn for more control
             plt.subplot(2, 2, 1)
             for i, decision in enumerate(unique_decisions):
-                subset = decision_df[decision_df['Keputusan'] == decision]['RR']
+                subset = decision_df[decision_df['Keputusan'] == decision]['RR'].dropna()
                 if len(subset) > 0:  # Only plot if we have data
                     plt.boxplot(subset, positions=[i+1], widths=0.6)
             plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
@@ -414,7 +456,7 @@ def visualize_decisions(decision_df):
             # Temperature by decision
             plt.subplot(2, 2, 2)
             for i, decision in enumerate(unique_decisions):
-                subset = decision_df[decision_df['Keputusan'] == decision]['TAVG']
+                subset = decision_df[decision_df['Keputusan'] == decision]['TAVG'].dropna()
                 if len(subset) > 0:  # Only plot if we have data
                     plt.boxplot(subset, positions=[i+1], widths=0.6)
             plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
@@ -426,7 +468,7 @@ def visualize_decisions(decision_df):
             # Humidity by decision
             plt.subplot(2, 2, 3)
             for i, decision in enumerate(unique_decisions):
-                subset = decision_df[decision_df['Keputusan'] == decision]['RH_AVG']
+                subset = decision_df[decision_df['Keputusan'] == decision]['RH_AVG'].dropna()
                 if len(subset) > 0:  # Only plot if we have data
                     plt.boxplot(subset, positions=[i+1], widths=0.6)
             plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
@@ -438,7 +480,7 @@ def visualize_decisions(decision_df):
             # Score by decision
             plt.subplot(2, 2, 4)
             for i, decision in enumerate(unique_decisions):
-                subset = decision_df[decision_df['Keputusan'] == decision]['Skor']
+                subset = decision_df[decision_df['Keputusan'] == decision]['Skor'].dropna()
                 if len(subset) > 0:  # Only plot if we have data
                     plt.boxplot(subset, positions=[i+1], widths=0.6)
             plt.xticks(range(1, len(unique_decisions)+1), unique_decisions)
@@ -457,6 +499,7 @@ def visualize_decisions(decision_df):
         plt.tight_layout()
         save_plt('decision_parameters_distribution_error')
         
+
 def main():
     """Main function to run the Rice Planting Decision Support System."""
     print("=" * 80)
@@ -543,6 +586,10 @@ def main():
             # Visualize forecast
             visualize_forecasts(filled_data, forecast_results, 'SS', 30)
     
+    # Print a preview of forecast results
+    print("\nPreview of forecast results:")
+    print(forecast_results.head())  # Debug line to check forecast values
+    
     # 4. Apply decision support logic
     print("\nSTEP 3: Applying decision support logic...")
     
@@ -551,27 +598,45 @@ def main():
     
     # Set negative values to 0 (can't have negative rainfall, etc.)
     for var in forecast_variables.keys():
-        decision_df[var] = decision_df[var].clip(lower=0)
+        if var in decision_df.columns:
+            decision_df[var] = decision_df[var].clip(lower=0)
     
     # Apply the decision logic for each day in the forecast
     decision_df['Skor'] = 0
     decision_df['Kategori'] = ''
     decision_df['Keputusan'] = ''
     
+    # Debug: count valid forecast days
+    valid_days = 0
+    
     for idx, row in decision_df.iterrows():
         try:
-            # Check if we have all required variables
-            if all(var in row.index for var in forecast_variables.keys()):
-                # Calculate decision
-                score, category, decision = calculate_decision(
-                    row['RR'], row['TAVG'], row['RH_AVG'], 
-                    row.get('SS', None)  # SS is optional
-                )
+            # Check if we have the required variables (even if NaN)
+            required_vars = list(forecast_variables.keys())
+            missing_vars = [var for var in required_vars if var not in row.index]
+            
+            if missing_vars:
+                print(f"Warning: Missing variables {missing_vars} for date {idx}")
+                continue
                 
-                # Store results
-                decision_df.at[idx, 'Skor'] = score
-                decision_df.at[idx, 'Kategori'] = category
-                decision_df.at[idx, 'Keputusan'] = decision
+            # Get values, may be NaN
+            rr_val = row['RR'] if 'RR' in row else np.nan
+            tavg_val = row['TAVG'] if 'TAVG' in row else np.nan
+            rh_val = row['RH_AVG'] if 'RH_AVG' in row else np.nan
+            ss_val = row.get('SS', np.nan)
+            
+            # Debug print to check values
+            if idx.day == 1 or valid_days < 5:  # Print first few days or 1st of each month
+                print(f"Day {idx}: RR={rr_val:.2f}, TAVG={tavg_val:.2f}, RH={rh_val:.2f}")
+                valid_days += 1
+            
+            # Calculate decision using updated function that handles NaN
+            score, category, decision = calculate_decision(rr_val, tavg_val, rh_val, ss_val)
+            
+            # Store results
+            decision_df.at[idx, 'Skor'] = score
+            decision_df.at[idx, 'Kategori'] = category
+            decision_df.at[idx, 'Keputusan'] = decision
         except Exception as e:
             print(f"Error calculating decision for {idx}: {str(e)}")
     
@@ -594,18 +659,29 @@ def main():
     print("\nSTEP 5: Visualizing and saving results...")
     visualize_decisions(decision_df)
     
-    # 7. Save results to CSV
+    # 7. Save results to CSV with proper column naming
     output_file = f'{output_dir}/rice_planting_decisions.csv'
     decision_columns = ['RR', 'TAVG', 'RH_AVG', 'Skor', 'Kategori', 'Keputusan']
     if 'SS' in decision_df.columns:
         decision_columns.insert(3, 'SS')
     
-    decision_df[decision_columns].to_csv(output_file)
+    # Create output dataframe with Tanggal column first
+    decision_output = decision_df[decision_columns].copy()
+    decision_output.reset_index(inplace=True)
+    decision_output.rename(columns={'index': 'Tanggal'}, inplace=True)
+    
+    # Reorganize columns to ensure Tanggal is first
+    final_columns = ['Tanggal'] + decision_columns
+    decision_output = decision_output[final_columns]
+    
+    # Save to CSV without index
+    decision_output.to_csv(output_file, index=False)
+    
     print(f"\nDecision support results saved to {output_file}")
     
-    # Display sample of results
+    # Display sample of results with proper column ordering
     print("\nSample of Decision Support Results:")
-    print(decision_df[decision_columns].head(10))
+    print(decision_output.head(10))
     
     print("\n" + "=" * 80)
     print("RICE PLANTING DECISION SUPPORT SYSTEM COMPLETED")
