@@ -20,13 +20,38 @@ def save_plt(filename):
 import warnings
 warnings.filterwarnings('ignore')
 
-# Load preprocessed BMKG data
 def load_data(file_path):
-    """Load and prepare BMKG data."""
+    """Load and prepare BMKG data with proper date handling."""
     try:
-        data = pd.read_csv(file_path, index_col=0, parse_dates=True)
-        print(f"Successfully loaded data with shape: {data.shape}")
-        return data
+        # Read data with Date column present
+        data = pd.read_csv(file_path)
+        print(f"Raw data shape: {data.shape}")
+        
+        # Check if necessary columns exist
+        required_columns = ['Date', 'TN', 'TX', 'TAVG', 'RH_AVG', 'RR']
+        missing_columns = [col for col in required_columns if col not in data.columns]
+        
+        if missing_columns:
+            print(f"Warning: Missing required columns: {missing_columns}")
+            
+        # Check if Date column exists, if not try to create it from Year, Month, Day
+        if 'Date' not in data.columns and all(col in data.columns for col in ['Year', 'Month', 'Day']):
+            print("Creating Date column from Year, Month, Day columns")
+            data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
+        
+        # Convert Date to datetime and set as index
+        if 'Date' in data.columns:
+            data['Date'] = pd.to_datetime(data['Date'])
+            data.set_index('Date', inplace=True)
+            print(f"Successfully loaded data with shape: {data.shape}")
+            
+            # Display sample of loaded data
+            print("Sample of loaded data:")
+            print(data.head(3))
+            return data
+        else:
+            print("Error: No Date column found or could be created")
+            return None
     except Exception as e:
         print(f"Error loading data: {str(e)}")
         return None
@@ -397,14 +422,18 @@ def main():
     
     raw_data, filled_data = preprocess_data(data)
     
+    # 1a. Analyze seasonal patterns before forecasting
+    print("\nSTEP 1a: Analyzing seasonal patterns...")
+    analyze_seasonality(filled_data, ['RR', 'TAVG', 'RH_AVG'])
+    
     # 2. Perform Holt-Winters forecasting for each selected variable
     print("\nSTEP 2: Forecasting weather variables...")
     
-    # Variables and their seasonal periods
+    # Variables and their seasonal periods (updated based on analysis)
     forecast_variables = {
-        'RR': 365,      # Rainfall (yearly seasonality)
-        'TAVG': 30,     # Average temperature (monthly seasonality)
-        'RH_AVG': 7     # Relative humidity (weekly seasonality)
+        'RR': (365, 'add'),   # Rainfall (yearly seasonality, additive to handle zeros)
+        'TAVG': (7, 'add'),   # Average temperature (weekly seasonality, changed from 30)
+        'RH_AVG': (3, 'add')  # Relative humidity (changed from 7 to 3 days)
     }
     
     # Prepare forecasting
@@ -417,9 +446,9 @@ def main():
     
     # Run forecasts for each variable
     models = {}
-    for var, period in forecast_variables.items():
+    for var, (period, seasonal_type) in forecast_variables.items():
         if var in filled_data.columns:
-            model, forecast, fitted = forecast_variable(filled_data, var, period, forecast_days)
+            model, forecast, fitted = forecast_variable(filled_data, var, period, forecast_days, seasonal_type)
             
             if model is not None:
                 # Store in the forecast results
@@ -432,6 +461,11 @@ def main():
                 forecast_results[f'{var}_Lower'] = forecast - 1.96 * rmse
                 forecast_results[f'{var}_Upper'] = forecast + 1.96 * rmse
                 
+                # Ensure no negative values in forecast
+                if var == 'RR':
+                    forecast_results[var] = forecast_results[var].clip(lower=0)
+                    forecast_results[f'{var}_Lower'] = forecast_results[f'{var}_Lower'].clip(lower=0)
+                
                 # Store model for later use
                 models[var] = model
                 
@@ -443,7 +477,7 @@ def main():
     # 3. Check if sunshine duration (SS) is available
     if 'SS' in filled_data.columns:
         # Use a simpler method for SS forecasting (e.g., monthly seasonality)
-        model_ss, forecast_ss, fitted_ss = forecast_variable(filled_data, 'SS', 30, forecast_days)
+        model_ss, forecast_ss, fitted_ss = forecast_variable(filled_data, 'SS', 30, forecast_days, 'add')
         if model_ss is not None:
             forecast_results['SS'] = forecast_ss
             
@@ -457,6 +491,10 @@ def main():
             # Visualize forecast
             visualize_forecasts(filled_data, forecast_results, 'SS', 30)
     
+    # Print a preview of forecast results
+    print("\nPreview of forecast results:")
+    print(forecast_results.head())  # Debug line to check forecast values
+    
     # 4. Apply decision support logic
     print("\nSTEP 3: Applying decision support logic...")
     
@@ -465,27 +503,45 @@ def main():
     
     # Set negative values to 0 (can't have negative rainfall, etc.)
     for var in forecast_variables.keys():
-        decision_df[var] = decision_df[var].clip(lower=0)
+        if var in decision_df.columns:
+            decision_df[var] = decision_df[var].clip(lower=0)
     
     # Apply the decision logic for each day in the forecast
     decision_df['Skor'] = 0
     decision_df['Kategori'] = ''
     decision_df['Keputusan'] = ''
     
+    # Debug: count valid forecast days
+    valid_days = 0
+    
     for idx, row in decision_df.iterrows():
         try:
-            # Check if we have all required variables
-            if all(var in row.index for var in forecast_variables.keys()):
-                # Calculate decision
-                score, category, decision = calculate_decision(
-                    row['RR'], row['TAVG'], row['RH_AVG'], 
-                    row.get('SS', None)  # SS is optional
-                )
+            # Check if we have the required variables (even if NaN)
+            required_vars = list(forecast_variables.keys())
+            missing_vars = [var for var in required_vars if var not in row.index]
+            
+            if missing_vars:
+                print(f"Warning: Missing variables {missing_vars} for date {idx}")
+                continue
                 
-                # Store results
-                decision_df.at[idx, 'Skor'] = score
-                decision_df.at[idx, 'Kategori'] = category
-                decision_df.at[idx, 'Keputusan'] = decision
+            # Get values, may be NaN
+            rr_val = row['RR'] if 'RR' in row else np.nan
+            tavg_val = row['TAVG'] if 'TAVG' in row else np.nan
+            rh_val = row['RH_AVG'] if 'RH_AVG' in row else np.nan
+            ss_val = row.get('SS', np.nan)
+            
+            # Debug print to check values
+            if idx.day == 1 or valid_days < 5:  # Print first few days or 1st of each month
+                print(f"Day {idx}: RR={rr_val:.2f}, TAVG={tavg_val:.2f}, RH={rh_val:.2f}")
+                valid_days += 1
+            
+            # Calculate decision using updated function that handles NaN
+            score, category, decision = calculate_decision(rr_val, tavg_val, rh_val, ss_val)
+            
+            # Store results
+            decision_df.at[idx, 'Skor'] = score
+            decision_df.at[idx, 'Kategori'] = category
+            decision_df.at[idx, 'Keputusan'] = decision
         except Exception as e:
             print(f"Error calculating decision for {idx}: {str(e)}")
     
@@ -508,18 +564,29 @@ def main():
     print("\nSTEP 5: Visualizing and saving results...")
     visualize_decisions(decision_df)
     
-    # 7. Save results to CSV
+    # 7. Save results to CSV with proper column naming
     output_file = f'{output_dir}/rice_planting_decisions.csv'
     decision_columns = ['RR', 'TAVG', 'RH_AVG', 'Skor', 'Kategori', 'Keputusan']
     if 'SS' in decision_df.columns:
         decision_columns.insert(3, 'SS')
     
-    decision_df[decision_columns].to_csv(output_file)
+    # Create output dataframe with Tanggal column first
+    decision_output = decision_df[decision_columns].copy()
+    decision_output.reset_index(inplace=True)
+    decision_output.rename(columns={'index': 'Tanggal'}, inplace=True)
+    
+    # Reorganize columns to ensure Tanggal is first
+    final_columns = ['Tanggal'] + decision_columns
+    decision_output = decision_output[final_columns]
+    
+    # Save to CSV without index
+    decision_output.to_csv(output_file, index=False)
+    
     print(f"\nDecision support results saved to {output_file}")
     
-    # Display sample of results
+    # Display sample of results with proper column ordering
     print("\nSample of Decision Support Results:")
-    print(decision_df[decision_columns].head(10))
+    print(decision_output.head(10))
     
     print("\n" + "=" * 80)
     print("RICE PLANTING DECISION SUPPORT SYSTEM COMPLETED")

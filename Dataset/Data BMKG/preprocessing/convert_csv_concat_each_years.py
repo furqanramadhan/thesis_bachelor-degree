@@ -38,6 +38,12 @@ def process_bmkg_excel(file_path):
     df = df.iloc[header_row_idx+1:].reset_index(drop=True)
     df.columns = headers
     
+    # Replace text-based missing values dengan NaN - menggunakan pendekatan modern
+    # Buat mask untuk nilai yang ingin diganti dengan NaN
+    missing_mask = df.isin(['-', 'nan', 'NaN', 'NULL', ''])
+    # Terapkan mask untuk mengubah nilai menjadi NaN
+    df = df.mask(missing_mask, np.nan)
+    
     # Cari indeks baris terakhir sebelum keterangan
     last_row_idx = len(df)
     for i in range(len(df)):
@@ -84,7 +90,6 @@ def process_bmkg_excel(file_path):
                 series = df[col].copy().astype('float64')
                 series[mask_8888 | mask_9999] = np.nan
                 df[col] = series
-    
     
     # Konversi kolom numerik ke tipe data yang sesuai (tanpa desimal jika nilai selalu integer)
     for col in df.columns:
@@ -135,7 +140,7 @@ def process_year_directory(year_dir):
         return None
     
     # Gabungkan semua DataFrame
-    combined_df = pd.concat(dfs, ignore_index=True)
+    combined_df = pd.concat(dfs, ignore_index=True, copy=False)
     
     # Urutkan berdasarkan tanggal
     combined_df = combined_df.sort_values(by='Date').reset_index(drop=True)
@@ -143,11 +148,11 @@ def process_year_directory(year_dir):
     return combined_df
 
 def main():
-    # Direktori induk yang berisi subfolder tahun
-    parent_dir = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/BMKG/Stasiun Klimatologi Aceh'
+    # Direktori induk yang berisi subfolder tahun (Excel data)
+    parent_dir = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/EXCEL'
     
-    # Output direktori (folder CSV di dalam direktori induk)
-    output_dir = os.path.join(parent_dir, "CSV")
+    # Output direktori untuk file CSV (folder terpisah di direktori yang sama)
+    output_dir = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV'
     os.makedirs(output_dir, exist_ok=True)
     
     # Cari semua subfolder tahun
