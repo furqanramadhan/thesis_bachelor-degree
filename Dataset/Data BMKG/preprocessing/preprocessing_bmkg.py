@@ -44,11 +44,6 @@ def preprocess_bmkg_data(input_file, output_file, location="Aceh"):
             "wet": [9, 10, 11, 12, 1, 2, 3],  # Sep-Mar
             "dry": [4, 5, 6, 7, 8]            # Apr-Aug
         },
-        "Java": {
-            # Standard Indonesian pattern
-            "wet": [10, 11, 12, 1, 2, 3, 4],  # Oct-Apr
-            "dry": [5, 6, 7, 8, 9]            # May-Sep
-        }
     }
     
     # Use appropriate season definition
