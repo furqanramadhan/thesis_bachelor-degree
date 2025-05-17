@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from statsmodels.tsa.seasonal import STL
 import os
 import warnings
 warnings.filterwarnings('ignore')
@@ -28,127 +27,69 @@ def save_plt(filename):
     plt.close()
 
 # ==============================
-# 1. DATA LOADING & PREPROCESSING
+# 1. DATA LOADING (preprocessing is done externally)
 # ==============================
 print("="*50)
-print("LOADING AND PREPROCESSING DATA")
+print("LOADING DATA")
 print("="*50)
 
-# Load BMKG data
-bmkg_data = pd.read_csv('/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv', index_col=0, parse_dates=True)
+# Load BMKG data (assume it's already cleaned and preprocessed)
+bmkg_data = pd.read_csv('/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV CLEANED/BMKG_Data_Cleaned.csv', index_col=0, parse_dates=True)
 print(f"Data loaded. Shape: {bmkg_data.shape}")
 print(f"Date range: {bmkg_data.index.min()} to {bmkg_data.index.max()}")
 
-# Check data types
-print("\nData types before conversion:")
+# Check data types (expecting all necessary preprocessing already done)
+print("\nData types:")
 print(bmkg_data.dtypes)
-
-# Clean data: convert cols to numeric, replace special values with NaN
-cols_to_fix = ['TN', 'TX', 'TAVG', 'RH_AVG', 'RR', 'SS', 'FF_X', 'DDD_X', 'FF_AVG']
-for col in cols_to_fix:
-    bmkg_data[col] = pd.to_numeric(bmkg_data[col], errors='coerce')
-
-# Handle special missing value codes
-for col in bmkg_data.columns:
-    if bmkg_data[col].dtype != 'object':  # Only modify numeric columns
-        bmkg_data[col] = bmkg_data[col].replace([8888, 9999], np.nan)
-
-print("\nData types after conversion:")
-print(bmkg_data.dtypes)
-
-# Check missing values
-missing_percentage = bmkg_data.isna().mean() * 100
-print("\nMissing values percentage by column:")
-print(missing_percentage)
 
 # ==============================
-# 2. ADVANCED MISSING VALUE HANDLING WITH STL DECOMPOSITION
+# 2. PREPARE DATA FOR FORECASTING
 # ==============================
 print("\n" + "="*50)
-print("HANDLING MISSING VALUES WITH STL DECOMPOSITION")
+print("PREPARING DATA FOR FORECASTING")
 print("="*50)
 
 # Focus on our target variables for rice cultivation
 target_vars = ['RR', 'TAVG', 'RH_AVG']
+
+# Create a copy to work with
 bmkg_for_forecast = bmkg_data[target_vars].copy()
 
-# First apply simple forward/backward fill for initial handling
-bmkg_filled = bmkg_for_forecast.fillna(method='ffill').fillna(method='bfill')
+# Add season variable (1: Dec-Mar (wet), 2: Apr-Jun (transition1), 3: Jul-Sep (dry), 4: Oct-Nov (transition2))
+bmkg_for_forecast['Season'] = pd.cut(
+    bmkg_for_forecast.index.month,
+    bins=[0, 3, 6, 9, 12],
+    labels=['Wet', 'Transition1', 'Dry', 'Transition2'],
+    include_lowest=True
+)
 
-def stl_imputation(series, seasonal_period):
-    """
-    Use STL decomposition to impute missing values with better error handling.
-    """
-    # Create a copy of the series for manipulation
-    imputed_series = series.copy()
-    
-    # Get indices of missing values
-    missing_indices = series[series.isna()].index
-    
-    # If no missing values, return the original series
-    if len(missing_indices) == 0:
-        return series
-    
-    # If too many missing values, use simpler method
-    if series.isna().mean() > 0.3:  # If more than 30% missing
-        return series.fillna(method='ffill').fillna(method='bfill').fillna(series.mean())
-    
-    # Fill missing values with a simple method for initial STL
-    temp_filled = series.fillna(method='ffill').fillna(method='bfill').fillna(series.mean())
-    
-    try:
-        # Check if we have enough data for the seasonal period
-        if len(temp_filled) < 2 * seasonal_period:
-            print(f"Not enough data for seasonal_period={seasonal_period}. Using simple imputation.")
-            return temp_filled
-        
-        # Apply STL decomposition with more robust settings
-        stl = STL(temp_filled, seasonal=seasonal_period, robust=True, 
-                 seasonal_deg=0)  # Lower degree for more stability
-        result = stl.fit()
-        
-        # Extract components
-        trend = result.trend
-        seasonal = result.seasonal
-        residual = result.resid
-        
-        # Impute missing values using the components
-        for idx in missing_indices:
-            if idx in trend.index:
-                # Reconstruct the value using trend and seasonal component
-                imputed_series[idx] = trend[idx] + seasonal[idx]
-        
-        # For any remaining NaN (e.g., at the edges), use original simple imputation
-        imputed_series = imputed_series.fillna(method='ffill').fillna(method='bfill').fillna(series.mean())
-        
-        return imputed_series
-    
-    except Exception as e:
-        print(f"STL imputation failed: {e}. Using simple imputation.")
-        return temp_filled
+# Add missing rainfall indicator
+bmkg_for_forecast['is_RR_missing'] = bmkg_for_forecast['RR'].isna().astype(int)
 
-# Set seasonal periods for our target variables
-seasonal_periods = {
-    'RR': 365,  # Yearly seasonality for rainfall
-    'TAVG': 30,  # Monthly seasonality for temperature
-    'RH_AVG': 7   # Weekly seasonality for humidity
-}
+# Check if data is already imputed, otherwise use simple imputation for remaining missing values
+missing_percentage = bmkg_for_forecast[target_vars].isna().mean() * 100
+print("\nMissing values percentage by column:")
+print(missing_percentage)
 
-# Apply STL imputation to each target variable
-print("Applying STL imputation for missing values...")
+# Simple imputation for any remaining missing values
 for var in target_vars:
-    print(f"Processing {var} with seasonal period {seasonal_periods[var]}...")
-    bmkg_filled[var] = stl_imputation(bmkg_for_forecast[var], seasonal_periods[var])
+    if bmkg_for_forecast[var].isna().sum() > 0:
+        print(f"Applying simple imputation for remaining missing values in {var}")
+        bmkg_for_forecast[var] = bmkg_for_forecast[var].fillna(method='ffill').fillna(method='bfill')
 
-# Check results of imputation
+# Check seasonal patterns and effects
+print("\nSeasonal statistics for target variables:")
 for var in target_vars:
-    before_imputation = bmkg_for_forecast[var].isna().sum()
-    after_imputation = bmkg_filled[var].isna().sum()
-    print(f"{var}: Missing values before: {before_imputation}, after: {after_imputation}")
+    seasonal_stats = bmkg_for_forecast.groupby('Season')[var].agg(['mean', 'std', 'min', 'max'])
+    print(f"\n{var} by season:")
+    print(seasonal_stats)
 
 # ==============================
-# 3. GRID SEARCH FOR OPTIMAL PARAMETERS - FIXED VERSION
+# 3. GRID SEARCH FOR OPTIMAL PARAMETERS
 # ==============================
+print("\n" + "="*50)
+print("GRID SEARCH FOR OPTIMAL PARAMETERS")
+print("="*50)
 
 def hw_grid_search(series, seasonal_periods_list=[7, 30, 365], 
                   trend_types=['add'], seasonal_types=['add', 'mul']):
@@ -217,11 +158,12 @@ def hw_grid_search(series, seasonal_periods_list=[7, 30, 365],
     
     if best_model is None:
         print(f"No valid model found. Using safe default parameters.")
-        # Always use additive model as fallback
+        # Use reasonable defaults based on the variable
+        default_period = 30 if series.name in ['TAVG', 'RH_AVG'] else 365  # default seasonal periods
         best_params = {
-            'seasonal_period': seasonal_periods[series.name] if series.name in seasonal_periods else 7,
+            'seasonal_period': default_period,
             'trend': 'add',
-            'seasonal': 'add',  # Changed to additive as safe default
+            'seasonal': 'add',
             'mse': float('inf')
         }
         
@@ -233,7 +175,7 @@ def hw_grid_search(series, seasonal_periods_list=[7, 30, 365],
     
     return {'params': best_params, 'model': best_model}
 
-# Specify potential parameters for grid search
+# Specify potential parameters for grid search based on domain knowledge
 seasonal_periods_options = {
     'RR': [365, 183, 90],    # Annual, semi-annual, quarterly
     'TAVG': [365, 30, 15],   # Annual, monthly, half-monthly
@@ -243,11 +185,11 @@ seasonal_periods_options = {
 # Results container
 grid_search_results = {}
 
-# FIXED: Perform grid search only once for each variable with both seasonal options
+# Perform grid search only once for each variable with both seasonal options
 for var in target_vars:
     print(f"\nPerforming grid search for {var}...")
     grid_search_results[var] = hw_grid_search(
-        bmkg_filled[var], 
+        bmkg_for_forecast[var], 
         seasonal_periods_list=seasonal_periods_options[var],
         trend_types=['add'],  # Additive trend is safer
         seasonal_types=['add', 'mul']  # Consider both options - will be filtered if needed
@@ -257,8 +199,11 @@ for var in target_vars:
 optimal_params = {var: results['params'] for var, results in grid_search_results.items()}
 
 # ==============================
-# 4. FORECASTING USING OPTIMAL PARAMETERS - FIXED VERSION
+# 4. FORECASTING USING OPTIMAL PARAMETERS
 # ==============================
+print("\n" + "="*50)
+print("FORECASTING USING OPTIMAL PARAMETERS")
+print("="*50)
 
 # Forecast horizon (120 days)
 forecast_horizon = 120
@@ -274,15 +219,15 @@ for var in target_vars:
     best_trend = optimal_params[var]['trend']
     best_seasonal = optimal_params[var]['seasonal']
     
-    # FIXED: More robust safety check for multiplicative models
-    if best_seasonal == 'mul' and bmkg_filled[var].min() <= 0:
+    # Safety check for multiplicative models
+    if best_seasonal == 'mul' and bmkg_for_forecast[var].min() <= 0:
         print(f"Forcing additive seasonal for {var} due to zero or negative values")
         best_seasonal = 'add'
     
     try:
         # Create model with optimal parameters
         model = ExponentialSmoothing(
-            bmkg_filled[var],
+            bmkg_for_forecast[var],
             trend=best_trend,
             seasonal=best_seasonal,
             seasonal_periods=best_period,
@@ -311,11 +256,12 @@ for var in target_vars:
         
         # Fallback to simpler model if optimal one fails
         try:
+            default_period = 30 if var in ['TAVG', 'RH_AVG'] else 365
             model = ExponentialSmoothing(
-                bmkg_filled[var],
+                bmkg_for_forecast[var],
                 trend='add',
                 seasonal='add',  # Always additive as safe fallback
-                seasonal_periods=seasonal_periods[var],
+                seasonal_periods=default_period,
                 initialization_method="estimated"
             ).fit(optimized=True, remove_bias=True)
             
@@ -327,57 +273,83 @@ for var in target_vars:
             print(f"Fallback model also failed: {e2}")
             print("Using naive forecast...")
             
-            # FIXED: Improved naive forecast implementation
-            # Get last date from data
-            # last_date = bmkg_filled.index[-1]
-            # forecast_index = pd.date_range(start=last_date + pd.Timedelta(days=1), 
-            #                               periods=forecast_horizon, freq='D')
-            
-            # Pastikan forecast_index adalah DatetimeIndex
-            last_date = bmkg_filled.index[-1]
+            # Improved naive forecast implementation
+            last_date = bmkg_for_forecast.index[-1]
             forecast_index = pd.date_range(start=last_date + pd.Timedelta(days=1), 
-                                          periods=forecast_horizon,freq='D')
-            forecast_df = pd.DataFrame(index=forecast_index)  # Inisialisasi dengan indeks yang benar
+                                          periods=forecast_horizon, freq='D')
             
-            # FIXED: More robust approach to generate naive forecast
-            # Get monthly-day averages with error handling
-            monthly_day_means = bmkg_filled[var].groupby([bmkg_filled.index.month, 
-                                                        bmkg_filled.index.day]).mean()
-            
-            # Create naive forecast
+            # Create naive forecast based on seasonal patterns
             naive_forecast = []
             for date in forecast_index:
-                key = (date.month, date.day)
-                if key in monthly_day_means.index and not pd.isna(monthly_day_means.loc[key]):
-                    naive_forecast.append(monthly_day_means.loc[key])
-                else:
-                    # If no data for this month-day, use monthly average
-                    month_mean = bmkg_filled[var][bmkg_filled.index.month == date.month].mean()
-                    if pd.isna(month_mean):
-                        naive_forecast.append(bmkg_filled[var].mean())  # Global mean as last resort
+                # Get the season for this date
+                month = date.month
+                season = pd.cut([month], bins=[0, 3, 6, 9, 12], 
+                               labels=['Wet', 'Transition1', 'Dry', 'Transition2'], 
+                               include_lowest=True)[0]
+                
+                # Get seasonal average
+                season_avg = bmkg_for_forecast[bmkg_for_forecast['Season'] == season][var].mean()
+                
+                if pd.isna(season_avg):
+                    # If no seasonal average, use month average
+                    month_avg = bmkg_for_forecast[bmkg_for_forecast.index.month == month][var].mean()
+                    if pd.isna(month_avg):
+                        # If no month average, use overall average
+                        naive_forecast.append(bmkg_for_forecast[var].mean())
                     else:
-                        naive_forecast.append(month_mean)
+                        naive_forecast.append(month_avg)
+                else:
+                    naive_forecast.append(season_avg)
             
-            # forecast_models[var] = None  # No actual model
-            # forecasts[var] = pd.Series(naive_forecast, index=forecast_index)
-
-            # Ganti kode naive forecast dengan:
-            naive_forecast = bmkg_filled[var].ffill().iloc[-forecast_horizon:].values
+            forecast_models[var] = None  # No actual model
             forecasts[var] = pd.Series(naive_forecast, index=forecast_index)
-            print(f"Naive forecast created for {var}")
+            print(f"Seasonal-aware naive forecast created for {var}")
 
 # ==============================
-# 5. VISUALIZING FORECASTS
+# 5. FORECAST FUTURE SEASONS
+# ==============================
+print("\n" + "="*50)
+print("GENERATING FUTURE SEASONAL DATA")
+print("="*50)
+
+# Create forecast index (dates)
+last_date = bmkg_for_forecast.index[-1]
+forecast_index = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=forecast_horizon, freq='D')
+
+# Create DataFrame to store forecasts
+forecast_df = pd.DataFrame(index=forecast_index)
+
+# Add forecasts to DataFrame
+for var in target_vars:
+    if len(forecasts[var]) > 0:
+        forecast_df[var] = forecasts[var].reindex(forecast_df.index)
+        print(f"Added {var} to forecast_df: {forecast_df[var].notna().sum()} non-null values")
+    else:
+        print(f"Warning: No valid forecast for {var}")
+        forecast_df[var] = np.nan
+
+# Add future seasons
+forecast_df['Season'] = pd.cut(
+    forecast_df.index.month,
+    bins=[0, 3, 6, 9, 12],
+    labels=['Wet', 'Transition1', 'Dry', 'Transition2'],
+    include_lowest=True
+)
+
+# Add rainfall missing indicator (initially all False for forecasts)
+forecast_df['is_RR_missing'] = 0  # We're not expecting missing values in forecasts
+
+# For dates where rainfall is very low (< 0.1), mark as potentially missing
+forecast_df.loc[forecast_df['RR'] < 0.1, 'is_RR_missing'] = 1
+
+# ==============================
+# 6. VISUALIZING FORECASTS
 # ==============================
 print("\n" + "="*50)
 print("VISUALIZING FORECASTS")
 print("="*50)
 
-# Create forecast index (dates)
-last_date = bmkg_filled.index[-1]
-forecast_index = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=forecast_horizon, freq='D')
-
-# FIXED: Verify forecasts before visualization
+# Verify forecasts before visualization
 for var in target_vars:
     print(f"Forecast for {var}: {len(forecasts[var])} values, {forecasts[var].isna().sum()} NaNs")
     if len(forecasts[var]) > 0:
@@ -392,7 +364,7 @@ for var in target_vars:
     
     # Historical data (last 365 days for context)
     plt.figure(figsize=(14, 7))
-    recent_data = bmkg_filled[var].iloc[-365:]
+    recent_data = bmkg_for_forecast[var].iloc[-365:]
     
     # Plot historical data
     plt.plot(recent_data.index, recent_data, label='Historical Data', color='blue', alpha=0.6)
@@ -403,7 +375,7 @@ for var in target_vars:
     # Calculate confidence intervals
     if forecast_models[var] is not None:
         try:
-            # FIXED: Handle potential model issues when calculating RMSE
+            # Handle potential model issues when calculating RMSE
             actual_fitted = recent_data.loc[recent_data.index.intersection(forecast_models[var].fittedvalues.index)]
             model_fitted = forecast_models[var].fittedvalues.loc[recent_data.index.intersection(forecast_models[var].fittedvalues.index)]
             
@@ -431,42 +403,30 @@ for var in target_vars:
         plt.axhline(y=60, color='orange', linestyle='--', alpha=0.7, label='Lower Threshold (60%)')
         plt.axhline(y=90, color='red', linestyle='--', alpha=0.7, label='Upper Threshold (90%)')
     
+    # Highlight seasons in the background
+    for season in ['Wet', 'Transition1', 'Dry', 'Transition2']:
+        season_data = forecast_df[forecast_df['Season'] == season]
+        if len(season_data) > 0:
+            plt.axvspan(season_data.index[0], season_data.index[-1], 
+                      alpha=0.1, 
+                      color={'Wet': 'blue', 'Dry': 'orange', 
+                             'Transition1': 'green', 'Transition2': 'purple'}[season],
+                      label=f'{season} Season' if season_data.index[0] == forecast_df.index[0] else "")
+    
     plt.grid(True, alpha=0.3)
-    plt.title(f'{var} - Forecast for {forecast_horizon} Days')
+    plt.title(f'{var} - Forecast for {forecast_horizon} Days with Seasonal Zones')
     plt.xlabel('Date')
     plt.ylabel('Value')
     plt.legend(loc='best')
     plt.tight_layout()
-    save_plt(f'forecast_{var}')
+    save_plt(f'forecast_{var}_with_seasons')
 
 # ==============================
-# 6. CLASSIFICATION AND DECISION SYSTEM
+# 7. ENHANCED CLASSIFICATION AND DECISION SYSTEM
 # ==============================
 print("\n" + "="*50)
-print("SETTING UP CLASSIFICATION AND DECISION SYSTEM")
+print("SETTING UP ENHANCED CLASSIFICATION AND DECISION SYSTEM")
 print("="*50)
-
-# Create DataFrame to store forecasts
-forecast_df = pd.DataFrame(index=forecast_index)
-
-# FIXED: Verify forecasts are properly assigned to DataFrame
-# for var in target_vars:
-#     if len(forecasts[var]) > 0:
-#         # Make sure indexes align
-#         forecast_df[var] = forecasts[var]
-#         print(f"Added {var} to forecast_df: {forecast_df[var].notna().sum()} non-null values")
-#     else:
-#         print(f"Warning: No valid forecast for {var}")
-#         forecast_df[var] = np.nan
-
-for var in target_vars:
-    if len(forecasts[var]) > 0:
-        # Pastikan forecast memiliki indeks yang sama dengan forecast_df
-        forecast_df[var] = forecasts[var].reindex(forecast_df.index)
-        print(f"Added {var} to forecast_df: {forecast_df[var].notna().sum()} non-null values")
-    else:
-        print(f"Warning: No valid forecast for {var}")
-        forecast_df[var] = np.nan
 
 # Classification functions based on agricultural thresholds
 def classify_rr(value):
@@ -510,82 +470,156 @@ forecast_df['RH_AVG_Status'] = forecast_df['RH_AVG'].apply(classify_rh)
 # Combine status into a single category column
 forecast_df['Kategori'] = forecast_df['RR_Status'] + ' / ' + forecast_df['TAVG_Status'] + ' / ' + forecast_df['RH_AVG_Status']
 
-# Calculate weighted score
-def calculate_score(row):
-    """Calculate weighted score based on variable classifications."""
+# Enhanced scoring function incorporating Season and is_RR_missing
+def calculate_enhanced_score(row):
+    """Calculate weighted score based on variable classifications and additional factors."""
     score = 0
     
     # Check if we have valid data
     if pd.isna(row['RR']) or pd.isna(row['TAVG']) or pd.isna(row['RH_AVG']):
         return 0
         
-    # Assign weights: RR (40%), TAVG (40%), RH_AVG (20%)
+    # Base scoring: RR (40%), TAVG (40%), RH_AVG (20%)
     if 'Optimal' in row['RR_Status']:
         score += 40
     if 'Optimal' in row['TAVG_Status']:
         score += 40
     if 'Optimal' in row['RH_AVG_Status']:
         score += 20
+    
+    # Season adjustments
+    if row['Season'] == 'Wet':
+        # In wet season, slightly penalize conditions
+        score = score * 0.95  # 5% reduction
+    elif row['Season'] == 'Dry':
+        # In dry season, increase importance of rainfall
+        if 'Optimal' in row['RR_Status']:
+            score += 5  # Bonus for optimal rainfall in dry season
+        elif 'Kering' in row['RR_Status']:
+            score -= 10  # Higher penalty for dry conditions in dry season
+    
+    # Missing rainfall adjustment
+    if row['is_RR_missing'] == 1:
+        score -= 15  # Significant penalty for missing rainfall data
         
-    return score
+    return max(0, min(100, score))  # Ensure score is between 0 and 100
 
-# Apply scoring function
-forecast_df['Skor'] = forecast_df.apply(calculate_score, axis=1)
+# Apply enhanced scoring function
+forecast_df['Skor'] = forecast_df.apply(calculate_enhanced_score, axis=1)
 
-# Decision logic
-def make_decision(row):
-    """Determine planting recommendation based on scores and status."""
+# Enhanced decision logic
+def make_enhanced_decision(row):
+    """Determine planting recommendation based on scores, status, and additional variables."""
     # Handle missing data
     if pd.isna(row['RR']) or pd.isna(row['TAVG']) or pd.isna(row['RH_AVG']):
-        return "Bera"
+        return "Bera (Data Tidak Lengkap)"
         
     # Prioritize extreme conditions
-    if 'Banjir' in row['RR_Status'] or 'Panas' in row['TAVG_Status']:
-        return "Bera (Risiko Tinggi)"
-        
-    # Score-based decisions
-    if row['Skor'] >= 70:
-        return "Tanam"
-    elif 50 <= row['Skor'] < 70:
-        return "Tanam (Waspada)"
-    else:
-        return "Bera"
+    if 'Banjir' in row['RR_Status']:
+        return "Bera (Risiko Banjir)"
+    
+    if 'Panas' in row['TAVG_Status']:
+        return "Bera (Risiko Suhu Tinggi)"
+    
+    # Additional rules for missing rainfall data
+    if row['is_RR_missing'] == 1:
+        if row['Season'] == 'Dry':
+            return "Bera (Data Hujan Tidak Tersedia)"
+        else:
+            return "Tanam Dengan Caution (Data Hujan Tidak Lengkap)"
+    
+    # Season-specific decisions
+    if row['Season'] == 'Wet':
+        if row['Skor'] >= 75:
+            return "Tanam (Musim Hujan Optimal)"
+        elif row['Skor'] >= 60:
+            return "Tanam Dengan Caution (Musim Hujan)"
+        else:
+            return "Bera (Kondisi Tidak Optimal)"
+    
+    elif row['Season'] == 'Dry':
+        if row['Skor'] >= 85:  # Higher threshold for dry season
+            return "Tanam (Musim Kering Optimal)"
+        elif row['Skor'] >= 70:
+            return "Tanam Terbatas (Musim Kering)"
+        else:
+            return "Bera (Musim Kering Risiko Tinggi)"
+    
+    # Transition seasons
+    else:  # Transition1 or Transition2
+        if row['Skor'] >= 80:
+            return "Tanam (Periode Transisi Optimal)"
+        elif row['Skor'] >= 65:
+            return "Tanam Dengan Caution (Periode Transisi)"
+        else:
+            return "Bera (Periode Transisi Risiko)"
 
-# Apply decision function
-forecast_df['Keputusan'] = forecast_df.apply(make_decision, axis=1)
+# Apply enhanced decision function
+forecast_df['Keputusan'] = forecast_df.apply(make_enhanced_decision, axis=1)
 
 # ==============================
-# 7. HARVEST CALENDAR INTEGRATION
+# 8. SEASON-AWARE HARVEST CALENDAR
 # ==============================
 print("\n" + "="*50)
-print("INTEGRATING WITH HARVEST CALENDAR")
+print("INTEGRATING SEASON-AWARE HARVEST CALENDAR")
 print("="*50)
 
 # Set planting date for simulation
 planting_date = pd.Timestamp('2025-01-11')
 print(f"Simulating planting on: {planting_date}")
 
-# Create rice growth window (typically ~100 days from planting to harvest)
-growth_duration = 100  # days
-harvest_date = planting_date + pd.Timedelta(days=growth_duration)
-print(f"Expected harvest date: {harvest_date}")
+# Create rice growth window with season-aware duration
+def calculate_harvest_date(planting_date, forecast_df):
+    """Calculate harvest date considering seasonal factors."""
+    # Get season of planting
+    planting_month = planting_date.month
+    planting_season = pd.cut([planting_month], bins=[0, 3, 6, 9, 12], 
+                            labels=['Wet', 'Transition1', 'Dry', 'Transition2'], 
+                            include_lowest=True)[0]
+    
+    # Adjust growth duration based on season
+    if planting_season == 'Wet':
+        growth_duration = 105  # Slightly longer due to more cloud cover
+    elif planting_season == 'Dry':
+        growth_duration = 95   # Slightly shorter due to more sunlight
+    else:
+        growth_duration = 100  # Standard duration
+    
+    harvest_date = planting_date + pd.Timedelta(days=growth_duration)
+    
+    print(f"Planting in {planting_season} season")
+    print(f"Adjusted growth duration: {growth_duration} days")
+    print(f"Expected harvest date: {harvest_date}")
+    
+    return harvest_date, growth_duration
+
+# Calculate season-aware harvest date
+harvest_date, growth_duration = calculate_harvest_date(planting_date, forecast_df)
 
 # Check if harvest date is within our forecast window
 if harvest_date in forecast_df.index:
-    # Check rainfall conditions 7 days before harvest
+    # Check conditions around harvest time
     pre_harvest_window = pd.date_range(end=harvest_date, periods=7, freq='D')
-    pre_harvest_rain = forecast_df.loc[forecast_df.index.isin(pre_harvest_window), 'RR']
+    pre_harvest_data = forecast_df.loc[forecast_df.index.isin(pre_harvest_window)]
     
-    # Determine if there's a rainfall risk (>10 mm/day)
-    harvest_risk = (pre_harvest_rain > 10).any()
+    # Check for rainfall risk (>10 mm/day)
+    rain_risk = (pre_harvest_data['RR'] > 10).any()
     
-    if harvest_risk:
-        harvest_recommendation = "Percepat Panen (Risiko Hujan)"
-        print(f"Recommendation: {harvest_recommendation}")
+    # Check season of harvest
+    harvest_season = pre_harvest_data['Season'].iloc[0] if len(pre_harvest_data) > 0 else None
+    
+    # Determine harvest recommendation
+    if rain_risk and harvest_season == 'Wet':
+        harvest_recommendation = "Percepat Panen 3-5 Hari (Risiko Hujan Tinggi)"
+    elif rain_risk:
+        harvest_recommendation = "Percepat Panen 1-2 Hari (Risiko Hujan)"
+    elif harvest_season == 'Dry':
+        harvest_recommendation = "Panen Sesuai Jadwal (Kondisi Kering Optimal)"
     else:
         harvest_recommendation = "Panen Sesuai Jadwal"
-        print(f"Recommendation: {harvest_recommendation}")
-        
+    
+    print(f"Harvest recommendation: {harvest_recommendation}")
+    
     # Add harvest recommendation to forecast data
     for date in pre_harvest_window:
         if date in forecast_df.index:
@@ -594,7 +628,7 @@ else:
     print("Harvest date is outside the forecast window.")
 
 # ==============================
-# 8. FORECAST EVALUATION AND VALIDATION - FIXED VERSION
+# 9. FORECAST EVALUATION AND VALIDATION
 # ==============================
 print("\n" + "="*50)
 print("EVALUATING FORECAST PERFORMANCE")
@@ -645,18 +679,10 @@ for var in target_vars:
         continue
     
     try:
-        # # Get fitted values from the model
-        # fitted_values = forecast_models[var].fittedvalues
-        
-        # # Get actual values for the same period
-        # actual = bmkg_filled[var].loc[fitted_values.index]
-
-        # fitted_values = model.fittedvalues.reset_index(drop=True)
-        # actual = bmkg_filled[var].iloc[:len(fitted_values)].reset_index(drop=True)
-
-        fitted_values = forecast_models[var].fittedvalues  # Sudah memiliki indeks tanggal
-        actual = bmkg_filled[var].loc[fitted_values.index]  # Ambil data aktual berdasarkan indeks yang sama
-
+        # Get fitted values from the model
+        fitted_values = forecast_models[var].fittedvalues
+        # Get actual values for the same period
+        actual = bmkg_for_forecast[var].loc[fitted_values.index]
         
         # Calculate metrics
         metrics[var] = calculate_forecast_metrics(actual, fitted_values)
