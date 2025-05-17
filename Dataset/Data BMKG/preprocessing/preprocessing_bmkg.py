@@ -599,6 +599,178 @@ def preprocess_bmkg_data(input_file, output_file, location="Aceh"):
     print(f"\nPreprocessed data saved to {output_file}")
     
     return df
+
+def create_diagnostic_plots(processed_df, output_file='BMKG_Data_Diagnostic_Plots.png'):
+    """
+    Create improved diagnostic plots for the processed BMKG data
+    """
+    # Create figure with more space
+    fig = plt.figure(figsize=(20, 16))
+    
+    # Set larger spacing between subplots
+    plt.subplots_adjust(hspace=0.4, wspace=0.3)
+    
+    # Plot 1: Rainfall data
+    ax1 = plt.subplot(2, 2, 1)
+    processed_df['RR'].plot(ax=ax1, color='blue', alpha=0.7)
+    
+    # Add a rolling average to see the trend better
+    processed_df['RR'].rolling(window=30).mean().plot(
+        ax=ax1, color='red', linewidth=2, 
+        label='30-day Moving Average'
+    )
+    
+    # Set reasonable y-axis limits for rainfall (adjust based on your data)
+    y_max_rain = min(processed_df['RR'].quantile(0.99) * 1.5, processed_df['RR'].max())
+    ax1.set_ylim(0, y_max_rain)
+    
+    ax1.set_title('Rainfall After Preprocessing', fontsize=14, pad=20)
+    ax1.set_ylabel('Rainfall (mm)', fontsize=12)
+    ax1.set_xlabel('Date', fontsize=12)
+    ax1.legend()
+    ax1.grid(alpha=0.3)
+    
+    # Plot 2: Temperature data
+    ax2 = plt.subplot(2, 2, 2)
+    processed_df['TX'].plot(ax=ax2, color='red', alpha=0.5, label='Max Temp')
+    processed_df['TAVG'].plot(ax=ax2, color='green', alpha=0.7, label='Avg Temp')
+    processed_df['TN'].plot(ax=ax2, color='blue', alpha=0.5, label='Min Temp')
+    
+    ax2.set_title('Temperature After Preprocessing', fontsize=14, pad=20)
+    ax2.set_ylabel('Temperature (°C)', fontsize=12)
+    ax2.set_xlabel('Date', fontsize=12)
+    
+    # Move legend to a better position
+    ax2.legend(loc='upper right')
+    ax2.grid(alpha=0.3)
+    
+    # Plot 3: Humidity
+    ax3 = plt.subplot(2, 2, 3)
+    processed_df['RH_AVG'].plot(ax=ax3, color='blue', alpha=0.6)
+    processed_df['RH_AVG'].rolling(window=30).mean().plot(
+        ax=ax3, color='darkblue', linewidth=2, 
+        label='30-day Moving Average'
+    )
+    
+    ax3.set_title('Relative Humidity After Preprocessing', fontsize=14, pad=20)
+    ax3.set_ylabel('Humidity (%)', fontsize=12)
+    ax3.set_xlabel('Date', fontsize=12)
+    ax3.set_ylim(40, 100)  # Reasonable range for humidity
+    ax3.legend()
+    ax3.grid(alpha=0.3)
+    
+    # Plot 4: Sunshine hours
+    ax4 = plt.subplot(2, 2, 4)
+    processed_df['SS'].plot(ax=ax4, color='orange', alpha=0.6)
+    processed_df['SS'].rolling(window=30).mean().plot(
+        ax=ax4, color='red', linewidth=2, 
+        label='30-day Moving Average'
+    )
+    
+    ax4.set_title('Sunshine Hours After Preprocessing', fontsize=14, pad=20)
+    ax4.set_ylabel('Sunshine Duration (hours)', fontsize=12)
+    ax4.set_xlabel('Date', fontsize=12)
+    ax4.set_ylim(0, processed_df['SS'].quantile(0.99) * 1.2)  # Set reasonable y-limit
+    ax4.legend()
+    ax4.grid(alpha=0.3)
+    
+    # Add a main title
+    plt.suptitle('BMKG Data Diagnostic Plots', fontsize=18, y=0.98)
+    
+    # Apply date formatting to all x-axes
+    for ax in [ax1, ax2, ax3, ax4]:
+        # Format x-axis dates nicely
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+        ax.xaxis.set_major_locator(mdates.YearLocator(2))  # Show every 2 years
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=45)
+    
+    # Save the improved plot
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
+    print(f"Improved diagnostic plots saved to '{output_file}'")
+    
+    # Optional: Create additional plots for more detailed analysis
+    create_seasonal_plots(processed_df, 'BMKG_Data_Seasonal_Analysis.png')
+
+
+def create_seasonal_plots(processed_df, output_file='BMKG_Data_Seasonal_Analysis.png'):
+    """
+    Create additional plots showing seasonal patterns
+    """
+    fig = plt.figure(figsize=(20, 12))
+    
+    # Plot 1: Monthly average rainfall boxplot
+    ax1 = plt.subplot(2, 2, 1)
+    processed_df.reset_index().boxplot(
+        column='RR', by='Month', ax=ax1, 
+        grid=False, showfliers=False  # Hide outliers for clarity
+    )
+    ax1.set_title('Monthly Rainfall Distribution', fontsize=14)
+    ax1.set_ylabel('Rainfall (mm)', fontsize=12)
+    ax1.set_xlabel('')
+    plt.suptitle('')  # Remove default boxplot title
+    
+    # Plot 2: Monthly average temperature
+    ax2 = plt.subplot(2, 2, 2)
+    by_month = processed_df.groupby(processed_df.index.month)
+    by_month['TX'].mean().plot(ax=ax2, marker='o', color='red', label='Max Temp')
+    by_month['TAVG'].mean().plot(ax=ax2, marker='o', color='green', label='Avg Temp')
+    by_month['TN'].mean().plot(ax=ax2, marker='o', color='blue', label='Min Temp')
+    
+    ax2.set_title('Monthly Average Temperature', fontsize=14)
+    ax2.set_ylabel('Temperature (°C)', fontsize=12)
+    ax2.set_xlabel('Month', fontsize=12)
+    ax2.set_xticks(range(1, 13))
+    ax2.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    ax2.grid(alpha=0.3)
+    ax2.legend()
+    
+    # Plot 3: Wet vs Dry season comparison
+    ax3 = plt.subplot(2, 2, 3)
+    processed_df.groupby('Season')['RR'].mean().plot(
+        kind='bar', ax=ax3, color=['blue', 'orange']
+    )
+    ax3.set_title('Average Rainfall by Season', fontsize=14)
+    ax3.set_ylabel('Average Rainfall (mm)', fontsize=12)
+    ax3.grid(alpha=0.3, axis='y')
+    
+    # Plot 4: Annual rainfall trend - FIXED
+    ax4 = plt.subplot(2, 2, 4)
+    annual_rain = processed_df.resample('Y')['RR'].sum()
+    annual_rain.plot(ax=ax4, marker='o', linestyle='-', color='blue')
+    
+    # Add trend line - FIXED to avoid converter warning
+    # Get years as float values for trend calculation
+    years = np.array([d.year + d.dayofyear/365.25 for d in annual_rain.index])
+    y_values = annual_rain.values
+    
+    # Fit the trend line using years as float
+    z = np.polyfit(years, y_values, 1)
+    p = np.poly1d(z)
+    
+    # Create a separate line artist and add it to the plot
+    trend_line = plt.Line2D(annual_rain.index, p(years), 
+                           color='r', linestyle='--', linewidth=2)
+    ax4.add_artist(trend_line)
+    
+    # Add the trend label separately
+    ax4.plot([], [], 'r--', linewidth=2, label=f'Trend: {z[0]:.2f} mm/year')
+    
+    ax4.set_title('Annual Rainfall Trend', fontsize=14)
+    ax4.set_ylabel('Total Annual Rainfall (mm)', fontsize=12)
+    ax4.set_xlabel('Year', fontsize=12)
+    ax4.grid(alpha=0.3)
+    ax4.legend()
+    
+    # Add a main title
+    plt.suptitle('BMKG Data Seasonal Analysis', fontsize=18, y=0.98)
+    
+    # Adjust layout
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+    
+    # Save the seasonal analysis plot
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
+    print(f"Seasonal analysis plots saved to '{output_file}'")
+
 if __name__ == "__main__":
     input_file = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"
     output_file = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV CLEANED/BMKG_Data_Cleaned.csv"
@@ -607,36 +779,8 @@ if __name__ == "__main__":
         processed_df = preprocess_bmkg_data(input_file, output_file)
         
         if processed_df is not None:
-            # Generate some diagnostic plots
-            plt.figure(figsize=(15, 10))
-            
-            # Plot rainfall data
-            plt.subplot(2, 2, 1)
-            processed_df['RR'].plot()
-            plt.title('Rainfall After Preprocessing')
-            plt.ylabel('Rainfall (mm)')
-            
-            # Plot temperature data
-            plt.subplot(2, 2, 2)
-            processed_df[['TN', 'TX', 'TAVG']].plot()
-            plt.title('Temperature After Preprocessing')
-            plt.ylabel('Temperature (°C)')
-            
-            # Plot humidity
-            plt.subplot(2, 2, 3)
-            processed_df['RH_AVG'].plot()
-            plt.title('Relative Humidity After Preprocessing')
-            plt.ylabel('Humidity (%)')
-            
-            # Plot sunshine hours
-            plt.subplot(2, 2, 4)
-            processed_df['SS'].plot()
-            plt.title('Sunshine Hours After Preprocessing')
-            plt.ylabel('Sunshine Duration (hours)')
-            
-            plt.tight_layout()
-            plt.savefig('BMKG_Data_Diagnostic_Plots.png')
-            print("Diagnostic plots saved to 'BMKG_Data_Diagnostic_Plots.png'")
+        # Generate improved diagnostic plots
+            create_diagnostic_plots(processed_df)
         else:
             print("Preprocessing failed, cannot generate diagnostic plots.")
         
