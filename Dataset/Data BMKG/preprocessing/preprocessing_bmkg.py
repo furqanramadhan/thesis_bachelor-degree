@@ -459,10 +459,6 @@ def preprocess_bmkg_data(input_file, output_file, location="Aceh"):
     # More accurate estimate of max daylight hours based on latitude
     latitudes = {
         "Aceh": 5.5,      # North Sumatra approx 5.5°N
-        "Java": -7.5,     # Central Java approx 7.5°S
-        "Bali": -8.3,     # Approx 8.3°S
-        "Kalimantan": 0,  # Crosses equator
-        "Papua": -4.0     # Approx 4.0°S
     }
     
     latitude = latitudes.get(location, 0)  # Default to equator if unknown
