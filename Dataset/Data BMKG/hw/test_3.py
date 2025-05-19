@@ -231,9 +231,11 @@ rr_df = rr_df[['ds', 'y']]
 
 # Build Prophet model
 prophet_model = Prophet(
-    daily_seasonality=True,
-    weekly_seasonality=False,
-    yearly_seasonality=True
+    daily_seasonality=False,  # Usually not needed for rainfall
+    weekly_seasonality=True,  # Weekly patterns are often important
+    yearly_seasonality=True,
+    seasonality_prior_scale=0.1,
+    changepoint_prior_scale=0.05
 )
 prophet_model.fit(rr_df)
 # Forecast horizon
@@ -746,7 +748,10 @@ metrics = {}
 if 'RR' in target_vars and 'RR' in forecast_models:
     print(f"\nEvaluating RR with Prophet model...")
     actual_log = bmkg_for_forecast['RR_log']
-    fitted_log = prophet_model.predict(rr_df)['yhat']
+    prophet_forecast = prophet_model.predict(rr_df)
+    
+    # Set the ds column as index for proper alignment
+    fitted_log = prophet_forecast.set_index('ds')['yhat']
     
     # Align indices
     common_index = actual_log.index.intersection(fitted_log.index)
