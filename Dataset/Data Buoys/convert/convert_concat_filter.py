@@ -237,59 +237,68 @@ def apply_quality_control(df, data_columns):
     return df_filtered
 
 def process_temperature_data(lines, input_file):
-    """Proses data temperature - hanya ambil 10m dan 20m depth dengan quality control"""
+    """
+    Proses data temperature dengan penanganan dynamic indexing
+    untuk mengatasi masalah perubahan struktur kedalaman
+    """
     
-    # Cari informasi kedalaman
-    depth_line = None
-    for line in lines:
-        if 'Depth(M):' in line:
-            depth_line = line.strip()
-            break
+    # Target kedalaman yang diinginkan (tanpa 13m)
+    TARGET_DEPTHS = [10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
     
-    if not depth_line:
-        print("❌ Tidak dapat menemukan informasi kedalaman")
-        return pd.DataFrame()
-    
-    # Ekstrak nilai kedalaman
-    depth_parts = depth_line.split(':')[1].strip().split()
-    depth_values = []
-    depth_indices = []
-    
-    for i, part in enumerate(depth_parts):
-        try:
-            depth = float(part)
-            # Hanya ambil kedalaman 10m dan 20m
-            if depth in [10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]:
-                depth_values.append(f"TEMP_{depth}m")
-                depth_indices.append(i)
-        except ValueError:
-            continue
-    
-    if not depth_values:
-        print("⚠️ Tidak ditemukan data kedalaman 10m atau 20m")
-        return pd.DataFrame()
-    
-    # Proses baris data
     data_rows = []
-    for line in lines:
+    current_depth_info = None
+    
+    for line_num, line in enumerate(lines):
+        line = line.strip()
+        
+        # Deteksi header kedalaman
+        if 'Depth(M):' in line:
+            current_depth_info = parse_depth_header(line)
+            print(f"📏 Ditemukan header kedalaman pada baris {line_num + 1}")
+            print(f"    Kedalaman tersedia: {list(current_depth_info.keys())}")
+            continue
+        
+        # Proses baris data
         if re.match(r'^\s*\d{8}\s+\d{4}', line):
-            parts = line.strip().split()
-            
+            if current_depth_info is None:
+                print("⚠️ Data ditemukan tanpa header kedalaman, skip...")
+                continue
+                
+            parts = line.split()
+            if len(parts) < 3:
+                continue
+                
             date = parts[0]
             time = parts[1]
             
-            # Ambil nilai temperature sesuai indeks kedalaman yang diinginkan
-            temp_values = parts[2:]
+            # Ambil semua nilai data (mulai dari index 2)
+            data_values = parts[2:]
             
+            # Buat row data dengan dynamic mapping
             row_data = {'YYYYMMDD': date, 'HHMM': time}
-            for i, depth_name in enumerate(depth_values):
-                if depth_indices[i] < len(temp_values):
-                    row_data[depth_name] = temp_values[depth_indices[i]]
+            
+            for target_depth in TARGET_DEPTHS:
+                col_name = f"TEMP_{target_depth}m"
+                
+                if target_depth in current_depth_info:
+                    # Ambil index yang benar untuk kedalaman ini
+                    depth_index = current_depth_info[target_depth]
+                    
+                    # Pastikan index valid dalam data_values
+                    if depth_index < len(data_values):
+                        value = data_values[depth_index]
+                        # Skip jika 13m (meskipun ada di header)
+                        if target_depth != 13.0:
+                            row_data[col_name] = value
+                    else:
+                        row_data[col_name] = 'NaN'
                 else:
-                    row_data[depth_name] = 'NaN'
+                    # Kedalaman tidak tersedia untuk baris ini
+                    row_data[col_name] = 'NaN'
             
             data_rows.append(row_data)
     
+    # Convert ke DataFrame
     df = pd.DataFrame(data_rows)
     df = process_datetime_and_clean(df)
     
@@ -297,8 +306,90 @@ def process_temperature_data(lines, input_file):
     if not df.empty:
         data_columns = [col for col in df.columns if col.startswith('TEMP_')]
         df = apply_quality_control(df, data_columns)
+        
+        print(f"✅ Berhasil memproses {len(df)} baris temperature data")
+        print(f"    Kolom temperature: {[col for col in df.columns if col.startswith('TEMP_')]}")
     
     return df
+
+def parse_depth_header(depth_line):
+    """
+    Parse header kedalaman dan return mapping depth -> data_index
+    
+    Returns:
+    dict: {depth_value: data_index}
+    """
+    
+    # Ekstrak bagian setelah "Depth(M):"
+    depth_part = depth_line.split('Depth(M):')[1].strip()
+    
+    # Split dan ambil hanya angka kedalaman (sebelum "QUALITY SOURCE")
+    parts = depth_part.split()
+    
+    depth_mapping = {}
+    data_index = 0  # Index dalam array data (dimulai dari 0)
+    
+    for part in parts:
+        # Stop jika mencapai "QUALITY" atau "SOURCE"
+        if part.upper() in ['QUALITY', 'SOURCE', 'QQQQQQQQQQQQ', 'SSSSSSSSSSSS']:
+            break
+            
+        try:
+            depth_value = float(part)
+            depth_mapping[depth_value] = data_index
+            data_index += 1
+        except ValueError:
+            # Skip non-numeric parts
+            continue
+    
+    return depth_mapping
+
+def debug_temperature_structure(input_file):
+    """
+    Fungsi debug untuk melihat struktur data temperature
+    """
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+    
+    print(f"\n🔍 DEBUG: Analisis struktur {os.path.basename(input_file)}")
+    print("=" * 50)
+    
+    current_depth_info = None
+    sample_data_shown = False
+    
+    for line_num, line in enumerate(lines[:50], 1):  # Check first 50 lines
+        line = line.strip()
+        
+        if 'Depth(M):' in line:
+            current_depth_info = parse_depth_header(line)
+            print(f"\n📏 Header kedalaman (baris {line_num}):")
+            print(f"    Raw: {line}")
+            print(f"    Parsed: {current_depth_info}")
+            sample_data_shown = False
+        
+        elif re.match(r'^\s*\d{8}\s+\d{4}', line) and not sample_data_shown:
+            if current_depth_info:
+                parts = line.split()
+                data_values = parts[2:]
+                print(f"\n📊 Sample data (baris {line_num}):")
+                print(f"    Raw: {line}")
+                print(f"    Data values: {data_values[:min(len(data_values), 15)]}...")
+                print(f"    Jumlah nilai: {len(data_values)}")
+                
+                # Show mapping untuk beberapa kedalaman target
+                target_depths = [10.0, 13.0, 20.0, 40.0]
+                for depth in target_depths:
+                    if depth in current_depth_info:
+                        idx = current_depth_info[depth]
+                        if idx < len(data_values):
+                            print(f"    {depth}m -> index {idx} -> value: {data_values[idx]}")
+                        else:
+                            print(f"    {depth}m -> index {idx} -> OUT OF RANGE!")
+                    else:
+                        print(f"    {depth}m -> NOT AVAILABLE")
+                
+                sample_data_shown = True
+
 
 def process_sst_data(lines, input_file):
     """Proses data SST dengan quality control"""
@@ -672,46 +763,268 @@ def process_all_locations_to_single_csv(base_directory, location_names, output_f
         print("❌ Tidak ada data yang berhasil diproses dari semua lokasi")
         return None
 
-# Contoh penggunaan
 if __name__ == "__main__":
-    # Konfigurasi path dan lokasi
+    # ============================================================================
+    # KONFIGURASI UTAMA
+    # ============================================================================
+    
+    # Path dan lokasi
     base_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys'
     location_names = ['0N90E', '4N90E', '8N90E']
+    output_filename = 'Buoys_Data_All.csv'
     
-    # Proses semua lokasi menjadi satu file dengan quality control
+    # Banner informasi
+    print("\n" + "="*80)
+    print("🌊 BUOY DATA PROCESSOR - ADVANCED QUALITY CONTROL SYSTEM 🌊")
+    print("="*80)
+    print(f"📂 Base Directory: {base_directory}")
+    print(f"📍 Locations: {', '.join(location_names)}")
+    print(f"📄 Output File: {output_filename}")
+    print(f"🕐 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("="*80)
+    
+    # ============================================================================
+    # VALIDASI AWAL
+    # ============================================================================
+    
+    print("\n🔍 VALIDASI AWAL:")
+    print("-" * 40)
+    
+    # Cek base directory
+    if not os.path.exists(base_directory):
+        print(f"❌ Base directory tidak ditemukan: {base_directory}")
+        exit(1)
+    else:
+        print(f"✅ Base directory OK: {base_directory}")
+    
+    # Cek setiap lokasi
+    valid_locations = []
+    for location in location_names:
+        location_path = os.path.join(base_directory, location)
+        ascii_path = os.path.join(location_path, 'ASCII')
+        
+        if os.path.exists(location_path):
+            if os.path.exists(ascii_path):
+                # Count available ASCII files
+                ascii_files = glob.glob(os.path.join(ascii_path, '*.ascii'))
+                print(f"✅ {location}: {len(ascii_files)} file ASCII ditemukan")
+                valid_locations.append(location)
+            else:
+                print(f"⚠️ {location}: Direktori ASCII tidak ditemukan")
+        else:
+            print(f"❌ {location}: Direktori lokasi tidak ditemukan")
+    
+    if not valid_locations:
+        print("\n❌ Tidak ada lokasi valid yang ditemukan!")
+        exit(1)
+    
+    print(f"\n📊 Total lokasi valid: {len(valid_locations)}/{len(location_names)}")
+    
+    # ============================================================================
+    # AUTO DEBUG MODE UNTUK TEMPERATURE DATA
+    # ============================================================================
+    
+    print("\n🐛 DEBUG MODE - Menganalisis struktur temperature data...")
+    print("-" * 50)
+    
+    for location in valid_locations:
+        temp_file = os.path.join(base_directory, location, 'ASCII', f't{location.lower()}_dy.ascii')
+        if os.path.exists(temp_file):
+            print(f"\n📏 Analisis struktur: {location}")
+            debug_temperature_structure(temp_file)
+        else:
+            print(f"⚠️ File temperature tidak ditemukan untuk {location}")
+    
+    # ============================================================================
+    # PROCESSING UTAMA
+    # ============================================================================
+    
+    print(f"\n🚀 MEMULAI PROCESSING DATA...")
+    print("-" * 40)
+    
+    start_time = datetime.now()
+    
+    # Proses semua lokasi
     result_file = process_all_locations_to_single_csv(
         base_directory=base_directory,
-        location_names=location_names,
-        output_file='Buoys_Data_All.csv'
+        location_names=valid_locations,  # Gunakan lokasi yang valid saja
+        output_file=output_filename
     )
     
+    end_time = datetime.now()
+    processing_time = end_time - start_time
+    
+    # ============================================================================
+    # HASIL DAN ANALISIS
+    # ============================================================================
+    
     if result_file:
-        print(f"\n🎉 Konversi dengan Quality Control berhasil! File tersimpan di: {result_file}")
+        print(f"\n🎉 KONVERSI BERHASIL!")
+        print("="*60)
+        print(f"📁 File tersimpan: {result_file}")
+        print(f"⏱️ Waktu processing: {processing_time}")
+        print(f"🏁 Selesai pada: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
         
-        # Tampilkan preview data (opsional)
-        import pandas as pd
+        # ========================================================================
+        # ANALISIS MENDALAM
+        # ========================================================================
+        
         try:
+            print("\n📊 LOADING DATA UNTUK ANALISIS...")
             df_preview = pd.read_csv(result_file)
-            print(f"\n📋 Preview 5 baris pertama:")
-            print(df_preview.head())
-            print(f"\n📊 Info dataset:")
-            print(f"   Shape: {df_preview.shape}")
-            print(f"   Memory usage: {df_preview.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
             
-            # Quality assessment
-            print(f"\n🎯 Quality Assessment:")
+            # Basic Info
+            print(f"\n📋 INFORMASI DATASET:")
+            print("-" * 30)
+            print(f"   📏 Shape: {df_preview.shape}")
+            print(f"   💾 Memory: {df_preview.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
+            print(f"   📅 Date Range: {df_preview['Date'].min()} → {df_preview['Date'].max()}")
+            print(f"   📍 Locations: {', '.join(df_preview['Location'].unique())}")
+            
+            # Data Availability Analysis
+            print(f"\n🎯 DATA AVAILABILITY ANALYSIS:")
+            print("-" * 40)
+            
             data_cols = [col for col in df_preview.columns if col not in ['Date', 'Year', 'Month', 'Day', 'Location']]
+            availability_stats = {}
+            
             for col in data_cols:
                 if col in df_preview.columns:
-                    null_pct = (df_preview[col].isna().sum() / len(df_preview)) * 100
-                    print(f"   {col}: {100-null_pct:.1f}% data availability")
+                    total_points = len(df_preview)
+                    valid_points = df_preview[col].notna().sum()
+                    availability_pct = (valid_points / total_points) * 100
+                    availability_stats[col] = availability_pct
                     
+                    # Color coding untuk output
+                    if availability_pct >= 80:
+                        status = "✅"
+                    elif availability_pct >= 60:
+                        status = "🟡"
+                    elif availability_pct >= 40:
+                        status = "🟠"
+                    else:
+                        status = "🔴"
+                    
+                    print(f"   {status} {col:<12}: {availability_pct:6.1f}% ({valid_points:,}/{total_points:,})")
+            
+            # Location-wise Analysis
+            print(f"\n📍 ANALISIS PER LOKASI:")
+            print("-" * 30)
+            
+            for location in df_preview['Location'].unique():
+                location_data = df_preview[df_preview['Location'] == location]
+                date_range = f"{location_data['Date'].min()} → {location_data['Date'].max()}"
+                print(f"   🏝️ {location}: {len(location_data):,} records ({date_range})")
+                
+                # Top 3 variables dengan data terlengkap untuk lokasi ini
+                loc_availability = {}
+                for col in data_cols:
+                    if col in location_data.columns:
+                        availability = (location_data[col].notna().sum() / len(location_data)) * 100
+                        loc_availability[col] = availability
+                
+                top_vars = sorted(loc_availability.items(), key=lambda x: x[1], reverse=True)[:3]
+                top_vars_str = ", ".join([f"{var}({pct:.0f}%)" for var, pct in top_vars])
+                print(f"      📈 Best variables: {top_vars_str}")
+            
+            # Temperature Depth Analysis (jika ada)
+            temp_cols = [col for col in df_preview.columns if col.startswith('TEMP_')]
+            if temp_cols:
+                print(f"\n🌡️ ANALISIS KEDALAMAN TEMPERATURE:")
+                print("-" * 40)
+                
+                # Extract depth values dan sort
+                depth_analysis = {}
+                for col in temp_cols:
+                    depth_str = col.replace('TEMP_', '').replace('m', '')
+                    try:
+                        depth = float(depth_str)
+                        availability = (df_preview[col].notna().sum() / len(df_preview)) * 100
+                        depth_analysis[depth] = availability
+                    except ValueError:
+                        continue
+                
+                # Sort by depth
+                sorted_depths = sorted(depth_analysis.items())
+                for depth, availability in sorted_depths:
+                    status = "✅" if availability >= 70 else "🟡" if availability >= 50 else "🔴"
+                    print(f"   {status} {depth:6.0f}m: {availability:6.1f}% available")
+            
+            # Quality Issues Detection
+            print(f"\n🔍 DETEKSI MASALAH KUALITAS:")
+            print("-" * 35)
+            
+            issues_found = False
+            
+            # Check for suspicious values
+            for col in data_cols:
+                if col in df_preview.columns and df_preview[col].dtype in ['float64', 'int64']:
+                    # Check for problematic patterns
+                    problematic_patterns = [
+                        ('Large numbers (>1000)', df_preview[col] > 1000),
+                        ('Negative values', df_preview[col] < 0),
+                        ('Repeated digits', df_preview[col].astype(str).str.contains(r'(\d)\1{4,}', na=False))
+                    ]
+                    
+                    for pattern_name, mask in problematic_patterns:
+                        if mask.any():
+                            count = mask.sum()
+                            pct = (count / len(df_preview)) * 100
+                            if pct > 0.1:  # Only report if >0.1%
+                                print(f"   ⚠️ {col}: {count} {pattern_name} ({pct:.2f}%)")
+                                issues_found = True
+            
+            if not issues_found:
+                print("   ✅ Tidak ditemukan masalah kualitas yang signifikan")
+            
+            # Sample Data Preview
+            print(f"\n📋 PREVIEW DATA (5 baris pertama):")
+            print("-" * 50)
+            
+            # Select important columns for preview
+            preview_cols = ['Date', 'Location']
+            for col in ['RAD', 'RAIN', 'RH', 'SST']:
+                if col in df_preview.columns:
+                    preview_cols.append(col)
+            
+            # Add first few temperature columns
+            temp_preview = [col for col in temp_cols[:3]]
+            preview_cols.extend(temp_preview)
+            
+            # Add wind data if available
+            for col in ['WSPD', 'WDIR']:
+                if col in df_preview.columns:
+                    preview_cols.append(col)
+            
+            # Display preview
+            preview_data = df_preview[preview_cols].head()
+            pd.set_option('display.max_columns', None)
+            pd.set_option('display.width', None)
+            print(preview_data.to_string(index=False))
+            
+            # Export Summary
+            print(f"\n📤 EXPORT SUMMARY:")
+            print("-" * 25)
+            print(f"   📄 Filename: {os.path.basename(result_file)}")
+            print(f"   📏 File size: {os.path.getsize(result_file) / 1024**2:.2f} MB")
+            print(f"   🗂️ Columns: {len(df_preview.columns)}")
+            print(f"   📊 Records: {len(df_preview):,}")
+            
         except Exception as e:
-            print(f"⚠️ Tidak dapat menampilkan preview: {e}")
+            print(f"\n⚠️ Error saat analisis: {e}")
+            print("   File berhasil dibuat tapi tidak dapat dianalisis")
             
     else:
-        print("\n❌ Konversi gagal!")
+        print(f"\n❌ KONVERSI GAGAL!")
+        print("   Periksa log error di atas untuk detail masalah")
         
-    print("\n" + "="*60)
-    print("🚀 Script dengan Quality Control selesai dijalankan!")
-    print("="*60)
+    # ============================================================================
+    # PENUTUP
+    # ============================================================================
+        
+    print("\n" + "="*80)
+    print("🏁 BUOY DATA PROCESSING COMPLETED")
+    print("="*80)
+    print(f"🕐 Total Runtime: {processing_time}")
+    print(f"📊 Quality Control: {'ENABLED' if result_file else 'FAILED'}")
+    print(f"🎯 Status: {'SUCCESS' if result_file else 'FAILED'}")
