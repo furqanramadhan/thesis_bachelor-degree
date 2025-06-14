@@ -950,30 +950,29 @@ if __name__ == "__main__":
                     status = "✅" if availability >= 70 else "🟡" if availability >= 50 else "🔴"
                     print(f"   {status} {depth:6.0f}m: {availability:6.1f}% available")
             
-            # Quality Issues Detection
-            print(f"\n🔍 DETEKSI MASALAH KUALITAS:")
-            print("-" * 35)
-            
-            issues_found = False
-            
+                # Quality Issues Detection
+                print(f"\n🔍 DETEKSI MASALAH KUALITAS:")
+                print("-" * 35)
+                issues_found = False
             # Check for suspicious values
             for col in data_cols:
                 if col in df_preview.columns and df_preview[col].dtype in ['float64', 'int64']:
-                    # Check for problematic patterns
+                # Check for problematic patterns
                     problematic_patterns = [
-                        ('Large numbers (>1000)', df_preview[col] > 1000),
-                        ('Negative values', df_preview[col] < 0),
-                        ('Repeated digits', df_preview[col].astype(str).str.contains(r'(\d)\1{4,}', na=False))
+                    ('Large numbers (>1000)', df_preview[col] > 1000),
+                    ('Negative values', df_preview[col] < 0),
+            # Fixed: Use simpler pattern to avoid regex warning about capture groups
+                    ('Repeated digits', df_preview[col].astype(str).str.contains(r'\d{5,}', na=False, regex=True))
                     ]
-                    
-                    for pattern_name, mask in problematic_patterns:
-                        if mask.any():
-                            count = mask.sum()
-                            pct = (count / len(df_preview)) * 100
-                            if pct > 0.1:  # Only report if >0.1%
-                                print(f"   ⚠️ {col}: {count} {pattern_name} ({pct:.2f}%)")
-                                issues_found = True
-            
+        
+            for pattern_name, mask in problematic_patterns:
+                if mask.any():
+                    count = mask.sum()
+                    pct = (count / len(df_preview)) * 100
+                    if pct > 0.1:  # Only report if >0.1%
+                        print(f"   ⚠️ {col}: {count} {pattern_name} ({pct:.2f}%)")
+                        issues_found = True
+
             if not issues_found:
                 print("   ✅ Tidak ditemukan masalah kualitas yang signifikan")
             
