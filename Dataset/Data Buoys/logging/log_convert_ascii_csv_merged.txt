@@ -1,0 +1,573 @@
+================================================================================
+🌊 BUOY DATA PROCESSOR - ADVANCED QUALITY CONTROL SYSTEM 🌊
+================================================================================
+📂 Base Directory: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys
+📍 Locations: 0N90E, 4N90E, 8N90E
+📄 Output File: Buoys_Data_All.csv
+🕐 Started at: 2025-06-14 16:34:35
+================================================================================
+
+🔍 VALIDASI AWAL:
+----------------------------------------
+✅ Base directory OK: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys
+✅ 0N90E: 6 file ASCII ditemukan
+✅ 4N90E: 6 file ASCII ditemukan
+✅ 8N90E: 6 file ASCII ditemukan
+
+📊 Total lokasi valid: 3/3
+
+🐛 DEBUG MODE - Menganalisis struktur temperature data...
+--------------------------------------------------
+
+📏 Analisis struktur: 0N90E
+
+🔍 DEBUG: Analisis struktur t0n90e_dy.ascii
+==================================================
+
+📏 Header kedalaman (baris 5):
+    Raw: Depth(M):           1     10     20     40     60     80    100    120    140    180    300    500 QUALITY SOURCE
+    Parsed: {1.0: 0, 10.0: 1, 20.0: 2, 40.0: 3, 60.0: 4, 80.0: 5, 100.0: 6, 120.0: 7, 140.0: 8, 180.0: 9, 300.0: 10, 500.0: 11}
+
+📊 Sample data (baris 7):
+    Raw: 20050101 1200  29.140 29.150 29.140 29.090 29.080 28.050 22.680 18.050 16.880 13.890 11.560  9.920 441222222222 555111111111
+    Data values: ['29.140', '29.150', '29.140', '29.090', '29.080', '28.050', '22.680', '18.050', '16.880', '13.890', '11.560', '9.920', '441222222222', '555111111111']...
+    Jumlah nilai: 14
+    10.0m -> index 1 -> value: 29.150
+    13.0m -> NOT AVAILABLE
+    20.0m -> index 2 -> value: 29.140
+    40.0m -> index 3 -> value: 29.090
+
+📏 Analisis struktur: 4N90E
+
+🔍 DEBUG: Analisis struktur t4n90e_dy.ascii
+==================================================
+
+📏 Header kedalaman (baris 5):
+    Raw: Depth(M):           1     10     13     20     40     60     80    100    120    140    180    300    500 QUALITY SOURCE
+    Parsed: {1.0: 0, 10.0: 1, 13.0: 2, 20.0: 3, 40.0: 4, 60.0: 5, 80.0: 6, 100.0: 7, 120.0: 8, 140.0: 9, 180.0: 10, 300.0: 11, 500.0: 12}
+
+📊 Sample data (baris 7):
+    Raw: 20061116 1200  29.310 29.280 29.270 29.250 28.090 23.990 18.970 16.250 14.890 14.290 13.380 11.730 10.210 1111111111111 5555555555555
+    Data values: ['29.310', '29.280', '29.270', '29.250', '28.090', '23.990', '18.970', '16.250', '14.890', '14.290', '13.380', '11.730', '10.210', '1111111111111', '5555555555555']...
+    Jumlah nilai: 15
+    10.0m -> index 1 -> value: 29.280
+    13.0m -> index 2 -> value: 29.270
+    20.0m -> index 3 -> value: 29.250
+    40.0m -> index 4 -> value: 28.090
+
+📏 Analisis struktur: 8N90E
+
+🔍 DEBUG: Analisis struktur t8n90e_dy.ascii
+==================================================
+
+📏 Header kedalaman (baris 5):
+    Raw: Depth(M):           1     10     13     20     40     60     80    100    120    140    180    300    500 QUALITY SOURCE
+    Parsed: {1.0: 0, 10.0: 1, 13.0: 2, 20.0: 3, 40.0: 4, 60.0: 5, 80.0: 6, 100.0: 7, 120.0: 8, 140.0: 9, 180.0: 10, 300.0: 11, 500.0: 12}
+
+📊 Sample data (baris 7):
+    Raw: 20061114 1200  29.270 -9.999 29.290 29.310 29.180 28.430 26.550 22.830 20.040 17.970 14.770 11.640  9.780 1011111111411 5055555555555
+    Data values: ['29.270', '-9.999', '29.290', '29.310', '29.180', '28.430', '26.550', '22.830', '20.040', '17.970', '14.770', '11.640', '9.780', '1011111111411', '5055555555555']...
+    Jumlah nilai: 15
+    10.0m -> index 1 -> value: -9.999
+    13.0m -> index 2 -> value: 29.290
+    20.0m -> index 3 -> value: 29.310
+    40.0m -> index 4 -> value: 29.180
+
+🚀 MEMULAI PROCESSING DATA...
+----------------------------------------
+
+🌊 KONVERSI DATA BUOY - DENGAN QUALITY CONTROL 🌊
+============================================================
+🔍 Quality Control Settings:
+   ✅ Acceptable Quality Codes: [1, 2, 3]
+   ✅ Acceptable Source Codes: [1, 2, 5, 6]
+   ❌ Excluded Quality Codes: [0, 4, 5]
+   ❌ Excluded Source Codes: [0, 4]
+============================================================
+
+🔄 Memproses lokasi: 0N90E
+========================================
+📁 Memproses: rad0n90e_dy.ascii
+📊 Memproses rad0n90e_dy.ascii sebagai tipe: RAD
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RAD
+      ✅ Data valid: 3545/3559 (99.6%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3559
+   ✅ Baris valid: 3545
+   ❌ Baris dihapus: 14 (0.4%)
+✅ Berhasil memproses 3545 baris data (setelah quality control)
+📁 Memproses: rain0n90e_dy.ascii
+📊 Memproses rain0n90e_dy.ascii sebagai tipe: RAIN
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RAIN
+      ✅ Data valid: 3194/3275 (97.5%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3275
+   ✅ Baris valid: 3194
+   ❌ Baris dihapus: 81 (2.5%)
+✅ Berhasil memproses 3194 baris data (setelah quality control)
+📁 Memproses: rh0n90e_dy.ascii
+📊 Memproses rh0n90e_dy.ascii sebagai tipe: RH
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RH
+      ✅ Data valid: 3440/3446 (99.8%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3446
+   ✅ Baris valid: 3440
+   ❌ Baris dihapus: 6 (0.2%)
+✅ Berhasil memproses 3440 baris data (setelah quality control)
+📁 Memproses: sst0n90e_dy.ascii
+📊 Memproses sst0n90e_dy.ascii sebagai tipe: SST
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: SST
+      ✅ Data valid: 4192/4203 (99.7%)
+📊 Quality Control Summary:
+   📈 Baris asli: 4203
+   ✅ Baris valid: 4192
+   ❌ Baris dihapus: 11 (0.3%)
+✅ Berhasil memproses 4192 baris data (setelah quality control)
+📁 Memproses: t0n90e_dy.ascii
+📊 Memproses t0n90e_dy.ascii sebagai tipe: TEMP
+📏 Ditemukan header kedalaman pada baris 5
+    Kedalaman tersedia: [1.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 529
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 3231
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 3647
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 4226
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Menerapkan Quality Control pada 11 kolom data...
+   📋 Memproses kolom: TEMP_10.0m
+      ✅ Data valid: 3698/4406 (83.9%)
+   📋 Memproses kolom: TEMP_20.0m
+      ✅ Data valid: 3836/4406 (87.1%)
+   📋 Memproses kolom: TEMP_40.0m
+      ✅ Data valid: 3554/4406 (80.7%)
+   📋 Memproses kolom: TEMP_60.0m
+      ✅ Data valid: 3143/4406 (71.3%)
+   📋 Memproses kolom: TEMP_80.0m
+      ✅ Data valid: 3826/4406 (86.8%)
+   📋 Memproses kolom: TEMP_100.0m
+      ✅ Data valid: 3399/4406 (77.1%)
+   📋 Memproses kolom: TEMP_120.0m
+      ✅ Data valid: 3605/4406 (81.8%)
+   📋 Memproses kolom: TEMP_140.0m
+      ✅ Data valid: 2974/4406 (67.5%)
+   📋 Memproses kolom: TEMP_180.0m
+      ✅ Data valid: 3396/4406 (77.1%)
+   📋 Memproses kolom: TEMP_300.0m
+      ✅ Data valid: 3487/4406 (79.1%)
+   📋 Memproses kolom: TEMP_500.0m
+      ✅ Data valid: 4302/4406 (97.6%)
+📊 Quality Control Summary:
+   📈 Baris asli: 4406
+   ✅ Baris valid: 4350
+   ❌ Baris dihapus: 56 (1.3%)
+✅ Berhasil memproses 4350 baris temperature data
+    Kolom temperature: ['TEMP_10.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+✅ Berhasil memproses 4350 baris data (setelah quality control)
+📁 Memproses: w0n90e_dy.ascii
+📊 Memproses w0n90e_dy.ascii sebagai tipe: WIND
+🔍 Menerapkan Quality Control pada 4 kolom data...
+   📋 Memproses kolom: UWND
+      ✅ Data valid: 2871/2874 (99.9%)
+   📋 Memproses kolom: VWND
+      ✅ Data valid: 2871/2874 (99.9%)
+   📋 Memproses kolom: WSPD
+      ✅ Data valid: 2871/2874 (99.9%)
+   📋 Memproses kolom: WDIR
+      ✅ Data valid: 2871/2874 (99.9%)
+📊 Quality Control Summary:
+   📈 Baris asli: 2874
+   ✅ Baris valid: 2871
+   ❌ Baris dihapus: 3 (0.1%)
+✅ Berhasil memproses 2871 baris data (setelah quality control)
+
+🔗 Menggabungkan 6 dataset...
+🔄 Mengurutkan data berdasarkan: Date -> Location
+📊 Preview pengurutan (5 baris pertama):
+      Date Location
+2005-01-01    0N90E
+2005-01-02    0N90E
+2005-01-03    0N90E
+2005-01-04    0N90E
+2005-01-05    0N90E
+✅ Berhasil menggabungkan data - Total baris: 4399
+
+🔄 Memproses lokasi: 4N90E
+========================================
+📁 Memproses: rad4n90e_dy.ascii
+📊 Memproses rad4n90e_dy.ascii sebagai tipe: RAD
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RAD
+      ✅ Data valid: 1823/1826 (99.8%)
+📊 Quality Control Summary:
+   📈 Baris asli: 1826
+   ✅ Baris valid: 1823
+   ❌ Baris dihapus: 3 (0.2%)
+✅ Berhasil memproses 1823 baris data (setelah quality control)
+📁 Memproses: rain4n90e_dy.ascii
+📊 Memproses rain4n90e_dy.ascii sebagai tipe: RAIN
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RAIN
+      ✅ Data valid: 1868/1908 (97.9%)
+📊 Quality Control Summary:
+   📈 Baris asli: 1908
+   ✅ Baris valid: 1868
+   ❌ Baris dihapus: 40 (2.1%)
+✅ Berhasil memproses 1868 baris data (setelah quality control)
+📁 Memproses: rh4n90e_dy.ascii
+📊 Memproses rh4n90e_dy.ascii sebagai tipe: RH
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RH
+      ✅ Data valid: 1848/1852 (99.8%)
+📊 Quality Control Summary:
+   📈 Baris asli: 1852
+   ✅ Baris valid: 1848
+   ❌ Baris dihapus: 4 (0.2%)
+✅ Berhasil memproses 1848 baris data (setelah quality control)
+📁 Memproses: sst4n90e_dy.ascii
+📊 Memproses sst4n90e_dy.ascii sebagai tipe: SST
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: SST
+      ✅ Data valid: 2357/2397 (98.3%)
+📊 Quality Control Summary:
+   📈 Baris asli: 2397
+   ✅ Baris valid: 2357
+   ❌ Baris dihapus: 40 (1.7%)
+✅ Berhasil memproses 2357 baris data (setelah quality control)
+📁 Memproses: t4n90e_dy.ascii
+📊 Memproses t4n90e_dy.ascii sebagai tipe: TEMP
+📏 Ditemukan header kedalaman pada baris 5
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 2600
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 3532
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Menerapkan Quality Control pada 11 kolom data...
+   📋 Memproses kolom: TEMP_10.0m
+      ✅ Data valid: 1756/3577 (49.1%)
+   📋 Memproses kolom: TEMP_20.0m
+      ✅ Data valid: 2019/3577 (56.4%)
+   📋 Memproses kolom: TEMP_40.0m
+      ✅ Data valid: 2536/3577 (70.9%)
+   📋 Memproses kolom: TEMP_60.0m
+      ✅ Data valid: 1921/3577 (53.7%)
+   📋 Memproses kolom: TEMP_80.0m
+      ✅ Data valid: 2148/3577 (60.1%)
+   📋 Memproses kolom: TEMP_100.0m
+      ✅ Data valid: 2497/3577 (69.8%)
+   📋 Memproses kolom: TEMP_120.0m
+      ✅ Data valid: 3295/3577 (92.1%)
+   📋 Memproses kolom: TEMP_140.0m
+      ✅ Data valid: 3447/3577 (96.4%)
+   📋 Memproses kolom: TEMP_180.0m
+      ✅ Data valid: 3449/3577 (96.4%)
+   📋 Memproses kolom: TEMP_300.0m
+      ✅ Data valid: 2739/3577 (76.6%)
+   📋 Memproses kolom: TEMP_500.0m
+      ✅ Data valid: 2738/3577 (76.5%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3577
+   ✅ Baris valid: 3450
+   ❌ Baris dihapus: 127 (3.6%)
+✅ Berhasil memproses 3450 baris temperature data
+    Kolom temperature: ['TEMP_10.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+✅ Berhasil memproses 3450 baris data (setelah quality control)
+📁 Memproses: w4n90e_dy.ascii
+📊 Memproses w4n90e_dy.ascii sebagai tipe: WIND
+🔍 Menerapkan Quality Control pada 4 kolom data...
+   📋 Memproses kolom: UWND
+      ✅ Data valid: 813/813 (100.0%)
+   📋 Memproses kolom: VWND
+      ✅ Data valid: 813/813 (100.0%)
+   📋 Memproses kolom: WSPD
+      ✅ Data valid: 813/813 (100.0%)
+   📋 Memproses kolom: WDIR
+      ✅ Data valid: 813/813 (100.0%)
+📊 Quality Control Summary:
+   📈 Baris asli: 813
+   ✅ Baris valid: 813
+   ❌ Baris dihapus: 0 (0.0%)
+✅ Berhasil memproses 813 baris data (setelah quality control)
+
+🔗 Menggabungkan 6 dataset...
+🔄 Mengurutkan data berdasarkan: Date -> Location
+📊 Preview pengurutan (5 baris pertama):
+      Date Location
+2006-11-16    4N90E
+2006-11-17    4N90E
+2006-11-18    4N90E
+2006-11-19    4N90E
+2006-11-20    4N90E
+✅ Berhasil menggabungkan data - Total baris: 3552
+
+🔄 Memproses lokasi: 8N90E
+========================================
+📁 Memproses: rad8n90e_dy.ascii
+📊 Memproses rad8n90e_dy.ascii sebagai tipe: RAD
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RAD
+      ✅ Data valid: 3152/3166 (99.6%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3166
+   ✅ Baris valid: 3152
+   ❌ Baris dihapus: 14 (0.4%)
+✅ Berhasil memproses 3152 baris data (setelah quality control)
+📁 Memproses: rain8n90e_dy.ascii
+📊 Memproses rain8n90e_dy.ascii sebagai tipe: RAIN
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RAIN
+      ✅ Data valid: 1692/1713 (98.8%)
+📊 Quality Control Summary:
+   📈 Baris asli: 1713
+   ✅ Baris valid: 1692
+   ❌ Baris dihapus: 21 (1.2%)
+✅ Berhasil memproses 1692 baris data (setelah quality control)
+📁 Memproses: rh8n90e_dy.ascii
+📊 Memproses rh8n90e_dy.ascii sebagai tipe: RH
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: RH
+      ✅ Data valid: 3106/3113 (99.8%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3113
+   ✅ Baris valid: 3106
+   ❌ Baris dihapus: 7 (0.2%)
+✅ Berhasil memproses 3106 baris data (setelah quality control)
+📁 Memproses: sst8n90e_dy.ascii
+📊 Memproses sst8n90e_dy.ascii sebagai tipe: SST
+🔍 Menerapkan Quality Control pada 1 kolom data...
+   📋 Memproses kolom: SST
+      ✅ Data valid: 3006/3009 (99.9%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3009
+   ✅ Baris valid: 3006
+   ❌ Baris dihapus: 3 (0.1%)
+✅ Berhasil memproses 3006 baris data (setelah quality control)
+📁 Memproses: t8n90e_dy.ascii
+📊 Memproses t8n90e_dy.ascii sebagai tipe: TEMP
+📏 Ditemukan header kedalaman pada baris 5
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 2414
+    Kedalaman tersedia: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 2828
+    Kedalaman tersedia: [1.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 3213
+    Kedalaman tersedia: [1.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📏 Ditemukan header kedalaman pada baris 3492
+    Kedalaman tersedia: [1.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Menerapkan Quality Control pada 11 kolom data...
+   📋 Memproses kolom: TEMP_10.0m
+      ✅ Data valid: 2829/3557 (79.5%)
+   📋 Memproses kolom: TEMP_20.0m
+      ✅ Data valid: 2913/3557 (81.9%)
+   📋 Memproses kolom: TEMP_40.0m
+      ✅ Data valid: 3272/3557 (92.0%)
+   📋 Memproses kolom: TEMP_60.0m
+      ✅ Data valid: 2772/3557 (77.9%)
+   📋 Memproses kolom: TEMP_80.0m
+      ✅ Data valid: 3085/3557 (86.7%)
+   📋 Memproses kolom: TEMP_100.0m
+      ✅ Data valid: 3364/3557 (94.6%)
+   📋 Memproses kolom: TEMP_120.0m
+      ✅ Data valid: 3089/3557 (86.8%)
+   📋 Memproses kolom: TEMP_140.0m
+      ✅ Data valid: 3442/3557 (96.8%)
+   📋 Memproses kolom: TEMP_180.0m
+      ✅ Data valid: 3086/3557 (86.8%)
+   📋 Memproses kolom: TEMP_300.0m
+      ✅ Data valid: 3445/3557 (96.9%)
+   📋 Memproses kolom: TEMP_500.0m
+      ✅ Data valid: 3445/3557 (96.9%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3557
+   ✅ Baris valid: 3532
+   ❌ Baris dihapus: 25 (0.7%)
+✅ Berhasil memproses 3532 baris temperature data
+    Kolom temperature: ['TEMP_10.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+✅ Berhasil memproses 3532 baris data (setelah quality control)
+📁 Memproses: w8n90e_dy.ascii
+📊 Memproses w8n90e_dy.ascii sebagai tipe: WIND
+🔍 Menerapkan Quality Control pada 4 kolom data...
+   📋 Memproses kolom: UWND
+      ✅ Data valid: 3021/3029 (99.7%)
+   📋 Memproses kolom: VWND
+      ✅ Data valid: 3022/3029 (99.8%)
+   📋 Memproses kolom: WSPD
+      ✅ Data valid: 3024/3029 (99.8%)
+   📋 Memproses kolom: WDIR
+      ✅ Data valid: 3024/3029 (99.8%)
+📊 Quality Control Summary:
+   📈 Baris asli: 3029
+   ✅ Baris valid: 3024
+   ❌ Baris dihapus: 5 (0.2%)
+✅ Berhasil memproses 3024 baris data (setelah quality control)
+
+🔗 Menggabungkan 6 dataset...
+🔄 Mengurutkan data berdasarkan: Date -> Location
+📊 Preview pengurutan (5 baris pertama):
+      Date Location
+2006-11-14    8N90E
+2006-11-15    8N90E
+2006-11-16    8N90E
+2006-11-17    8N90E
+2006-11-18    8N90E
+✅ Berhasil menggabungkan data - Total baris: 3561
+
+🔗 Menggabungkan data dari 3 lokasi...
+🔄 Mengurutkan data berdasarkan: Date -> Location
+📊 Preview pengurutan (5 baris pertama):
+      Date Location
+2005-01-01    0N90E
+2005-01-02    0N90E
+2005-01-03    0N90E
+2005-01-04    0N90E
+2005-01-05    0N90E
+
+📊 RINGKASAN HASIL (DENGAN QUALITY CONTROL):
+✅ Total baris data: 11,512
+📍 Jumlah lokasi: 3
+📅 Rentang tanggal: 2005-01-01 - 2020-06-07
+📁 File disimpan: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/Buoys_Data_All.csv
+
+📋 Kolom yang tersedia (urutan sudah diperbaiki):
+    1. Date
+    2. Year
+    3. Month
+    4. Day
+    5. RAD
+    6. RAIN
+    7. RH
+    8. SST
+    9. TEMP_10.0m
+   10. TEMP_20.0m
+   11. TEMP_40.0m
+   12. TEMP_60.0m
+   13. TEMP_80.0m
+   14. TEMP_100.0m
+   15. TEMP_120.0m
+   16. TEMP_140.0m
+   17. TEMP_180.0m
+   18. TEMP_300.0m
+   19. TEMP_500.0m
+   20. UWND
+   21. VWND
+   22. WSPD
+   23. WDIR
+   24. Location
+
+📈 Distribusi data per lokasi:
+   0N90E: 4,399 baris
+   8N90E: 3,561 baris
+   4N90E: 3,552 baris
+
+🔍 Data Quality Summary:
+   RAD: 8,520/11,512 (74.0% complete)
+   RAIN: 6,754/11,512 (58.7% complete)
+   RH: 8,394/11,512 (72.9% complete)
+   SST: 9,555/11,512 (83.0% complete)
+   TEMP_10.0m: 8,283/11,512 (72.0% complete)
+   TEMP_20.0m: 8,768/11,512 (76.2% complete)
+   TEMP_40.0m: 9,362/11,512 (81.3% complete)
+   TEMP_60.0m: 7,836/11,512 (68.1% complete)
+   TEMP_80.0m: 9,059/11,512 (78.7% complete)
+   TEMP_100.0m: 9,260/11,512 (80.4% complete)
+   TEMP_120.0m: 9,989/11,512 (86.8% complete)
+   TEMP_140.0m: 9,863/11,512 (85.7% complete)
+   TEMP_180.0m: 9,931/11,512 (86.3% complete)
+   TEMP_300.0m: 9,671/11,512 (84.0% complete)
+   TEMP_500.0m: 10,485/11,512 (91.1% complete)
+   UWND: 6,705/11,512 (58.2% complete)
+   VWND: 6,706/11,512 (58.3% complete)
+   WSPD: 6,708/11,512 (58.3% complete)
+   WDIR: 6,708/11,512 (58.3% complete)
+
+🎉 KONVERSI BERHASIL!
+============================================================
+📁 File tersimpan: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/Buoys_Data_All.csv
+⏱️ Waktu processing: 0:00:02.239085
+🏁 Selesai pada: 2025-06-14 16:34:37
+
+📊 LOADING DATA UNTUK ANALISIS...
+
+📋 INFORMASI DATASET:
+------------------------------
+   📏 Shape: (11512, 24)
+   💾 Memory: 3.17 MB
+   📅 Date Range: 2005-01-01 → 2020-06-07
+   📍 Locations: 0N90E, 8N90E, 4N90E
+
+🎯 DATA AVAILABILITY ANALYSIS:
+----------------------------------------
+   🟡 RAD         :   74.0% (8,520/11,512)
+   🟠 RAIN        :   58.7% (6,754/11,512)
+   🟡 RH          :   72.9% (8,394/11,512)
+   ✅ SST         :   83.0% (9,555/11,512)
+   🟡 TEMP_10.0m  :   72.0% (8,283/11,512)
+   🟡 TEMP_20.0m  :   76.2% (8,768/11,512)
+   ✅ TEMP_40.0m  :   81.3% (9,362/11,512)
+   🟡 TEMP_60.0m  :   68.1% (7,836/11,512)
+   🟡 TEMP_80.0m  :   78.7% (9,059/11,512)
+   ✅ TEMP_100.0m :   80.4% (9,260/11,512)
+   ✅ TEMP_120.0m :   86.8% (9,989/11,512)
+   ✅ TEMP_140.0m :   85.7% (9,863/11,512)
+   ✅ TEMP_180.0m :   86.3% (9,931/11,512)
+   ✅ TEMP_300.0m :   84.0% (9,671/11,512)
+   ✅ TEMP_500.0m :   91.1% (10,485/11,512)
+   🟠 UWND        :   58.2% (6,705/11,512)
+   🟠 VWND        :   58.3% (6,706/11,512)
+   🟠 WSPD        :   58.3% (6,708/11,512)
+   🟠 WDIR        :   58.3% (6,708/11,512)
+
+📍 ANALISIS PER LOKASI:
+------------------------------
+   🏝️ 0N90E: 4,399 records (2005-01-01 → 2020-06-07)
+      📈 Best variables: TEMP_500.0m(98%), SST(95%), TEMP_20.0m(87%)
+   🏝️ 8N90E: 3,561 records (2006-11-14 → 2020-02-21)
+      📈 Best variables: TEMP_300.0m(97%), TEMP_500.0m(97%), TEMP_140.0m(97%)
+   🏝️ 4N90E: 3,552 records (2006-11-16 → 2018-07-31)
+      📈 Best variables: TEMP_180.0m(97%), TEMP_140.0m(97%), TEMP_120.0m(93%)
+
+🌡️ ANALISIS KEDALAMAN TEMPERATURE:
+----------------------------------------
+   ✅     10m:   72.0% available
+   ✅     20m:   76.2% available
+   ✅     40m:   81.3% available
+   🟡     60m:   68.1% available
+   ✅     80m:   78.7% available
+   ✅    100m:   80.4% available
+   ✅    120m:   86.8% available
+   ✅    140m:   85.7% available
+   ✅    180m:   86.3% available
+   ✅    300m:   84.0% available
+   ✅    500m:   91.1% available
+
+🔍 DETEKSI MASALAH KUALITAS:
+-----------------------------------
+   ✅ Tidak ditemukan masalah kualitas yang signifikan
+
+📋 PREVIEW DATA (5 baris pertama):
+--------------------------------------------------
+      Date Location    RAD  RAIN   RH   SST  TEMP_10.0m  TEMP_20.0m  TEMP_40.0m  WSPD  WDIR
+2005-01-01    0N90E 155.61  0.36 91.5 29.14       29.15       29.14       29.09   7.7 135.1
+2005-01-02    0N90E  57.16  0.19 90.5 29.02       29.03       29.03       29.06   1.8 202.3
+2005-01-03    0N90E 130.86  0.00 84.8 29.06       29.04       29.04       29.06   0.9  20.1
+2005-01-04    0N90E 269.79  0.13 83.8 29.45       29.09       29.06       29.06   1.8  44.2
+2005-01-05    0N90E  79.43  0.95 91.7 29.14       29.18       29.13       29.07   2.2  39.9
+
+📤 EXPORT SUMMARY:
+-------------------------
+   📄 Filename: Buoys_Data_All.csv
+   📏 File size: 1.22 MB
+   🗂️ Columns: 24
+   📊 Records: 11,512
+
+================================================================================
+🏁 BUOY DATA PROCESSING COMPLETED
+================================================================================
+🕐 Total Runtime: 0:00:02.239085
+📊 Quality Control: ENABLED
+🎯 Status: SUCCESS

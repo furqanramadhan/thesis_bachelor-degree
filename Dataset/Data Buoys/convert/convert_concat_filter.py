@@ -5,17 +5,26 @@ import pandas as pd
 import glob
 from datetime import datetime
 
-# KONFIGURASI QUALITY CONTROL
+# KONFIGURASI QUALITY CONTROL - DIPERBAIKI
 ACCEPTABLE_QUALITY_CODES = [1, 2, 3]  # 1 = Highest Quality, 2 = Default Quality, 3 = Data Adjusted
-ACCEPTABLE_SOURCE_CODES = [1, 2, 5, 6]  # Real Time, Derived RT, Recovered RAM, Derived RAM
+ACCEPTABLE_SOURCE_CODES = [1, 2, 3, 5, 6, 7, 8]  # DITAMBAHKAN: 3, 7, 8 untuk interpolated data
 EXCLUDE_QUALITY_CODES = [0, 4, 5]  # Missing, Lower Quality, Sensor Failed
 EXCLUDE_SOURCE_CODES = [0, 4]  # No Sensor, Inactive
+
+# DITAMBAHKAN: Special indicators yang harus ditolak
+SPECIAL_ADJUSTMENT_INDICATORS = ['C', 'c']  # Special adjustments indicator
+MISSING_DATA_INDICATORS = [
+    '-9', '-9.0', '-9.9', '-9.99', '-9.999',
+    '-999', '-999.0', '-999.9', '-999.99', '-999.999',
+    'NaN', 'nan', 'NULL', 'null', '',
+    '-99', '-99.0', '-99.9', '-99.99', '-99.999'
+]
 
 def convert_ascii_to_unified_csv(input_file, variable_type=None):
     """
     Mengkonversi file ASCII menjadi DataFrame dengan deteksi otomatis format.
     Khusus untuk temperature, hanya ambil 10m dan 20m depth.
-    DITAMBAHKAN: Quality Control filtering
+    DIPERBAIKI: Quality Control filtering dengan handling 'C' dan interpolated data
     
     Parameters:
     input_file (str): Path ke file ASCII
@@ -74,32 +83,43 @@ def parse_quality_source_codes(value_str):
     Parse value string yang mengandung quality dan source codes
     Format umum: VALUE_QC_SC atau VALUE QC SC
     
+    DIPERBAIKI: Menambahkan handling untuk 'C' dan source codes 3, 7, 8
+    
     Returns:
-    tuple: (value, quality_code, source_code, is_valid)
+    tuple: (value, quality_code, source_code, is_valid, rejection_reason)
     """
     
     if pd.isna(value_str) or str(value_str).strip() == '':
-        return np.nan, None, None, False
+        return np.nan, None, None, False, "Empty/NaN"
     
     # Convert to string and clean
     value_str = str(value_str).strip()
     
-    # Handle missing data indicators - DIPERLUAS untuk menangani lebih banyak format
-    missing_indicators = [
-        '-9', '-9.0', '-9.9', '-9.99', '-9.999',
-        '-999', '-999.0', '-999.9', '-999.99', '-999.999',
-        'NaN', 'nan', 'NULL', 'null', '',
-        '-99', '-99.0', '-99.9', '-99.99', '-99.999'
-    ]
+    # PRIORITAS 1: Cek special adjustment indicators ('C' atau 'c')
+    if value_str in SPECIAL_ADJUSTMENT_INDICATORS:
+        return np.nan, None, None, False, "Special adjustment indicator (C)"
     
-    if value_str in missing_indicators:
-        return np.nan, 0, 0, False
+    # PRIORITAS 2: Cek missing data indicators termasuk -9
+    if value_str in MISSING_DATA_INDICATORS:
+        return np.nan, 0, 0, False, f"Missing data indicator ({value_str})"
     
-    # Cek jika value adalah angka missing (negatif dengan pola tertentu)
+    # PRIORITAS 3: Cek jika mengandung 'C' dalam format gabungan (e.g., "25.3_2_C")
+    if 'C' in value_str.upper():
+        return np.nan, None, None, False, "Contains special adjustment indicator (C)"
+    
+    # PRIORITAS 4: Cek nilai -9 yang embedded dalam format
     try:
-        temp_val = float(value_str.split('_')[0] if '_' in value_str else value_str.split()[0])
-        if temp_val <= -9:  # Semua nilai <= -9 dianggap missing
-            return np.nan, 0, 0, False
+        # Extract value part untuk cek -9
+        if '_' in value_str:
+            temp_val = float(value_str.split('_')[0])
+        elif ' ' in value_str:
+            temp_val = float(value_str.split()[0])
+        else:
+            temp_val = float(value_str)
+        
+        # Tolak semua nilai -9 atau kurang
+        if temp_val == -9.0 or temp_val <= -9:
+            return np.nan, 0, 0, False, f"Missing value ({temp_val})"
     except (ValueError, IndexError):
         pass
     
@@ -109,56 +129,74 @@ def parse_quality_source_codes(value_str):
         if len(parts) >= 3:
             try:
                 value = float(parts[0])
-                # Cek lagi jika value adalah missing indicator
-                if value <= -9:
-                    return np.nan, 0, 0, False
-                quality_code = int(parts[1])
-                source_code = int(parts[2])
-                return value, quality_code, source_code, True
+                # Double check untuk -9
+                if value == -9.0 or value <= -9:
+                    return np.nan, 0, 0, False, f"Missing value in parsed data ({value})"
+                
+                quality_code = int(parts[1]) if parts[1].isdigit() else None
+                
+                # Handle source code yang mungkin 'C'
+                if parts[2].upper() == 'C':
+                    return np.nan, None, None, False, "Source code is special adjustment (C)"
+                
+                source_code = int(parts[2]) if parts[2].isdigit() else None
+                
+                if quality_code is not None and source_code is not None:
+                    return value, quality_code, source_code, True, None
             except (ValueError, IndexError):
                 pass
     
-    # Pattern 2: VALUE QC SC (space separated, last 2 digits)
+    # Pattern 2: VALUE QC SC (space separated)
     parts = value_str.split()
     if len(parts) >= 3:
         try:
             value = float(parts[0])
-            # Cek lagi jika value adalah missing indicator
-            if value <= -9:
-                return np.nan, 0, 0, False
-            quality_code = int(parts[1])
-            source_code = int(parts[2])
-            return value, quality_code, source_code, True
+            # Double check untuk -9
+            if value == -9.0 or value <= -9:
+                return np.nan, 0, 0, False, f"Missing value in parsed data ({value})"
+            
+            quality_code = int(parts[1]) if parts[1].isdigit() else None
+            
+            # Handle source code yang mungkin 'C'
+            if parts[2].upper() == 'C':
+                return np.nan, None, None, False, "Source code is special adjustment (C)"
+            
+            source_code = int(parts[2]) if parts[2].isdigit() else None
+            
+            if quality_code is not None and source_code is not None:
+                return value, quality_code, source_code, True, None
         except (ValueError, IndexError):
             pass
     
     # Pattern 3: Single value with embedded codes (e.g., "25.31_2_1")
-    if re.match(r'^-?\d+\.?\d*_\d_\d$', value_str):
+    if re.match(r'^-?\d+\.?\d*_\d+_\d+$', value_str):
         parts = value_str.split('_')
         try:
             value = float(parts[0])
-            # Cek lagi jika value adalah missing indicator
-            if value <= -9:
-                return np.nan, 0, 0, False
+            # Double check untuk -9
+            if value == -9.0 or value <= -9:
+                return np.nan, 0, 0, False, f"Missing value in parsed data ({value})"
+            
             quality_code = int(parts[1])
             source_code = int(parts[2])
-            return value, quality_code, source_code, True
+            return value, quality_code, source_code, True, None
         except (ValueError, IndexError):
             pass
     
     # Pattern 4: Just numeric value (assume default quality)
     try:
         value = float(value_str)
-        # Cek lagi jika value adalah missing indicator
-        if value <= -9:
-            return np.nan, 0, 0, False
-        return value, 2, 1, True  # Default quality, real-time source
+        # Double check untuk -9
+        if value == -9.0 or value <= -9:
+            return np.nan, 0, 0, False, f"Missing value ({value})"
+        return value, 2, 1, True, None  # Default quality, real-time source
     except ValueError:
-        return np.nan, None, None, False
+        return np.nan, None, None, False, "Unable to parse value"
 
 def apply_quality_control(df, data_columns):
     """
     Menerapkan quality control pada DataFrame
+    DIPERBAIKI: Dengan source codes 3, 7, 8 dan rejection tracking
     
     Parameters:
     df (pandas.DataFrame): DataFrame input
@@ -172,9 +210,13 @@ def apply_quality_control(df, data_columns):
         return df
     
     original_rows = len(df)
-    filtered_rows = 0
+    rejection_stats = {}
     
     print(f"🔍 Menerapkan Quality Control pada {len(data_columns)} kolom data...")
+    print(f"   ✅ Acceptable Quality Codes: {ACCEPTABLE_QUALITY_CODES}")
+    print(f"   ✅ Acceptable Source Codes: {ACCEPTABLE_SOURCE_CODES}")
+    print(f"   ❌ Excluded Quality Codes: {EXCLUDE_QUALITY_CODES}")
+    print(f"   ❌ Excluded Source Codes: {EXCLUDE_SOURCE_CODES}")
     
     for col in data_columns:
         if col in df.columns:
@@ -188,6 +230,12 @@ def apply_quality_control(df, data_columns):
             df[f'{col}_quality'] = parsed_data.apply(lambda x: x[1])
             df[f'{col}_source'] = parsed_data.apply(lambda x: x[2])
             df[f'{col}_valid'] = parsed_data.apply(lambda x: x[3])
+            df[f'{col}_rejection_reason'] = parsed_data.apply(lambda x: x[4])
+            
+            # Collect rejection statistics
+            rejection_reasons = df[f'{col}_rejection_reason'].dropna()
+            if len(rejection_reasons) > 0:
+                rejection_stats[col] = rejection_reasons.value_counts().to_dict()
             
             # Apply quality control filters
             quality_mask = (
@@ -212,15 +260,30 @@ def apply_quality_control(df, data_columns):
             # Replace original column with filtered values
             df[col] = df[f'{col}_value']
             
-            # Count valid data points
+            # Count valid data points by source type
             valid_count = df[col].notna().sum()
             total_count = len(df)
             
+            # Count by source types untuk tracking interpolated data
+            source_counts = df[f'{col}_source'].value_counts()
+            interpolated_sources = [3, 7, 8]  # Temporally and Spatially Interpolated
+            interpolated_count = sum(source_counts.get(src, 0) for src in interpolated_sources)
+            
             print(f"      ✅ Data valid: {valid_count}/{total_count} ({valid_count/total_count*100:.1f}%)")
+            if interpolated_count > 0:
+                print(f"      🔄 Interpolated data: {interpolated_count} ({interpolated_count/total_count*100:.1f}%)")
             
             # Clean up temporary columns
-            temp_cols = [f'{col}_value', f'{col}_quality', f'{col}_source', f'{col}_valid']
+            temp_cols = [f'{col}_value', f'{col}_quality', f'{col}_source', f'{col}_valid', f'{col}_rejection_reason']
             df.drop(temp_cols, axis=1, inplace=True, errors='ignore')
+    
+    # Print rejection statistics
+    if rejection_stats:
+        print(f"\n📊 Data Rejection Summary:")
+        for col, reasons in rejection_stats.items():
+            print(f"   📋 {col}:")
+            for reason, count in reasons.items():
+                print(f"      ❌ {reason}: {count} records")
     
     # Remove rows where ALL data columns are NaN
     data_mask = df[data_columns].notna().any(axis=1)
@@ -229,7 +292,7 @@ def apply_quality_control(df, data_columns):
     filtered_rows = len(df_filtered)
     removed_rows = original_rows - filtered_rows
     
-    print(f"📊 Quality Control Summary:")
+    print(f"\n📊 Quality Control Summary:")
     print(f"   📈 Baris asli: {original_rows}")
     print(f"   ✅ Baris valid: {filtered_rows}")
     print(f"   ❌ Baris dihapus: {removed_rows} ({removed_rows/original_rows*100:.1f}%)")
@@ -390,7 +453,6 @@ def debug_temperature_structure(input_file):
                 
                 sample_data_shown = True
 
-
 def process_sst_data(lines, input_file):
     """Proses data SST dengan quality control"""
     
@@ -547,7 +609,10 @@ def process_datetime_and_clean(df):
 
 def reorder_columns_properly(df):
     """
-    Mengurutkan kolom dengan urutan yang benar:
+    Mengurutkan data berdasarkan tanggal terlebih dahulu, kemudian per lokasi.
+    Format: TANGGAL_1 -> semua lokasi, TANGGAL_2 -> semua lokasi, dst.
+    
+    Urutan kolom tetap:
     1. Date, Year, Month, Day
     2. RAD, RAIN, RH, SST
     3. Temperature berdasarkan kedalaman (ascending)
@@ -558,7 +623,7 @@ def reorder_columns_properly(df):
     if df.empty:
         return df
     
-    # Definisikan urutan kolom
+    # STEP 1: Urutkan kolom dengan struktur yang sama seperti sebelumnya
     ordered_columns = []
     
     # 1. Date columns
@@ -597,8 +662,44 @@ def reorder_columns_properly(df):
     remaining_cols = [col for col in df.columns if col not in ordered_columns]
     ordered_columns.extend(remaining_cols)
     
-    # Return dataframe with reordered columns
-    return df[ordered_columns]
+    # Reorder columns first
+    df_reordered = df[ordered_columns].copy()
+    
+    # STEP 2: Sort data by date first, then by location
+    # Pastikan kolom datetime ada untuk sorting
+    sort_columns = []
+    
+    # Primary sort: Date-related columns
+    if 'Date' in df_reordered.columns:
+        sort_columns.append('Date')
+    else:
+        # Fallback jika Date tidak ada, gunakan Year, Month, Day
+        if all(col in df_reordered.columns for col in ['Year', 'Month', 'Day']):
+            sort_columns.extend(['Year', 'Month', 'Day'])
+    
+    # Secondary sort: Location (untuk mengelompokkan lokasi dalam tanggal yang sama)
+    if 'Location' in df_reordered.columns:
+        sort_columns.append('Location')
+    
+    # Lakukan sorting jika ada kolom untuk sorting
+    if sort_columns:
+        print(f"🔄 Mengurutkan data berdasarkan: {' -> '.join(sort_columns)}")
+        df_sorted = df_reordered.sort_values(sort_columns, ascending=True)
+        df_sorted.reset_index(drop=True, inplace=True)
+        
+        # Tampilkan preview pengurutan untuk konfirmasi
+        if len(df_sorted) > 0:
+            print(f"📊 Preview pengurutan (5 baris pertama):")
+            preview_cols = ['Date', 'Location'] if 'Date' in df_sorted.columns else (['Year', 'Month', 'Day', 'Location'])
+            preview_cols = [col for col in preview_cols if col in df_sorted.columns]
+            
+            if len(preview_cols) > 0:
+                print(df_sorted[preview_cols].head().to_string(index=False))
+        
+        return df_sorted
+    else:
+        print("⚠️ Tidak dapat mengurutkan data - kolom tanggal tidak ditemukan")
+        return df_reordered
 
 def process_single_location(location_path, location_name):
     """
