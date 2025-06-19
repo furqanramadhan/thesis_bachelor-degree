@@ -6,8 +6,6 @@ import glob
 
 # KONFIGURASI QUALITY DAN SOURCE CODES
 ACCEPTABLE_QUALITY_CODES = [1, 2, 3]  # 1 = Highest Quality, 2 = Default Quality, 3 = Data Adjusted
-# Khusus untuk temperature variable
-TEMP_ACCEPTABLE_QUALITY_CODES = [1, 2, 3, 4]  # Tambah quality code 4
 ACCEPTABLE_SOURCE_CODES = [1, 2, 3, 5, 6, 7, 8]  # Termasuk interpolated data
 EXCLUDE_QUALITY_CODES = [0, 4, 5]  # Missing, Lower Quality, Sensor Failed
 EXCLUDE_SOURCE_CODES = [0, 4]  # No Sensor, Inactive
@@ -148,7 +146,7 @@ def convert_ascii_to_csv(input_file, output_file=None):
         return convert_general_ascii_to_csv(input_file, output_file)
 
 def convert_temperature_ascii_to_csv(input_file, output_file):
-    """Fungsi untuk konversi file format suhu multi-kedalaman"""
+    """Fungsi untuk konversi file format suhu multi-kedalaman - SIMPLIFIED VERSION"""
     with open(input_file, 'r') as f:
         lines = f.readlines()
     
@@ -167,6 +165,9 @@ def convert_temperature_ascii_to_csv(input_file, output_file):
     depth_parts = depth_line.split(':')[1].strip().split()
     depth_values = []
     for part in depth_parts:
+        # Skip kata-kata non-numerik seperti 'QUALITY', 'SOURCE'
+        if part in ['QUALITY', 'SOURCE']:
+            break
         try:
             depth = float(part)
             depth_values.append(f"TEMP_{depth}m")
@@ -177,6 +178,8 @@ def convert_temperature_ascii_to_csv(input_file, output_file):
     if depth_values and "TEMP_1.0m" in depth_values[0]:
         depth_values[0] = "SST"
     
+    print(f"🔍 Kedalaman yang terdeteksi: {depth_values}")
+    
     # Buat struktur untuk data
     data_rows = []
     
@@ -184,38 +187,33 @@ def convert_temperature_ascii_to_csv(input_file, output_file):
     for line in lines:
         if re.match(r'^\s*\d{8}\s+\d{4}', line):
             parts = line.strip().split()
-        
-        # Ambil tanggal dan waktu
+            
+            # Ambil tanggal dan waktu
             date = parts[0]
             time = parts[1]
-        
-        # Ekstrak data, quality, dan source
-            temp_values, quality_codes, source_codes = extract_quality_source_from_line(parts, len(depth_values))
-        
-        # Pastikan jumlah nilai sesuai dengan jumlah kedalaman
-            if len(temp_values) > len(depth_values):
-                temp_values = temp_values[:len(depth_values)]
-            elif len(temp_values) < len(depth_values):
+            
+            # Ambil data temperatur (skip quality dan source codes)
+            temp_values = parts[2:2+len(depth_values)]
+            
+            # Pastikan jumlah nilai sesuai dengan jumlah kedalaman
+            if len(temp_values) < len(depth_values):
                 temp_values.extend(['NaN'] * (len(depth_values) - len(temp_values)))
-        
-        # Gabungkan tanggal, waktu, dan nilai suhu
+            elif len(temp_values) > len(depth_values):
+                temp_values = temp_values[:len(depth_values)]
+            
+            # Gabungkan tanggal, waktu, dan nilai suhu
             row_data = {'YYYYMMDD': date, 'HHMM': time}
             for i, depth_name in enumerate(depth_values):
                 if i < len(temp_values):
                     row_data[depth_name] = temp_values[i]
-                # Tambahkan quality dan source jika ada
-                    if i < len(quality_codes):
-                        row_data[f"{depth_name}_QUALITY"] = quality_codes[i]
-                    if i < len(source_codes):
-                        row_data[f"{depth_name}_SOURCE"] = source_codes[i]
                 else:
                     row_data[depth_name] = 'NaN'
+            
             data_rows.append(row_data)
     
     # Buat DataFrame
     df = pd.DataFrame(data_rows)
     
-    # Debug: tampilkan kolom yang berhasil diproses
     print(f"Kolom yang berhasil diproses: {df.columns.tolist()}")
     print(f"Jumlah baris data: {len(df)}")
     
@@ -225,68 +223,37 @@ def convert_temperature_ascii_to_csv(input_file, output_file):
     # Hapus kolom asli tanggal dan waktu
     df.drop(['YYYYMMDD', 'HHMM'], axis=1, inplace=True)
 
-    # 🔧 PERBAIKAN 1: Handle missing values dengan lebih tepat
-    # Konversi missing values hanya untuk kolom data (bukan quality/source)
+    # Konversi missing values (-9.999) ke NaN untuk kolom data temperatur
     for col in df.columns:
-        if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col:
-            # Ganti nilai missing yang spesifik dengan NaN
-            df[col] = df[col].apply(lambda x: np.nan if str(x) in ['-9.999', '-999.9', '-99.9', '-9'] else x)
+        if col != 'Timestamp':
+            # Hanya ganti nilai -9.999 dengan NaN (sesuai dokumentasi ASCII)
+            df[col] = df[col].apply(lambda x: np.nan if str(x) == '-9.999' else x)
             df[col] = pd.to_numeric(df[col], errors='coerce')
     
-    # 🔧 PERBAIKAN 2: Konfigurasi quality codes yang lebih permisif untuk temperature
-    # Untuk data temperatur, terima quality code 4 juga
-    TEMP_ACCEPTABLE_QUALITY_CODES = [1, 2, 3, 4]  # Tambah quality code 4
-    TEMP_ACCEPTABLE_SOURCE_CODES = [1, 2, 3, 5, 6, 7, 8]  # Tetap sama
+    # Hapus baris dengan terlalu banyak missing values (lebih dari 3-5 kolom)
+    temp_cols = [col for col in df.columns if col != 'Timestamp']
+    max_allowed_missing = min(5, len(temp_cols) - 1)  # Maksimal 5 atau jumlah kolom-1
     
-    # 🔍 Filter berdasarkan quality/source codes dengan konfigurasi khusus temperatur
-    quality_cols = [col for col in df.columns if '_QUALITY' in col]
-    source_cols = [col for col in df.columns if '_SOURCE' in col]
-
-    if quality_cols or source_cols:
-        print("🔍 Menerapkan filter quality dan source codes untuk data temperatur...")
-        for i, depth_name in enumerate(depth_values):
-            quality_col = f"{depth_name}_QUALITY" if f"{depth_name}_QUALITY" in df.columns else None
-            source_col = f"{depth_name}_SOURCE" if f"{depth_name}_SOURCE" in df.columns else None
-        
-            if quality_col or source_col:
-                # Gunakan konfigurasi khusus untuk temperatur
-                if quality_col:
-                    # Hanya set ke NaN jika quality code tidak acceptable
-                    mask_bad_quality = ~df[quality_col].isin(TEMP_ACCEPTABLE_QUALITY_CODES)
-                    df.loc[mask_bad_quality, depth_name] = np.nan
-                    
-                if source_col:
-                    # Hanya set ke NaN jika source code tidak acceptable
-                    mask_bad_source = ~df[source_col].isin(TEMP_ACCEPTABLE_SOURCE_CODES)
-                    df.loc[mask_bad_source, depth_name] = np.nan
+    # Hitung missing values per baris
+    missing_counts = df[temp_cols].isnull().sum(axis=1)
+    rows_to_drop = missing_counts > max_allowed_missing
     
-    # 🔧 PERBAIKAN 3: Hapus logika penghapusan baris dengan semua quality/source = 0
-    # Karena ini menyebabkan penghapusan baris yang seharusnya tetap ada
-    # Sebagai gantinya, hanya hapus baris yang semua data temperaturnya NaN
+    if rows_to_drop.sum() > 0:
+        print(f"🗑️ Menghapus {rows_to_drop.sum()} baris dengan lebih dari {max_allowed_missing} missing values")
+        df = df[~rows_to_drop].reset_index(drop=True)
     
-    # Identifikasi kolom-kolom data temperatur (bukan quality/source)
-    temp_data_cols = [col for col in df.columns if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col]
-    
-    if temp_data_cols:
-        # Hapus baris yang semua kolom temperaturnya NaN
-        before_drop = len(df)
-        df = df.dropna(subset=temp_data_cols, how='all')
-        dropped_rows = before_drop - len(df)
-        if dropped_rows > 0:
-            print(f"🗑️ Menghapus {dropped_rows} baris karena semua data temperatur kosong.")
-
-    # Simpan ke CSV (hapus kolom quality dan source sebelum menyimpan)
-    df_output = df.drop(columns=quality_cols + source_cols)
-    df_output.to_csv(output_file, index=False)
-    print(f"✅ Berhasil menyimpan {len(df_output)} baris data ke {output_file}")
+    # Simpan ke CSV
+    df.to_csv(output_file, index=False)
+    print(f"✅ Berhasil menyimpan {len(df)} baris data ke {output_file}")
     
     # Tampilkan informasi missing values per kolom
-    missing_info = df_output.isnull().sum()
+    missing_info = df.isnull().sum()
     if missing_info.sum() > 0:
         print("\n📊 Informasi Missing Values:")
         for col, missing_count in missing_info.items():
             if missing_count > 0:
-                print(f"   {col}: {missing_count} missing values")
+                percentage = (missing_count / len(df)) * 100
+                print(f"   {col}: {missing_count} missing values ({percentage:.1f}%)")
     
     return output_file
 
@@ -370,10 +337,10 @@ def convert_wind_ascii_to_csv(input_file, output_file):
     for col in df.columns:
         if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col:
             # Ganti hanya nilai missing yang spesifik (-99.9, -999.9)
-            df[col] = df[col].apply(lambda x: np.nan if str(x) in ['-99.9', '-999.9'] else x)
+            df[col] = df[col].apply(lambda x: np.nan if str(x) in ['-99.9', '-999.9', '-9.999', '-9'] else x)
             df[col] = pd.to_numeric(df[col], errors='coerce')
     
-    # 🔍 Filter berdasarkan quality/source codes (DIPERBAIKI - di luar loop)
+    # 🔧 PERBAIKAN 1: Gunakan EXCLUDE_QUALITY_CODES dan EXCLUDE_SOURCE_CODES yang sudah didefinisikan
     quality_cols = [col for col in df.columns if '_QUALITY' in col]
     source_cols = [col for col in df.columns if '_SOURCE' in col]
 
@@ -384,20 +351,71 @@ def convert_wind_ascii_to_csv(input_file, output_file):
             source_col = f"{header}_SOURCE" if f"{header}_SOURCE" in df.columns else None
         
             if quality_col or source_col:
+                # 🔧 PERBAIKAN: Gunakan EXCLUDE_QUALITY_CODES instead of ACCEPTABLE_QUALITY_CODES
                 if quality_col:
-                    df.loc[~df[quality_col].isin(ACCEPTABLE_QUALITY_CODES), header] = np.nan
+                    df.loc[df[quality_col].isin(EXCLUDE_QUALITY_CODES), header] = np.nan
                 if source_col:
-                    df.loc[~df[source_col].isin(ACCEPTABLE_SOURCE_CODES), header] = np.nan
+                    df.loc[df[source_col].isin(EXCLUDE_SOURCE_CODES), header] = np.nan
+    
+    # 🔧 PERBAIKAN 2: Hapus baris yang semua data wind-nya NaN DAN semua quality/source codes invalid
+    if quality_cols or source_cols:
+        print("🗑️ Menghapus baris dengan semua data invalid...")
+        
+        # Identifikasi kolom-kolom data wind (bukan quality/source/timestamp)
+        wind_data_cols = [col for col in df.columns if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col]
+        
+        # Buat mask untuk baris yang harus dihapus
+        rows_to_drop = []
+        
+        for idx, row in df.iterrows():
+            # Cek apakah semua data wind NaN
+            all_wind_data_nan = all(pd.isna(row[col]) for col in wind_data_cols)
+            
+            if all_wind_data_nan:
+                # Cek apakah semua quality codes dalam EXCLUDE list
+                all_quality_excluded = True
+                if quality_cols:
+                    for quality_col in quality_cols:
+                        if quality_col in row and not pd.isna(row[quality_col]):
+                            if row[quality_col] not in EXCLUDE_QUALITY_CODES:
+                                all_quality_excluded = False
+                                break
+                
+                # Cek apakah semua source codes dalam EXCLUDE list
+                all_source_excluded = True
+                if source_cols:
+                    for source_col in source_cols:
+                        if source_col in row and not pd.isna(row[source_col]):
+                            if row[source_col] not in EXCLUDE_SOURCE_CODES:
+                                all_source_excluded = False
+                                break
+                
+                # Jika semua data NaN DAN (semua quality excluded ATAU semua source excluded)
+                if all_quality_excluded or all_source_excluded:
+                    rows_to_drop.append(idx)
+        
+        # Hapus baris yang tidak valid
+        if rows_to_drop:
+            df = df.drop(rows_to_drop)
+            print(f"🗑️ Menghapus {len(rows_to_drop)} baris karena semua data wind invalid (quality/source = 0,0)")
+        
+        # Reset index setelah penghapusan
+        df = df.reset_index(drop=True)
+    
+    # Hapus kolom quality dan source sebelum menyimpan
+    df_output = df.drop(columns=quality_cols + source_cols)
     
     # Simpan ke CSV
-    df.to_csv(output_file, index=False)
-    print(f"✅ Berhasil menyimpan {len(df)} baris data ke {output_file}")
+    df_output.to_csv(output_file, index=False)
+    print(f"✅ Berhasil menyimpan {len(df_output)} baris data ke {output_file}")
     
-    # Tampilkan total missing values
-    missing_values_df = df.isnull().sum().to_frame(name="Jumlah Missing Values")
-    missing_values_df.loc["Total Data yang hilang"] = missing_values_df.sum()
-    print("Total Baris Hilang per Kolom:\n")
-    print(missing_values_df)
+    # Tampilkan informasi missing values per kolom
+    missing_info = df_output.isnull().sum()
+    if missing_info.sum() > 0:
+        print("\n📊 Informasi Missing Values:")
+        for col, missing_count in missing_info.items():
+            if missing_count > 0:
+                print(f"   {col}: {missing_count} missing values")
     
     return output_file
 
