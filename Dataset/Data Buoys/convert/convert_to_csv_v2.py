@@ -432,7 +432,7 @@ def convert_wind_ascii_to_csv(input_file, output_file):
     return output_file
 
 def convert_general_ascii_to_csv(input_file, output_file):
-    """Fungsi untuk konversi file format umum (rad, rain, rh, sst)"""
+    """Fungsi untuk konversi file format umum (rad, rain, rh, sst) - IMPROVED VERSION"""
     with open(input_file, 'r') as f:
         lines = f.readlines()
     
@@ -462,7 +462,9 @@ def convert_general_ascii_to_csv(input_file, output_file):
             if header not in ['YYYYMMDD', 'HHMM']:
                 data_headers.append(header)
     
-    # Proses baris data
+    # Proses baris data dengan improvement untuk missing values handling
+    removed_rows_count = 0  # Counter untuk baris yang dihapus
+    
     for line in lines:
         if re.match(r'^\s*\d{8}\s+\d{4}', line):
             parts = line.strip().split()
@@ -475,6 +477,29 @@ def convert_general_ascii_to_csv(input_file, output_file):
                 data_values = parts[2:] if len(parts) > 2 else []
                 quality_codes = []
                 source_codes = []
+            
+            # 🔧 IMPROVEMENT 1: Hitung jumlah missing values dalam baris ini
+            missing_count = 0
+            for value in data_values:
+                if str(value) in ['-999.99', '-9.99', '-9.999', '-999.9', '-9.9']:
+                    missing_count += 1
+            
+            # 🔧 IMPROVEMENT 2: Skip baris jika lebih dari 2 missing values
+            if missing_count > 2:
+                removed_rows_count += 1
+                continue  # Skip baris ini, jangan tambahkan ke data_rows
+            
+            # 🔧 IMPROVEMENT 3: Check untuk quality=0 dan source=0 combination
+            skip_record_due_to_quality_source = False
+            if quality_codes and source_codes:
+                for i in range(min(len(quality_codes), len(source_codes))):
+                    if quality_codes[i] == 0 and source_codes[i] == 0:
+                        skip_record_due_to_quality_source = True
+                        break
+            
+            if skip_record_due_to_quality_source:
+                removed_rows_count += 1
+                continue  # Skip baris ini karena ada kombinasi (0,0)
             
             # Pastikan panjang data sesuai dengan header
             if len(parts) >= 2:  # Minimal ada tanggal dan waktu
@@ -497,26 +522,32 @@ def convert_general_ascii_to_csv(input_file, output_file):
                 if len(row_data) >= 2:  # Minimal ada tanggal dan waktu
                     data_rows.append(row_data)
     
+    # Report jumlah baris yang dihapus
+    if removed_rows_count > 0:
+        print(f"🗑️ Menghapus {removed_rows_count} baris karena:")
+        print(f"   - Lebih dari 2 missing values")
+        print(f"   - Kombinasi quality=0 dan source=0")
+    
     # Buat DataFrame
     df = pd.DataFrame(data_rows)
     
     # Debug: tampilkan kolom yang berhasil diproses
     print(f"Kolom yang berhasil diproses: {df.columns.tolist()}")
-    print(f"Jumlah baris data: {len(df)}")
+    print(f"Jumlah baris data setelah filter: {len(df)}")
     
     # Gabungkan kolom tanggal dan waktu ke timestamp
     if 'YYYYMMDD' in df.columns and 'HHMM' in df.columns:
         df['Timestamp'] = pd.to_datetime(df['YYYYMMDD'] + ' ' + df['HHMM'], format='%Y%m%d %H%M', errors='coerce')
         df.drop(['YYYYMMDD', 'HHMM'], axis=1, inplace=True)
     
-    # Konversi nilai ke numerik dan tangani missing values
+    # 🔧 IMPROVEMENT 4: Konversi nilai ke numerik dan tangani missing values dengan pattern yang diperbaiki
     for col in df.columns:
         if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col:
-            # Identifikasi dan ganti nilai missing sesuai dengan pattern yang umum
-            df[col] = df[col].apply(lambda x: np.nan if re.match(r'^-9\.9+$|^-999\.9+$', str(x)) else x)
+            # Identifikasi dan ganti nilai missing dengan pattern yang diperbaiki
+            df[col] = df[col].apply(lambda x: np.nan if str(x) in ['-999.99', '-9.99', '-9.999', '-999.9', '-9.9'] else x)
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # 🔍 Filter berdasarkan quality/source codes (DIPERBAIKI - di luar loop)
+    # 🔧 IMPROVEMENT 5: Filter berdasarkan quality/source codes menggunakan EXCLUDE approach
     quality_cols = [col for col in df.columns if '_QUALITY' in col]
     source_cols = [col for col in df.columns if '_SOURCE' in col]
 
@@ -528,19 +559,51 @@ def convert_general_ascii_to_csv(input_file, output_file):
         
             if quality_col or source_col:
                 if quality_col:
-                    df.loc[~df[quality_col].isin(ACCEPTABLE_QUALITY_CODES), header] = np.nan
+                    invalid_quality_mask = df[quality_col].isin(EXCLUDE_QUALITY_CODES)
+                    df.loc[invalid_quality_mask, header] = np.nan
+                    
                 if source_col:
-                    df.loc[~df[source_col].isin(ACCEPTABLE_SOURCE_CODES), header] = np.nan
+                    invalid_source_mask = df[source_col].isin(EXCLUDE_SOURCE_CODES)
+                    df.loc[invalid_source_mask, header] = np.nan
+    
+    # 🔧 IMPROVEMENT 6: Final cleanup - hapus baris yang sekarang memiliki semua data NaN
+    data_cols_final = [col for col in df.columns if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col]
+    
+    if data_cols_final:
+        # Identifikasi baris dengan semua data NaN
+        all_data_nan_mask = df[data_cols_final].isnull().all(axis=1)
+        rows_to_drop_final = all_data_nan_mask.sum()
+        
+        if rows_to_drop_final > 0:
+            df = df[~all_data_nan_mask].reset_index(drop=True)
+            print(f"🗑️ Final cleanup: menghapus {rows_to_drop_final} baris dengan semua data menjadi NaN setelah quality/source filtering")
     
     # Simpan ke CSV
     df.to_csv(output_file, index=False)
     print(f"✅ Berhasil menyimpan {len(df)} baris data ke {output_file}")
     
-    # Tampilkan total missing values
-    missing_values_df = df.isnull().sum().to_frame(name="Jumlah Missing Values")
-    missing_values_df.loc["Total Data yang hilang"] = missing_values_df.sum()
-    print("Total Baris Hilang per Kolom:\n")
-    print(missing_values_df)
+    # Tampilkan statistik missing values per kolom
+    missing_info = df.isnull().sum()
+    if missing_info.sum() > 0:
+        print("\n📊 Informasi Missing Values per kolom:")
+        for col, missing_count in missing_info.items():
+            if missing_count > 0:
+                percentage = (missing_count / len(df)) * 100
+                print(f"   {col}: {missing_count} missing values ({percentage:.1f}%)")
+    else:
+        print("\n✅ Tidak ada missing values dalam dataset final")
+    
+    # Tampilkan ringkasan total removal
+    total_original_estimated = len(data_rows) + removed_rows_count
+    if 'rows_to_drop_final' in locals():
+        total_removed = removed_rows_count + rows_to_drop_final
+    else:
+        total_removed = removed_rows_count
+    
+    print(f"\n📊 Ringkasan Data Processing:")
+    print(f"   Data asli (estimasi): ~{total_original_estimated} baris")
+    print(f"   Data tersimpan: {len(df)} baris") 
+    print(f"   Total dihapus: ~{total_removed} baris")
     
     return output_file
 
