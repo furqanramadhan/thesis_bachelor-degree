@@ -838,25 +838,13 @@ if __name__ == "__main__":
     if len(csv_files) > 0:
         print("\n📋 Ringkasan Hasil Konversi:")
         print(f"✅ Berhasil mengkonversi {len(csv_files)} dari {len(glob.glob(os.path.join(input_directory, '*.ascii')))} file ASCII")
-        
         # Hanya tampilkan 5 file pertama jika ada banyak file
-        if len(csv_files) > 5:
-            print(f"\n📄 Beberapa file CSV yang dihasilkan (5 dari {len(csv_files)}):")
-            for i, file in enumerate(csv_files[:5], 1):
-                print(f"   {i}. {os.path.basename(file)}")
-            print(f"   ... dan {len(csv_files) - 5} file lainnya")
-            
-            print(f"\n📊 Beberapa file Excel yang dihasilkan (5 dari {len(excel_files)}):")
-            for i, file in enumerate(excel_files[:5], 1):
-                print(f"   {i}. {os.path.basename(file)}")
-            print(f"   ... dan {len(excel_files) - 5} file lainnya")
-        else:
+        if len(csv_files) > 0:
             print("\n📄 File CSV yang dihasilkan:")
             for i, file in enumerate(csv_files, 1):
                 print(f"   {i}. {os.path.basename(file)}")
             
             print("\n📊 File Excel yang dihasilkan:")
             for i, file in enumerate(excel_files, 1):
-                print(f"   {i}. {os.path.basename(file)}")
-    
+                print(f"   {i}. {os.path.basename(file)}")    
     print("\n✨ Proses konversi selesai! ✨")

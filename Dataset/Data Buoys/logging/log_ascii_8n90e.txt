@@ -1,0 +1,297 @@
+📋 KONVERSI DATA BUOY RAMA ASCII KE CSV DAN EXCEL 📋
+==================================================
+📂 Direktori input: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII
+📄 Direktori output CSV: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV
+📊 Direktori output Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL
+==================================================
+📁 Menggunakan direktori CSV: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV
+📊 Menggunakan direktori Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL
+🔍 Menemukan 6 file dengan pola '*.ascii' di direktori input
+
+🔄 Memproses file 1/6: rad4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII/rad4n90e_dy.ascii
+🗑️ Menghapus 2 baris karena:
+   - Lebih dari 2 missing values
+   - Kombinasi quality=0 dan source=0
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SWRad', 'StDev', 'Max', 'Q', 'S']
+Jumlah baris data setelah filter: 1824
+✅ Berhasil menyimpan 1824 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/rad4n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   SWRad: 1 missing values (0.1%)
+   Max: 8 missing values (0.4%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~1826 baris
+   Data tersimpan: 1824 baris
+   Total dihapus: ~2 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/rad4n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL/rad4n90e_dy.xlsx
+✅ Berhasil mengkonversi rad4n90e_dy.ascii
+
+🔄 Memproses file 2/6: rain4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII/rain4n90e_dy.ascii
+🗑️ Menghapus 4 baris karena:
+   - Lebih dari 2 missing values
+   - Kombinasi quality=0 dan source=0
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'Prec', 'StDev', '%Time', 'Q', 'S']
+Jumlah baris data setelah filter: 1904
+✅ Berhasil menyimpan 1904 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/rain4n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   Prec: 36 missing values (1.9%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~1908 baris
+   Data tersimpan: 1904 baris
+   Total dihapus: ~4 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/rain4n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL/rain4n90e_dy.xlsx
+✅ Berhasil mengkonversi rain4n90e_dy.ascii
+
+🔄 Memproses file 3/6: rh4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII/rh4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'RH', 'Q', 'S']
+Jumlah baris data setelah filter: 1852
+✅ Berhasil menyimpan 1852 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/rh4n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   RH: 4 missing values (0.2%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~1852 baris
+   Data tersimpan: 1852 baris
+   Total dihapus: ~0 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/rh4n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL/rh4n90e_dy.xlsx
+✅ Berhasil mengkonversi rh4n90e_dy.ascii
+
+🔄 Memproses file 4/6: sst4n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII/sst4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'Q', 'S']
+Jumlah baris data setelah filter: 2397
+✅ Berhasil menyimpan 2397 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/sst4n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   SST: 40 missing values (1.7%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~2397 baris
+   Data tersimpan: 2397 baris
+   Total dihapus: ~0 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/sst4n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL/sst4n90e_dy.xlsx
+✅ Berhasil mengkonversi sst4n90e_dy.ascii
+
+🔄 Memproses file 5/6: t4n90e_dy.ascii...
+📊 Terdeteksi format suhu (multi-kedalaman) dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII/t4n90e_dy.ascii
+🔍 Kedalaman yang terdeteksi: ['SST', 'TEMP_10.0m', 'TEMP_13.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'TEMP_10.0m', 'TEMP_13.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+Jumlah baris data: 3577
+🗑️ Menghapus 1037 baris dengan lebih dari 5 missing values
+✅ Berhasil menyimpan 2540 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/t4n90e_dy.csv
+
+📊 Informasi Missing Values:
+   SST: 485 missing values (19.1%)
+   TEMP_10.0m: 784 missing values (30.9%)
+   TEMP_13.0m: 139 missing values (5.5%)
+   TEMP_20.0m: 521 missing values (20.5%)
+   TEMP_40.0m: 5 missing values (0.2%)
+   TEMP_60.0m: 619 missing values (24.4%)
+   TEMP_80.0m: 392 missing values (15.4%)
+   TEMP_100.0m: 43 missing values (1.7%)
+   TEMP_120.0m: 8 missing values (0.3%)
+   TEMP_140.0m: 2 missing values (0.1%)
+   TEMP_500.0m: 1 missing values (0.0%)
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/t4n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL/t4n90e_dy.xlsx
+✅ Berhasil mengkonversi t4n90e_dy.ascii
+
+🔄 Memproses file 6/6: w4n90e_dy.ascii...
+🌬️ Terdeteksi format angin dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/ASCII/w4n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'UWND', 'VWND', 'WSPD', 'WDIR']
+Jumlah baris data setelah filter missing values: 813
+✅ Berhasil menyimpan 813 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/w4n90e_dy.csv
+
+✅ Tidak ada missing values dalam dataset final
+   Data asli: ~813 baris
+   Data tersimpan: 813 baris
+   Total dihapus: ~0 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV/w4n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL/w4n90e_dy.xlsx
+✅ Berhasil mengkonversi w4n90e_dy.ascii
+
+✅ Selesai memproses 6/6 file
+📄 File CSV yang dihasilkan: 6 (disimpan di /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/CSV)
+📊 File Excel yang dihasilkan: 6 (disimpan di /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/4N90E/EXCEL)
+
+📋 Ringkasan Hasil Konversi:
+✅ Berhasil mengkonversi 6 dari 6 file ASCII
+
+📄 File CSV yang dihasilkan:
+   1. rad4n90e_dy.csv
+   2. rain4n90e_dy.csv
+   3. rh4n90e_dy.csv
+   4. sst4n90e_dy.csv
+   5. t4n90e_dy.csv
+   6. w4n90e_dy.csv
+
+📊 File Excel yang dihasilkan:
+   1. rad4n90e_dy.xlsx
+   2. rain4n90e_dy.xlsx
+   3. rh4n90e_dy.xlsx
+   4. sst4n90e_dy.xlsx
+   5. t4n90e_dy.xlsx
+   6. w4n90e_dy.xlsx
+
+✨ Proses konversi selesai! ✨
+(tugas-akhir) [cryptedlm@Arch convert]$ python convert_to_csv_v2.py 
+
+📋 KONVERSI DATA BUOY RAMA ASCII KE CSV DAN EXCEL 📋
+==================================================
+📂 Direktori input: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII
+📄 Direktori output CSV: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV
+📊 Direktori output Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL
+==================================================
+📁 Menggunakan direktori CSV: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV
+📊 Menggunakan direktori Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL
+🔍 Menemukan 6 file dengan pola '*.ascii' di direktori input
+
+🔄 Memproses file 1/6: rad8n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII/rad8n90e_dy.ascii
+🗑️ Menghapus 14 baris karena:
+   - Lebih dari 2 missing values
+   - Kombinasi quality=0 dan source=0
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SWRad', 'StDev', 'Max', 'Q', 'S']
+Jumlah baris data setelah filter: 3152
+✅ Berhasil menyimpan 3152 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/rad8n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   Max: 5 missing values (0.2%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~3166 baris
+   Data tersimpan: 3152 baris
+   Total dihapus: ~14 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/rad8n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL/rad8n90e_dy.xlsx
+✅ Berhasil mengkonversi rad8n90e_dy.ascii
+
+🔄 Memproses file 2/6: rain8n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII/rain8n90e_dy.ascii
+🗑️ Menghapus 3 baris karena:
+   - Lebih dari 2 missing values
+   - Kombinasi quality=0 dan source=0
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'Prec', 'StDev', '%Time', 'Q', 'S']
+Jumlah baris data setelah filter: 1710
+✅ Berhasil menyimpan 1710 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/rain8n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   Prec: 18 missing values (1.1%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~1713 baris
+   Data tersimpan: 1710 baris
+   Total dihapus: ~3 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/rain8n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL/rain8n90e_dy.xlsx
+✅ Berhasil mengkonversi rain8n90e_dy.ascii
+
+🔄 Memproses file 3/6: rh8n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII/rh8n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'RH', 'Q', 'S']
+Jumlah baris data setelah filter: 3113
+✅ Berhasil menyimpan 3113 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/rh8n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   RH: 7 missing values (0.2%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~3113 baris
+   Data tersimpan: 3113 baris
+   Total dihapus: ~0 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/rh8n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL/rh8n90e_dy.xlsx
+✅ Berhasil mengkonversi rh8n90e_dy.ascii
+
+🔄 Memproses file 4/6: sst8n90e_dy.ascii...
+📋 Terdeteksi format umum dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII/sst8n90e_dy.ascii
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'Q', 'S']
+Jumlah baris data setelah filter: 3009
+✅ Berhasil menyimpan 3009 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/sst8n90e_dy.csv
+
+📊 Informasi Missing Values per kolom:
+   SST: 3 missing values (0.1%)
+
+📊 Ringkasan Data Processing:
+   Data asli (estimasi): ~3009 baris
+   Data tersimpan: 3009 baris
+   Total dihapus: ~0 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/sst8n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL/sst8n90e_dy.xlsx
+✅ Berhasil mengkonversi sst8n90e_dy.ascii
+
+🔄 Memproses file 5/6: t8n90e_dy.ascii...
+📊 Terdeteksi format suhu (multi-kedalaman) dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII/t8n90e_dy.ascii
+🔍 Kedalaman yang terdeteksi: ['SST', 'TEMP_10.0m', 'TEMP_13.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'TEMP_10.0m', 'TEMP_13.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+Jumlah baris data: 3557
+🗑️ Menghapus 608 baris dengan lebih dari 5 missing values
+✅ Berhasil menyimpan 2949 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/t8n90e_dy.csv
+
+📊 Informasi Missing Values:
+   SST: 50 missing values (1.7%)
+   TEMP_10.0m: 230 missing values (7.8%)
+   TEMP_13.0m: 69 missing values (2.3%)
+   TEMP_20.0m: 38 missing values (1.3%)
+   TEMP_40.0m: 299 missing values (10.1%)
+   TEMP_60.0m: 252 missing values (8.5%)
+   TEMP_80.0m: 13 missing values (0.4%)
+   TEMP_100.0m: 3 missing values (0.1%)
+   TEMP_120.0m: 14 missing values (0.5%)
+   TEMP_140.0m: 3 missing values (0.1%)
+   TEMP_180.0m: 12 missing values (0.4%)
+   TEMP_500.0m: 1 missing values (0.0%)
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/t8n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL/t8n90e_dy.xlsx
+✅ Berhasil mengkonversi t8n90e_dy.ascii
+
+🔄 Memproses file 6/6: w8n90e_dy.ascii...
+🌬️ Terdeteksi format angin dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII/w8n90e_dy.ascii
+🗑️ Menghapus 5 baris karena memiliki lebih dari 3 missing values (-99.9)
+Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'UWND', 'VWND', 'WSPD', 'WDIR']
+Jumlah baris data setelah filter missing values: 3024
+✅ Berhasil menyimpan 3024 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/w8n90e_dy.csv
+
+✅ Tidak ada missing values dalam dataset final
+   Data asli: ~3029 baris
+   Data tersimpan: 3024 baris
+   Total dihapus: ~5 baris
+✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV/w8n90e_dy.csv
+✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL/w8n90e_dy.xlsx
+✅ Berhasil mengkonversi w8n90e_dy.ascii
+
+✅ Selesai memproses 6/6 file
+📄 File CSV yang dihasilkan: 6 (disimpan di /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV)
+📊 File Excel yang dihasilkan: 6 (disimpan di /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL)
+
+📋 Ringkasan Hasil Konversi:
+✅ Berhasil mengkonversi 6 dari 6 file ASCII
+
+📄 File CSV yang dihasilkan:
+   1. rad8n90e_dy.csv
+   2. rain8n90e_dy.csv
+   3. rh8n90e_dy.csv
+   4. sst8n90e_dy.csv
+   5. t8n90e_dy.csv
+   6. w8n90e_dy.csv
+
+📊 File Excel yang dihasilkan:
+   1. rad8n90e_dy.xlsx
+   2. rain8n90e_dy.xlsx
+   3. rh8n90e_dy.xlsx
+   4. sst8n90e_dy.xlsx
+   5. t8n90e_dy.xlsx
+   6. w8n90e_dy.xlsx
+
+✨ Proses konversi selesai! ✨
