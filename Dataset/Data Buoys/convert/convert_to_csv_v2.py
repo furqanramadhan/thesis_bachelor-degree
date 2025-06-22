@@ -500,7 +500,7 @@ def convert_wind_ascii_to_csv(input_file, output_file):
     return output_file
 
 def convert_general_ascii_to_csv(input_file, output_file):
-    """Fungsi untuk konversi file format umum (rad, rain, rh, sst) - IMPROVED VERSION dengan SST Support"""
+    """Fungsi untuk konversi file format umum (rad, rain, rh, sst) - FIXED VERSION dengan indexing yang benar"""
     with open(input_file, 'r') as f:
         lines = f.readlines()
     
@@ -589,7 +589,7 @@ def convert_general_ascii_to_csv(input_file, output_file):
         if re.match(r'^\s*\d{8}\s+\d{4}', line):
             parts = line.strip().split()
             
-            # 🔧 PERBAIKAN 3: Handle ekstraksi data berdasarkan format
+            # 🔧 PERBAIKAN 3: Handle ekstraksi data berdasarkan format - FIXED INDEXING
             if is_sst_format:
                 # Untuk format SST, quality dan source sudah terpisah di kolom individual
                 data_values = []
@@ -615,20 +615,31 @@ def convert_general_ascii_to_csv(input_file, output_file):
                                 source_codes.append(0)  # Default untuk nilai non-numeric
                 
             elif is_non_sst_format:
-                # 🆕 UNTUK RAD, RAIN, RH: Ambil hanya data tanpa Q dan S
+                # 🆕🔧 UNTUK RAD, RAIN, RH: FIXED INDEXING - Ambil hanya data tanpa Q dan S
                 data_values = []
                 quality_codes = []
                 source_codes = []
                 
-                # Ambil data berdasarkan posisi header yang valid (tanpa Q dan S)
-                data_start_index = 2  # Skip YYYYMMDD dan HHMM
+                # ✨ PERBAIKAN UTAMA: Indexing yang benar
+                data_index = 2  # Start from position 2 (after YYYYMMDD and HHMM)
                 
-                for i, header in enumerate(headers):
-                    if header in data_headers and (data_start_index + i) < len(parts):
-                        data_values.append(parts[data_start_index + i])
+                for header in headers:
+                    if header in data_headers:
+                        # Ini adalah kolom data yang kita inginkan
+                        if data_index < len(parts):
+                            data_values.append(parts[data_index])
+                            print(f"🔍 Mengambil data untuk {header}: {parts[data_index]} dari index {data_index}")
+                        data_index += 1  # Increment untuk data berikutnya
+                    elif header in ['Q', 'S']:
+                        # Skip kolom Q dan S, tapi tetap increment index karena ada di file asli
+                        print(f"⏭️ Melewatkan kolom {header} di index {data_index}")
+                        data_index += 1
+                    elif header not in ['YYYYMMDD', 'HHMM']:
+                        # Skip kolom lain yang tidak diinginkan, tapi tetap increment index
+                        data_index += 1
                 
                 # ✨ TIDAK ada quality/source codes untuk rad, rain, rh
-                print(f"📋 Data extracted untuk non-SST: {data_values} (Q dan S diabaikan)")
+                print(f"📋 Data extracted untuk non-SST: {data_values}")
                 
             else:
                 # Untuk format lainnya, gunakan logic original
