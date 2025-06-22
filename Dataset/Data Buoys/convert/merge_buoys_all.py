@@ -136,8 +136,17 @@ def main():
     print("\nMenggabungkan semua data lokasi...")
     final_df = pd.concat(all_data, ignore_index=True)
     
-    # Urutkan berdasarkan Location dan Date
-    final_df = final_df.sort_values(['Location', 'Date'])
+    # Konversi Location ke string dan urutan kustom
+    final_df['Location'] = final_df['Location'].astype(str)
+    locations_custom = ["0N90E", "4N90E", "8N90E"]  # pastikan urutan sesuai kebutuhan
+    final_df['Location'] = pd.Categorical(
+        final_df['Location'], 
+        categories=locations_custom, 
+        ordered=True
+    )
+    
+    # Sort berdasarkan Location dulu, kemudian Date dengan reset index
+    final_df = final_df.sort_values(['Date', 'Location']).reset_index(drop=True)
     
     # Atur urutan kolom sesuai yang diinginkan
     column_order = [
@@ -158,7 +167,7 @@ def main():
     final_df['Date'] = final_df['Date'].dt.strftime('%Y-%m-%d')
     
     # Simpan ke file CSV
-    output_file = os.path.join(base_dir, 'testww.csv')
+    output_file = os.path.join(base_dir, 'CSV/Buoys_Data_All.csv')
     final_df.to_csv(output_file, index=False)
     
     print(f"\nData berhasil digabungkan dan disimpan ke: {output_file}")
