@@ -442,23 +442,12 @@ def convert_wind_ascii_to_csv(input_file, output_file):
 
     if quality_cols or source_cols:
         print("🔍 Menerapkan filter quality dan source codes pada file angin...")
-        additional_invalid_rows = 0
-        
+        # Aplikasikan filter untuk setiap variabel angin
         for header in data_headers:
             quality_col = f"{header}_QUALITY" if f"{header}_QUALITY" in df.columns else None
             source_col = f"{header}_SOURCE" if f"{header}_SOURCE" in df.columns else None
-        
-            if quality_col or source_col:
-                # Gunakan EXCLUDE_QUALITY_CODES dan EXCLUDE_SOURCE_CODES
-                if quality_col:
-                    invalid_quality_mask = df[quality_col].isin(EXCLUDE_QUALITY_CODES)
-                    df.loc[invalid_quality_mask, header] = np.nan
-                    
-                if source_col:
-                    invalid_source_mask = df[source_col].isin(EXCLUDE_SOURCE_CODES)
-                    df.loc[invalid_source_mask, header] = np.nan
-        
-        # 🔧 IMPROVEMENT 4: Setelah quality/source filtering, hapus baris yang sekarang memiliki semua data NaN
+            df = filter_by_quality_source(df, quality_col, source_col)
+        # Setelah filtering, hapus baris yang sekarang memiliki semua data NaN
         wind_data_cols = [col for col in df.columns if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col]
         
         # Identifikasi baris dengan semua wind data NaN
@@ -511,7 +500,7 @@ def convert_wind_ascii_to_csv(input_file, output_file):
     return output_file
 
 def convert_general_ascii_to_csv(input_file, output_file):
-    """Fungsi untuk konversi file format umum (rad, rain, rh, sst) - IMPROVED VERSION"""
+    """Fungsi untuk konversi file format umum (rad, rain, rh, sst) - IMPROVED VERSION dengan SST Support"""
     with open(input_file, 'r') as f:
         lines = f.readlines()
     
@@ -531,15 +520,67 @@ def convert_general_ascii_to_csv(input_file, output_file):
     # Ekstrak header
     headers = header_line.strip().split()
     
-    # Identifikasi kolom-kolom data (bukan QUALITY/SOURCE dan bukan tanggal/waktu)
+    # 🔧 PERBAIKAN 1: Deteksi format berdasarkan nama file atau header pattern
+    filename = os.path.basename(input_file).lower()
+    is_sst_format = False
+    is_non_sst_format = False  # rad, rain, rh
+    
+    # Deteksi berdasarkan nama file
+    if 'sst' in filename:
+        is_sst_format = True
+        print("🌡️ Format SST terdeteksi berdasarkan nama file - akan menggunakan Q dan S sebagai quality/source codes")
+    elif any(var in filename for var in ['rad', 'rain', 'rh']):
+        is_non_sst_format = True
+        print(f"🌤️ Format non-SST terdeteksi ({filename}) - akan menghilangkan kolom Q dan S")
+    else:
+        # Fallback ke deteksi berdasarkan header
+        if 'SST' in headers and ('Q' in headers and 'S' in headers):
+            is_sst_format = True
+            print("🌡️ Format SST terdeteksi - akan menggunakan Q dan S sebagai quality/source codes")
+        elif ('Q' in headers and 'S' in headers):
+            is_non_sst_format = True
+            print("🌤️ Format non-SST terdeteksi - akan menghilangkan kolom Q dan S")
+    
+    # 🔧 PERBAIKAN 2: Identifikasi kolom berdasarkan format yang terdeteksi
     valid_headers = []
     data_headers = []
+    quality_headers = []
+    source_headers = []
     
-    for header in headers:
-        if header not in ['QUALITY', 'SOURCE'] and header != '':
-            valid_headers.append(header)
-            if header not in ['YYYYMMDD', 'HHMM']:
-                data_headers.append(header)
+    if is_sst_format:
+        # Untuk format SST, tetap gunakan Q dan S
+        for header in headers:
+            if header not in ['']:
+                valid_headers.append(header)
+                if header in ['YYYYMMDD', 'HHMM']:
+                    continue  # Skip date/time columns
+                elif header in ['SST']:
+                    data_headers.append(header)  # Data aktual
+                elif header in ['Q', 'QUALITY']:
+                    quality_headers.append(header)  # Quality codes
+                elif header in ['S', 'SOURCE']:
+                    source_headers.append(header)  # Source codes
+    elif is_non_sst_format:
+        # 🆕 UNTUK RAD, RAIN, RH: Abaikan kolom Q dan S
+        for header in headers:
+            if header not in ['Q', 'S', '']:  # ✨ KUNCI: Skip kolom Q dan S
+                valid_headers.append(header)
+                if header not in ['YYYYMMDD', 'HHMM']:
+                    data_headers.append(header)
+        
+        print(f"✂️ Kolom Q dan S dihilangkan untuk variabel non-SST")
+        print(f"📊 Data headers yang akan diproses: {data_headers}")
+    else:
+        # Untuk format lainnya (original logic)
+        for header in headers:
+            if header not in ['QUALITY', 'SOURCE'] and header != '':
+                valid_headers.append(header)
+                if header not in ['YYYYMMDD', 'HHMM']:
+                    data_headers.append(header)
+    
+    print(f"📊 Data headers: {data_headers}")
+    print(f"🔍 Quality headers: {quality_headers}")
+    print(f"📡 Source headers: {source_headers}")
     
     # Proses baris data dengan improvement untuk missing values handling
     removed_rows_count = 0  # Counter untuk baris yang dihapus
@@ -548,37 +589,97 @@ def convert_general_ascii_to_csv(input_file, output_file):
         if re.match(r'^\s*\d{8}\s+\d{4}', line):
             parts = line.strip().split()
             
-            # Ekstrak data, quality, dan source menggunakan function yang sudah ada
-            if len(data_headers) > 0:
-                data_values, quality_codes, source_codes = extract_quality_source_from_line(parts, len(data_headers))
-            else:
-                # Jika tidak ada data headers, ambil semua setelah tanggal/waktu
-                data_values = parts[2:] if len(parts) > 2 else []
+            # 🔧 PERBAIKAN 3: Handle ekstraksi data berdasarkan format
+            if is_sst_format:
+                # Untuk format SST, quality dan source sudah terpisah di kolom individual
+                data_values = []
                 quality_codes = []
                 source_codes = []
+                
+                # Mapping berdasarkan posisi header
+                for i, header in enumerate(headers):
+                    if i + 2 < len(parts):  # Skip YYYYMMDD (0) dan HHMM (1)
+                        value = parts[i]
+                        
+                        if header in data_headers:
+                            data_values.append(value)
+                        elif header in quality_headers:
+                            try:
+                                quality_codes.append(int(value))
+                            except ValueError:
+                                quality_codes.append(0)  # Default untuk nilai non-numeric
+                        elif header in source_headers:
+                            try:
+                                source_codes.append(int(value))
+                            except ValueError:
+                                source_codes.append(0)  # Default untuk nilai non-numeric
+                
+            elif is_non_sst_format:
+                # 🆕 UNTUK RAD, RAIN, RH: Ambil hanya data tanpa Q dan S
+                data_values = []
+                quality_codes = []
+                source_codes = []
+                
+                # Ambil data berdasarkan posisi header yang valid (tanpa Q dan S)
+                data_start_index = 2  # Skip YYYYMMDD dan HHMM
+                
+                for i, header in enumerate(headers):
+                    if header in data_headers and (data_start_index + i) < len(parts):
+                        data_values.append(parts[data_start_index + i])
+                
+                # ✨ TIDAK ada quality/source codes untuk rad, rain, rh
+                print(f"📋 Data extracted untuk non-SST: {data_values} (Q dan S diabaikan)")
+                
+            else:
+                # Untuk format lainnya, gunakan logic original
+                if len(data_headers) > 0:
+                    data_values, quality_codes, source_codes = extract_quality_source_from_line(parts, len(data_headers))
+                else:
+                    data_values = parts[2:] if len(parts) > 2 else []
+                    quality_codes = []
+                    source_codes = []
             
-            # 🔧 IMPROVEMENT 1: Hitung jumlah missing values dalam baris ini
+            # 🔧 PERBAIKAN 4: Pre-filtering berdasarkan quality/source codes HANYA untuk SST
+            skip_record_due_to_quality_source = False
+            
+            if is_sst_format:  # ✨ HANYA terapkan filtering untuk SST
+                # Check individual quality/source codes
+                for i in range(len(data_values)):
+                    current_quality = quality_codes[i] if i < len(quality_codes) else None
+                    current_source = source_codes[i] if i < len(source_codes) else None
+                    
+                    # Skip jika quality code tidak acceptable
+                    if current_quality is not None and current_quality in EXCLUDE_QUALITY_CODES:
+                        skip_record_due_to_quality_source = True
+                        print(f"🚫 SST Record ditolak karena quality code {current_quality}")
+                        break
+                    
+                    # Skip jika source code tidak acceptable  
+                    if current_source is not None and current_source in EXCLUDE_SOURCE_CODES:
+                        skip_record_due_to_quality_source = True
+                        print(f"🚫 SST Record ditolak karena source code {current_source}")
+                        break
+                    
+                    # Skip jika kombinasi (0,0)
+                    if current_quality == 0 and current_source == 0:
+                        skip_record_due_to_quality_source = True
+                        print(f"🚫 SST Record ditolak karena kombinasi quality=0 dan source=0")
+                        break
+            
+            if skip_record_due_to_quality_source:
+                removed_rows_count += 1
+                continue  # Skip baris ini karena quality/source tidak acceptable
+            
+            # 🔧 IMPROVEMENT: Hitung jumlah missing values dalam baris ini
             missing_count = 0
             for value in data_values:
                 if str(value) in ['-999.99', '-9.99', '-9.999', '-999.9', '-9.9']:
                     missing_count += 1
             
-            # 🔧 IMPROVEMENT 2: Skip baris jika lebih dari 2 missing values
+            # Skip baris jika lebih dari 2 missing values
             if missing_count > 2:
                 removed_rows_count += 1
                 continue  # Skip baris ini, jangan tambahkan ke data_rows
-            
-            # 🔧 IMPROVEMENT 3: Check untuk quality=0 dan source=0 combination
-            skip_record_due_to_quality_source = False
-            if quality_codes and source_codes:
-                for i in range(min(len(quality_codes), len(source_codes))):
-                    if quality_codes[i] == 0 and source_codes[i] == 0:
-                        skip_record_due_to_quality_source = True
-                        break
-            
-            if skip_record_due_to_quality_source:
-                removed_rows_count += 1
-                continue  # Skip baris ini karena ada kombinasi (0,0)
             
             # Pastikan panjang data sesuai dengan header
             if len(parts) >= 2:  # Minimal ada tanggal dan waktu
@@ -590,11 +691,12 @@ def convert_general_ascii_to_csv(input_file, output_file):
                 for i, header in enumerate(data_headers):
                     if i < len(data_values):
                         row_data[header] = data_values[i]
-                        # Tambahkan quality dan source jika ada
-                        if i < len(quality_codes):
-                            row_data[f"{header}_QUALITY"] = quality_codes[i]
-                        if i < len(source_codes):
-                            row_data[f"{header}_SOURCE"] = source_codes[i]
+                        # ✨ Tambahkan quality dan source HANYA untuk SST
+                        if is_sst_format:
+                            if i < len(quality_codes):
+                                row_data[f"{header}_QUALITY"] = quality_codes[i]
+                            if i < len(source_codes):
+                                row_data[f"{header}_SOURCE"] = source_codes[i]
                     else:
                         row_data[header] = 'NaN'
                 
@@ -604,8 +706,9 @@ def convert_general_ascii_to_csv(input_file, output_file):
     # Report jumlah baris yang dihapus
     if removed_rows_count > 0:
         print(f"🗑️ Menghapus {removed_rows_count} baris karena:")
+        if is_sst_format:
+            print(f"   - Quality/Source codes tidak acceptable (SST)")
         print(f"   - Lebih dari 2 missing values")
-        print(f"   - Kombinasi quality=0 dan source=0")
     
     # Buat DataFrame
     df = pd.DataFrame(data_rows)
@@ -619,33 +722,31 @@ def convert_general_ascii_to_csv(input_file, output_file):
         df['Timestamp'] = pd.to_datetime(df['YYYYMMDD'] + ' ' + df['HHMM'], format='%Y%m%d %H%M', errors='coerce')
         df.drop(['YYYYMMDD', 'HHMM'], axis=1, inplace=True)
     
-    # 🔧 IMPROVEMENT 4: Konversi nilai ke numerik dan tangani missing values dengan pattern yang diperbaiki
+    # 🔧 IMPROVEMENT: Konversi nilai ke numerik dan tangani missing values dengan pattern yang diperbaiki
     for col in df.columns:
         if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col:
             # Identifikasi dan ganti nilai missing dengan pattern yang diperbaiki
             df[col] = df[col].apply(lambda x: np.nan if str(x) in ['-999.99', '-9.99', '-9.999', '-999.9', '-9.9'] else x)
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # 🔧 IMPROVEMENT 5: Filter berdasarkan quality/source codes menggunakan EXCLUDE approach
+    # 🔧 IMPROVEMENT: Additional filtering menggunakan DataFrame-level quality/source filter HANYA untuk SST
     quality_cols = [col for col in df.columns if '_QUALITY' in col]
     source_cols = [col for col in df.columns if '_SOURCE' in col]
 
-    if quality_cols or source_cols:
-        print("🔍 Menerapkan filter quality dan source codes pada file umum...")
+    if (quality_cols or source_cols) and is_sst_format:  # ✨ HANYA untuk SST
+        print("🔍 Menerapkan additional DataFrame-level quality dan source filtering untuk SST...")
+        original_len = len(df)
+        
         for header in data_headers:
             quality_col = f"{header}_QUALITY" if f"{header}_QUALITY" in df.columns else None
             source_col = f"{header}_SOURCE" if f"{header}_SOURCE" in df.columns else None
+            df = filter_by_quality_source(df, quality_col, source_col)
         
-            if quality_col or source_col:
-                if quality_col:
-                    invalid_quality_mask = df[quality_col].isin(EXCLUDE_QUALITY_CODES)
-                    df.loc[invalid_quality_mask, header] = np.nan
-                    
-                if source_col:
-                    invalid_source_mask = df[source_col].isin(EXCLUDE_SOURCE_CODES)
-                    df.loc[invalid_source_mask, header] = np.nan
+        additional_removed = original_len - len(df)
+        if additional_removed > 0:
+            print(f"🗑️ DataFrame-level filtering menghapus {additional_removed} baris tambahan")
     
-    # 🔧 IMPROVEMENT 6: Final cleanup - hapus baris yang sekarang memiliki semua data NaN
+    # Final cleanup - hapus baris yang sekarang memiliki semua data NaN
     data_cols_final = [col for col in df.columns if col != 'Timestamp' and '_QUALITY' not in col and '_SOURCE' not in col]
     
     if data_cols_final:
@@ -655,7 +756,18 @@ def convert_general_ascii_to_csv(input_file, output_file):
         
         if rows_to_drop_final > 0:
             df = df[~all_data_nan_mask].reset_index(drop=True)
-            print(f"🗑️ Final cleanup: menghapus {rows_to_drop_final} baris dengan semua data menjadi NaN setelah quality/source filtering")
+            print(f"🗑️ Final cleanup: menghapus {rows_to_drop_final} baris dengan semua data menjadi NaN")
+    
+    # ✨ HAPUS kolom quality dan source untuk non-SST format
+    if is_non_sst_format:
+        # Untuk rad, rain, rh - hapus semua kolom quality/source (jika ada yang tersisa)
+        df = df.drop(columns=quality_cols + source_cols, errors='ignore')
+        print("✂️ Kolom Q dan S berhasil dihilangkan dari output final")
+    elif is_sst_format:
+        # Untuk SST, tetap simpan kolom quality/source jika diinginkan
+        # Atau uncomment baris berikut jika ingin menghapus juga untuk SST:
+        # df = df.drop(columns=quality_cols + source_cols, errors='ignore')
+        pass
     
     # Simpan ke CSV
     df.to_csv(output_file, index=False)
@@ -674,15 +786,22 @@ def convert_general_ascii_to_csv(input_file, output_file):
     
     # Tampilkan ringkasan total removal
     total_original_estimated = len(data_rows) + removed_rows_count
+    total_removed = removed_rows_count
+    if 'additional_removed' in locals():
+        total_removed += additional_removed
     if 'rows_to_drop_final' in locals():
-        total_removed = removed_rows_count + rows_to_drop_final
-    else:
-        total_removed = removed_rows_count
+        total_removed += rows_to_drop_final
     
     print(f"\n📊 Ringkasan Data Processing:")
     print(f"   Data asli (estimasi): ~{total_original_estimated} baris")
     print(f"   Data tersimpan: {len(df)} baris") 
     print(f"   Total dihapus: ~{total_removed} baris")
+    
+    # ✨ Status kolom Q dan S
+    if is_non_sst_format:
+        print(f"   ✂️ Kolom Q dan S berhasil dihilangkan untuk variabel non-SST")
+    elif is_sst_format:
+        print(f"   🔍 Kolom Q dan S dipertahankan untuk variabel SST")
     
     return output_file
 
