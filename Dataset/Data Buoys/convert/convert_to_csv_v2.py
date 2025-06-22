@@ -146,95 +146,166 @@ def convert_ascii_to_csv(input_file, output_file=None):
         return convert_general_ascii_to_csv(input_file, output_file)
 
 def convert_temperature_ascii_to_csv(input_file, output_file):
-    """Fungsi untuk konversi file format suhu multi-kedalaman - SIMPLIFIED VERSION"""
+    """
+    Fungsi untuk konversi file format suhu multi-kedalaman dengan handling multiple time blocks
+    dan skip TEMP_13m untuk konsistensi data.
+    """
     with open(input_file, 'r') as f:
         lines = f.readlines()
     
-    # Cari informasi kedalaman
-    depth_line = None
-    for line in lines:
-        if 'Depth(M):' in line:
-            depth_line = line.strip()
-            break
+    # FASE 1: Deteksi semua time blocks dan kedalaman unik
+    time_blocks = []
+    all_depths = set()
     
-    if not depth_line:
-        print("❌ Tidak dapat menemukan informasi kedalaman")
-        return None
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        
+        # Cari baris Time: yang menandakan time block baru
+        if line.startswith('Time:') and 'index' in line.lower():
+            # Parse informasi time block
+            time_info = line
+            
+            # Cari baris Index: dan Depth(M): setelah Time:
+            depth_line = None
+            for j in range(i + 1, min(i + 5, len(lines))):  # Cek 4 baris ke depan
+                if 'Depth(M):' in lines[j]:
+                    depth_line = lines[j].strip()
+                    break
+            
+            if depth_line:
+                # Ekstrak kedalaman dari baris ini
+                depth_parts = depth_line.split(':')[1].strip().split()
+                block_depths = []
+                
+                for part in depth_parts:
+                    if part in ['QUALITY', 'SOURCE']:
+                        break
+                    try:
+                        depth = float(part)
+                        block_depths.append(depth)
+                        all_depths.add(depth)
+                    except ValueError:
+                        continue
+                
+                # Simpan informasi time block
+                time_blocks.append({
+                    'info': time_info,
+                    'depths': block_depths,
+                    'start_line': i
+                })
+                
+                print(f"🔍 Time Block ditemukan: {len(block_depths)} kedalaman - {block_depths}")
+        
+        i += 1
     
-    # Ekstrak nilai kedalaman untuk digunakan sebagai nama kolom
-    depth_parts = depth_line.split(':')[1].strip().split()
-    depth_values = []
-    for part in depth_parts:
-        # Skip kata-kata non-numerik seperti 'QUALITY', 'SOURCE'
-        if part in ['QUALITY', 'SOURCE']:
-            break
-        try:
-            depth = float(part)
-            depth_values.append(f"TEMP_{depth}m")
-        except ValueError:
-            continue
+    print(f"📊 Total time blocks ditemukan: {len(time_blocks)}")
+    print(f"🌊 Semua kedalaman unik: {sorted(all_depths)}")
     
-    # Jika kedalaman pertama adalah 1, itu SST (Sea Surface Temperature)
-    if depth_values and "TEMP_1.0m" in depth_values[0]:
-        depth_values[0] = "SST"
+    # FASE 2: Buat struktur kolom target (skip kedalaman 13m)
+    target_depths = sorted([d for d in all_depths if d != 13.0])  # Skip 13m
     
-    print(f"🔍 Kedalaman yang terdeteksi: {depth_values}")
+    # Buat nama kolom
+    depth_columns = []
+    for depth in target_depths:
+        if depth == 1.0:
+            depth_columns.append("SST")
+        else:
+            depth_columns.append(f"TEMP_{depth}m")
     
-    # Buat struktur untuk data
+    print(f"🎯 Kolom target (skip 13m): {depth_columns}")
+    
+    # FASE 3: Buat mapping untuk setiap time block
+    block_mappings = []
+    for block in time_blocks:
+        block_depths = block['depths']
+        
+        # Buat mapping dari index data ke kolom target
+        mapping = {}
+        for data_idx, depth in enumerate(block_depths):
+            if depth == 13.0:
+                # Skip 13m - tidak di-map ke kolom manapun
+                continue
+            
+            # Cari posisi depth ini di target_depths
+            try:
+                target_idx = target_depths.index(depth)
+                target_col = depth_columns[target_idx]
+                mapping[data_idx] = target_col
+            except ValueError:
+                continue  # Depth tidak ada di target
+        
+        block_mappings.append({
+            'depths': block_depths,
+            'mapping': mapping,
+            'info': block['info']
+        })
+        
+        print(f"📋 Mapping untuk block {len(block_mappings)}: {mapping}")
+    
+    # FASE 4: Proses data dengan mapping yang tepat
     data_rows = []
+    current_block_idx = 0
+    current_mapping = block_mappings[0]['mapping'] if block_mappings else {}
     
-    # Proses baris data
     for line in lines:
+        # Check apakah baris ini adalah awal time block baru
+        if line.strip().startswith('Time:') and 'index' in line.lower():
+            # Update mapping ke block berikutnya
+            for i, block in enumerate(time_blocks):
+                if block['info'].strip() == line.strip():
+                    if i < len(block_mappings):
+                        current_mapping = block_mappings[i]['mapping']
+                        current_block_idx = i
+                        print(f"🔄 Switch ke time block {i+1}")
+                    break
+            continue
+        
+        # Proses baris data
         if re.match(r'^\s*\d{8}\s+\d{4}', line):
             parts = line.strip().split()
+            
+            if len(parts) < 3:
+                continue
             
             # Ambil tanggal dan waktu
             date = parts[0]
             time = parts[1]
             
-            # Ambil data temperatur (skip quality dan source codes)
-            temp_values = parts[2:2+len(depth_values)]
+            # Ekstrak data temperatur berdasarkan mapping current block
+            temp_data = parts[2:]  # Semua data setelah tanggal/waktu
             
-            # Pastikan jumlah nilai sesuai dengan jumlah kedalaman
-            if len(temp_values) < len(depth_values):
-                temp_values.extend(['NaN'] * (len(depth_values) - len(temp_values)))
-            elif len(temp_values) > len(depth_values):
-                temp_values = temp_values[:len(depth_values)]
-            
-            # Gabungkan tanggal, waktu, dan nilai suhu
+            # Inisialisasi row data dengan semua kolom target
             row_data = {'YYYYMMDD': date, 'HHMM': time}
-            for i, depth_name in enumerate(depth_values):
-                if i < len(temp_values):
-                    row_data[depth_name] = temp_values[i]
-                else:
-                    row_data[depth_name] = 'NaN'
+            for col in depth_columns:
+                row_data[col] = 'NaN'  # Default value
+            
+            # Map data sesuai dengan mapping current block
+            for data_idx, target_col in current_mapping.items():
+                if data_idx < len(temp_data):
+                    row_data[target_col] = temp_data[data_idx]
             
             data_rows.append(row_data)
     
-    # Buat DataFrame
-    df = pd.DataFrame(data_rows)
+    print(f"📈 Total baris data yang diproses: {len(data_rows)}")
     
-    print(f"Kolom yang berhasil diproses: {df.columns.tolist()}")
-    print(f"Jumlah baris data: {len(df)}")
+    # FASE 5: Buat DataFrame
+    df = pd.DataFrame(data_rows)
     
     # Gabungkan kolom tanggal dan waktu ke timestamp
     df['Timestamp'] = pd.to_datetime(df['YYYYMMDD'] + ' ' + df['HHMM'], format='%Y%m%d %H%M', errors='coerce')
-    
-    # Hapus kolom asli tanggal dan waktu
     df.drop(['YYYYMMDD', 'HHMM'], axis=1, inplace=True)
-
+    
     # Konversi missing values (-9.999) ke NaN untuk kolom data temperatur
-    for col in df.columns:
-        if col != 'Timestamp':
-            # Hanya ganti nilai -9.999 dengan NaN (sesuai dokumentasi ASCII)
+    for col in depth_columns:
+        if col in df.columns:
             df[col] = df[col].apply(lambda x: np.nan if str(x) == '-9.999' else x)
             df[col] = pd.to_numeric(df[col], errors='coerce')
     
-    # Hapus baris dengan terlalu banyak missing values (lebih dari 3-5 kolom)
-    temp_cols = [col for col in df.columns if col != 'Timestamp']
-    max_allowed_missing = min(5, len(temp_cols) - 1)  # Maksimal 5 atau jumlah kolom-1
+    # Hapus baris dengan terlalu banyak missing values
+    temp_cols = depth_columns
+    max_allowed_missing = min(5, len(temp_cols) - 1)
     
-    # Hitung missing values per baris
     missing_counts = df[temp_cols].isnull().sum(axis=1)
     rows_to_drop = missing_counts > max_allowed_missing
     
@@ -254,6 +325,14 @@ def convert_temperature_ascii_to_csv(input_file, output_file):
             if missing_count > 0:
                 percentage = (missing_count / len(df)) * 100
                 print(f"   {col}: {missing_count} missing values ({percentage:.1f}%)")
+    
+    # Tampilkan statistik per time block jika ada
+    if len(time_blocks) > 1:
+        print(f"\n📋 Statistik Time Blocks:")
+        for i, block in enumerate(time_blocks):
+            depths_str = ', '.join([f"{d}m" if d != 1.0 else "SST" for d in block['depths']])
+            skip_info = " (13m skipped)" if 13.0 in block['depths'] else ""
+            print(f"   Block {i+1}: {len(block['depths'])} depths [{depths_str}]{skip_info}")
     
     return output_file
 

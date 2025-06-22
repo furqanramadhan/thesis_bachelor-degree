@@ -84,25 +84,48 @@ Jumlah baris data setelah filter: 4203
 
 🔄 Memproses file 5/6: t0n90e_dy.ascii...
 📊 Terdeteksi format suhu (multi-kedalaman) dari /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/0N90E/ASCII/t0n90e_dy.ascii
-🔍 Kedalaman yang terdeteksi: ['SST', 'TEMP_10.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
-Kolom yang berhasil diproses: ['YYYYMMDD', 'HHMM', 'SST', 'TEMP_10.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
-Jumlah baris data: 4406
-🗑️ Menghapus 523 baris dengan lebih dari 5 missing values
-✅ Berhasil menyimpan 3883 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/0N90E/CSV/t0n90e_dy.csv
+🔍 Time Block ditemukan: 12 kedalaman - [1.0, 10.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Time Block ditemukan: 13 kedalaman - [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Time Block ditemukan: 13 kedalaman - [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Time Block ditemukan: 13 kedalaman - [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🔍 Time Block ditemukan: 13 kedalaman - [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+📊 Total time blocks ditemukan: 5
+🌊 Semua kedalaman unik: [1.0, 10.0, 13.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 180.0, 300.0, 500.0]
+🎯 Kolom target (skip 13m): ['SST', 'TEMP_10.0m', 'TEMP_20.0m', 'TEMP_40.0m', 'TEMP_60.0m', 'TEMP_80.0m', 'TEMP_100.0m', 'TEMP_120.0m', 'TEMP_140.0m', 'TEMP_180.0m', 'TEMP_300.0m', 'TEMP_500.0m']
+📋 Mapping untuk block 1: {0: 'SST', 1: 'TEMP_10.0m', 2: 'TEMP_20.0m', 3: 'TEMP_40.0m', 4: 'TEMP_60.0m', 5: 'TEMP_80.0m', 6: 'TEMP_100.0m', 7: 'TEMP_120.0m', 8: 'TEMP_140.0m', 9: 'TEMP_180.0m', 10: 'TEMP_300.0m', 11: 'TEMP_500.0m'}
+📋 Mapping untuk block 2: {0: 'SST', 1: 'TEMP_10.0m', 3: 'TEMP_20.0m', 4: 'TEMP_40.0m', 5: 'TEMP_60.0m', 6: 'TEMP_80.0m', 7: 'TEMP_100.0m', 8: 'TEMP_120.0m', 9: 'TEMP_140.0m', 10: 'TEMP_180.0m', 11: 'TEMP_300.0m', 12: 'TEMP_500.0m'}
+📋 Mapping untuk block 3: {0: 'SST', 1: 'TEMP_10.0m', 3: 'TEMP_20.0m', 4: 'TEMP_40.0m', 5: 'TEMP_60.0m', 6: 'TEMP_80.0m', 7: 'TEMP_100.0m', 8: 'TEMP_120.0m', 9: 'TEMP_140.0m', 10: 'TEMP_180.0m', 11: 'TEMP_300.0m', 12: 'TEMP_500.0m'}
+📋 Mapping untuk block 4: {0: 'SST', 1: 'TEMP_10.0m', 3: 'TEMP_20.0m', 4: 'TEMP_40.0m', 5: 'TEMP_60.0m', 6: 'TEMP_80.0m', 7: 'TEMP_100.0m', 8: 'TEMP_120.0m', 9: 'TEMP_140.0m', 10: 'TEMP_180.0m', 11: 'TEMP_300.0m', 12: 'TEMP_500.0m'}
+📋 Mapping untuk block 5: {0: 'SST', 1: 'TEMP_10.0m', 3: 'TEMP_20.0m', 4: 'TEMP_40.0m', 5: 'TEMP_60.0m', 6: 'TEMP_80.0m', 7: 'TEMP_100.0m', 8: 'TEMP_120.0m', 9: 'TEMP_140.0m', 10: 'TEMP_180.0m', 11: 'TEMP_300.0m', 12: 'TEMP_500.0m'}
+🔄 Switch ke time block 1
+🔄 Switch ke time block 2
+🔄 Switch ke time block 3
+🔄 Switch ke time block 4
+🔄 Switch ke time block 5
+📈 Total baris data yang diproses: 4406
+🗑️ Menghapus 522 baris dengan lebih dari 5 missing values
+✅ Berhasil menyimpan 3884 baris data ke /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/0N90E/CSV/t0n90e_dy.csv
 
 📊 Informasi Missing Values:
    SST: 4 missing values (0.1%)
-   TEMP_10.0m: 387 missing values (10.0%)
-   TEMP_20.0m: 38 missing values (1.0%)
-   TEMP_40.0m: 582 missing values (15.0%)
-   TEMP_60.0m: 436 missing values (11.2%)
-   TEMP_80.0m: 750 missing values (19.3%)
-   TEMP_100.0m: 219 missing values (5.6%)
-   TEMP_120.0m: 509 missing values (13.1%)
-   TEMP_140.0m: 214 missing values (5.5%)
-   TEMP_180.0m: 914 missing values (23.5%)
-   TEMP_300.0m: 496 missing values (12.8%)
-   TEMP_500.0m: 408 missing values (10.5%)
+   TEMP_10.0m: 388 missing values (10.0%)
+   TEMP_20.0m: 438 missing values (11.3%)
+   TEMP_40.0m: 514 missing values (13.2%)
+   TEMP_60.0m: 750 missing values (19.3%)
+   TEMP_80.0m: 241 missing values (6.2%)
+   TEMP_100.0m: 489 missing values (12.6%)
+   TEMP_120.0m: 281 missing values (7.2%)
+   TEMP_140.0m: 915 missing values (23.6%)
+   TEMP_180.0m: 496 missing values (12.8%)
+   TEMP_300.0m: 407 missing values (10.5%)
+   TEMP_500.0m: 9 missing values (0.2%)
+
+📋 Statistik Time Blocks:
+   Block 1: 12 depths [SST, 10.0m, 20.0m, 40.0m, 60.0m, 80.0m, 100.0m, 120.0m, 140.0m, 180.0m, 300.0m, 500.0m]
+   Block 2: 13 depths [SST, 10.0m, 13.0m, 20.0m, 40.0m, 60.0m, 80.0m, 100.0m, 120.0m, 140.0m, 180.0m, 300.0m, 500.0m] (13m skipped)
+   Block 3: 13 depths [SST, 10.0m, 13.0m, 20.0m, 40.0m, 60.0m, 80.0m, 100.0m, 120.0m, 140.0m, 180.0m, 300.0m, 500.0m] (13m skipped)
+   Block 4: 13 depths [SST, 10.0m, 13.0m, 20.0m, 40.0m, 60.0m, 80.0m, 100.0m, 120.0m, 140.0m, 180.0m, 300.0m, 500.0m] (13m skipped)
+   Block 5: 13 depths [SST, 10.0m, 13.0m, 20.0m, 40.0m, 60.0m, 80.0m, 100.0m, 120.0m, 140.0m, 180.0m, 300.0m, 500.0m] (13m skipped)
 ✅ Berhasil memperbarui CSV dengan format tanggal baru: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/0N90E/CSV/t0n90e_dy.csv
 ✅ Berhasil menyimpan ke Excel: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/0N90E/EXCEL/t0n90e_dy.xlsx
 ✅ Berhasil mengkonversi t0n90e_dy.ascii
