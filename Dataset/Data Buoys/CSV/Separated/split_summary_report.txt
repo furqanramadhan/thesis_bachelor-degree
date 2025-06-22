@@ -1,0 +1,25 @@
+LAPORAN PEMISAHAN DATA BUOYS
+========================================
+
+Tanggal pemrosesan: 2025-06-23 02:19:01
+
+Lokasi: 0N90E
+  File: Buoys_Data_0N90E.csv
+  Records: 3440
+  Kolom: 23 (tanpa Location)
+  Range Tanggal: 2005-01-01 to 2020-06-07
+
+Lokasi: 4N90E
+  File: Buoys_Data_4N90E.csv
+  Records: 1848
+  Kolom: 23 (tanpa Location)
+  Range Tanggal: 2006-11-16 to 2018-07-31
+
+Lokasi: 8N90E
+  File: Buoys_Data_8N90E.csv
+  Records: 3106
+  Kolom: 23 (tanpa Location)
+  Range Tanggal: 2006-11-14 to 2020-02-21
+
+TOTAL RECORDS: 8394
+TOTAL LOKASI: 3
