@@ -893,37 +893,97 @@ def process_multiple_files_with_excel(input_directory, csv_directory=None, excel
     return processed_csv_files, processed_excel_files
 
 if __name__ == "__main__":
-    # Definisikan direktori input, output CSV, dan output Excel
-    input_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/ASCII'
-    csv_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/CSV'
-    excel_directory = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys/8N90E/EXCEL'
-    
+    locations = ["0N90E", "4N90E", "8N90E"]
     print("\n📋 KONVERSI DATA BUOY RAMA ASCII KE CSV DAN EXCEL 📋")
-    print("=" * 50)
-    print(f"📂 Direktori input: {input_directory}")
-    print(f"📄 Direktori output CSV: {csv_directory}")
-    print(f"📊 Direktori output Excel: {excel_directory}")
-    print("=" * 50)
-    
-    # Proses semua file ASCII dalam direktori input
-    csv_files, excel_files = process_multiple_files_with_excel(
-        input_directory=input_directory,
-        csv_directory=csv_directory,
-        excel_directory=excel_directory,
-        file_pattern='*.ascii'
-    )
-    
-    # Menampilkan ringkasan lengkap jika ada banyak file yang diproses
-    if len(csv_files) > 0:
-        print("\n📋 Ringkasan Hasil Konversi:")
-        print(f"✅ Berhasil mengkonversi {len(csv_files)} dari {len(glob.glob(os.path.join(input_directory, '*.ascii')))} file ASCII")
-        # Hanya tampilkan 5 file pertama jika ada banyak file
+    print("=" * 60)
+
+    # Statistik keseluruhan
+    total_files_processed = 0
+    total_files_found = 0
+    all_csv_files = []
+    all_excel_files = []
+
+    for location in locations:
+        print(f"\n🚀 Memproses lokasi: {location}")
+        print("-" * 50)
+
+        base_dir = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data Buoys'
+        input_directory = f'{base_dir}/{location}/ASCII'
+        csv_directory = f'{base_dir}/{location}/CSV'
+        excel_directory = f'{base_dir}/{location}/EXCEL'
+
+        print(f"📂 Direktori input: {input_directory}")
+        print(f"📄 Direktori output CSV: {csv_directory}")
+        print(f"📊 Direktori output Excel: {excel_directory}")
+
+        # Hitung total file yang ditemukan untuk lokasi ini
+        files_in_location = len(glob.glob(os.path.join(input_directory, '*.ascii')))
+        total_files_found += files_in_location
+        print(f"🔍 Ditemukan {files_in_location} file ASCII di {location}")
+
+        # Proses semua file ASCII dalam direktori
+        csv_files, excel_files = process_multiple_files_with_excel(
+            input_directory=input_directory,
+            csv_directory=csv_directory,
+            excel_directory=excel_directory,
+            file_pattern='*.ascii'
+        )
+        
+        # Update statistik keseluruhan
+        total_files_processed += len(csv_files)
+        all_csv_files.extend(csv_files)
+        all_excel_files.extend(excel_files)
+
+        # Tampilkan hasil untuk lokasi ini
         if len(csv_files) > 0:
-            print("\n📄 File CSV yang dihasilkan:")
+            print(f"\n📋 Hasil Konversi untuk {location}:")
+            print(f"✅ Berhasil mengkonversi {len(csv_files)} dari {files_in_location} file ASCII")
+            
+            print(f"\n📄 File CSV yang dihasilkan di {location}:")
             for i, file in enumerate(csv_files, 1):
                 print(f"   {i}. {os.path.basename(file)}")
             
-            print("\n📊 File Excel yang dihasilkan:")
+            print(f"\n📊 File Excel yang dihasilkan di {location}:")
             for i, file in enumerate(excel_files, 1):
-                print(f"   {i}. {os.path.basename(file)}")    
+                print(f"   {i}. {os.path.basename(file)}")
+        else:
+            print(f"⚠️ Tidak ada file yang berhasil dikonversi di {location}")
+
+    # Ringkasan akhir untuk semua lokasi
+    print("\n" + "=" * 60)
+    print("📊 RINGKASAN KESELURUHAN PROSES KONVERSI")
+    print("=" * 60)
+    print(f"🌐 Total lokasi diproses: {len(locations)}")
+    print(f"📁 Total file ASCII ditemukan: {total_files_found}")
+    print(f"✅ Total file berhasil dikonversi: {total_files_processed}")
+    print(f"📄 Total file CSV dihasilkan: {len(all_csv_files)}")
+    print(f"📊 Total file Excel dihasilkan: {len(all_excel_files)}")
+    
+    # Tampilkan daftar lengkap semua file yang dihasilkan
+    if len(all_csv_files) > 0:
+        print(f"\n📋 DAFTAR LENGKAP SEMUA FILE CSV YANG DIHASILKAN ({len(all_csv_files)} file):")
+        print("-" * 60)
+        
+        # Kelompokkan berdasarkan lokasi untuk tampilan yang lebih rapi
+        for location in locations:
+            location_csv_files = [f for f in all_csv_files if f'/{location}/CSV/' in f]
+            
+            if location_csv_files:
+                print(f"\n🌊 {location} ({len(location_csv_files)} file):")
+                for i, file in enumerate(location_csv_files, 1):
+                    filename = os.path.basename(file)
+                    print(f"   {i}. {filename}")
+    
+    # Status akhir
+    success_rate = (total_files_processed / total_files_found * 100) if total_files_found > 0 else 0
+    
+    print(f"\n🎯 Tingkat keberhasilan: {success_rate:.1f}%")
+    
+    if total_files_processed == total_files_found:
+        print("🎉 Semua file berhasil dikonversi!")
+    elif total_files_processed > 0:
+        print(f"⚠️ {total_files_found - total_files_processed} file gagal dikonversi")
+    else:
+        print("❌ Tidak ada file yang berhasil dikonversi")
+    
     print("\n✨ Proses konversi selesai! ✨")
