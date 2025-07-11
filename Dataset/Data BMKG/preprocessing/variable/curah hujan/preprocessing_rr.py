@@ -94,7 +94,6 @@ class RainfallPreprocessor:
         print(yearly_missing)
         
         return yearly_missing
-    
     def clean_rainfall_data(self):
         """
         Cleaning data curah hujan dengan handling khusus dan analisis gap
@@ -104,10 +103,126 @@ class RainfallPreprocessor:
         # Backup data asli
         self.data['RR_original'] = self.data['RR'].copy()
         
-        # Konversi 8888 ke NaN
-        self.data['RR'] = self.data['RR'].replace(8888, np.nan)
+        # Step 1: Konversi 9999 ke NaN (tidak ada data)
+        self.data['RR'] = self.data['RR'].replace(9999, np.nan)
         
-        # Analisis gap patterns untuk strategi imputasi
+        # Step 2: Analisis dan estimasi nilai 8888 berdasarkan parameter meteorologi
+        mask_8888 = self.data['RR'] == 8888
+        count_8888 = mask_8888.sum()
+        
+        print(f"Data dengan kode 8888 (tidak terukur): {count_8888} records")
+        
+        if count_8888 > 0:
+            print("\n=== ESTIMASI DATA 8888 ===")
+            
+            # Buat dataset referensi dari data yang valid (bukan 8888 atau NaN)
+            valid_data = self.data[(self.data['RR'] != 8888) & (self.data['RR'].notna())].copy()
+            
+            if len(valid_data) > 0:
+                print(f"Menggunakan {len(valid_data)} data valid sebagai referensi")
+                
+                # Estimasi untuk setiap record dengan 8888
+                estimated_values = []
+                estimation_methods = []
+                
+                for idx in self.data[mask_8888].index:
+                    row = self.data.loc[idx]
+                    
+                    # Ekstrak parameter meteorologi
+                    rh_avg = row['RH_AVG'] if not pd.isna(row['RH_AVG']) else 75  # default jika NaN
+                    ss = row['SS'] if not pd.isna(row['SS']) else 5  # default jika NaN
+                    tn = row['TN'] if not pd.isna(row['TN']) else 25  # default jika NaN
+                    
+                    # Logika estimasi berdasarkan kombinasi parameter
+                    if rh_avg >= 80 and ss <= 3 and tn <= 24:
+                        # Kondisi sangat mendukung hujan
+                        similar_conditions = valid_data[
+                            (valid_data['RH_AVG'] >= 80) & 
+                            (valid_data['SS'] <= 3) & 
+                            (valid_data['TN'] <= 24)
+                        ]
+                        
+                        if len(similar_conditions) >= 3:
+                            # Gunakan median dari kondisi serupa
+                            estimated_rr = similar_conditions['RR'].median()
+                            method = "similar_wet_conditions"
+                        else:
+                            # Fallback: rata-rata hari hujan
+                            rainy_days = valid_data[valid_data['RR'] > 0]
+                            estimated_rr = rainy_days['RR'].median() if len(rainy_days) > 0 else 10.0
+                            method = "median_rainy_days"
+                    
+                    elif rh_avg >= 70 and ss <= 5:
+                        # Kondisi sedang mendukung hujan ringan
+                        similar_conditions = valid_data[
+                            (valid_data['RH_AVG'] >= 70) & 
+                            (valid_data['RH_AVG'] < 80) & 
+                            (valid_data['SS'] <= 5)
+                        ]
+                        
+                        if len(similar_conditions) >= 3:
+                            estimated_rr = similar_conditions['RR'].median()
+                            method = "similar_moderate_conditions"
+                        else:
+                            # Estimasi hujan ringan
+                            estimated_rr = 2.0
+                            method = "light_rain_estimate"
+                    
+                    elif rh_avg <= 70 and ss >= 5:
+                        # Kondisi cerah, kemungkinan tidak hujan
+                        estimated_rr = 0.0
+                        method = "clear_weather"
+                    
+                    else:
+                        # Kondisi tidak jelas, gunakan interpolasi temporal
+                        # Cari nilai sebelum dan sesudah
+                        prev_idx = idx - 1
+                        next_idx = idx + 1
+                        
+                        prev_val = None
+                        next_val = None
+                        
+                        if prev_idx in self.data.index and self.data.loc[prev_idx, 'RR'] not in [8888, np.nan]:
+                            prev_val = self.data.loc[prev_idx, 'RR']
+                        
+                        if next_idx in self.data.index and self.data.loc[next_idx, 'RR'] not in [8888, np.nan]:
+                            next_val = self.data.loc[next_idx, 'RR']
+                        
+                        if prev_val is not None and next_val is not None:
+                            estimated_rr = (prev_val + next_val) / 2
+                            method = "temporal_interpolation"
+                        elif prev_val is not None:
+                            estimated_rr = prev_val
+                            method = "previous_day"
+                        elif next_val is not None:
+                            estimated_rr = next_val
+                            method = "next_day"
+                        else:
+                            # Fallback ke rata-rata musiman
+                            month = row['Month']
+                            monthly_data = valid_data[valid_data['Month'] == month]
+                            estimated_rr = monthly_data['RR'].median() if len(monthly_data) > 0 else 5.0
+                            method = "monthly_median"
+                    
+                    estimated_values.append(estimated_rr)
+                    estimation_methods.append(method)
+                    
+                    print(f"  {row['Date'].strftime('%Y-%m-%d')}: RH={rh_avg:.1f}%, SS={ss:.1f}h, TN={tn:.1f}°C → {estimated_rr:.1f}mm ({method})")
+                
+                # Terapkan estimasi ke dataset
+                self.data.loc[mask_8888, 'RR'] = estimated_values
+                self.data.loc[mask_8888, 'RR_estimation_method'] = estimation_methods
+                
+                print(f"\nRingkasan estimasi:")
+                method_counts = pd.Series(estimation_methods).value_counts()
+                for method, count in method_counts.items():
+                    print(f"  {method}: {count} records")
+            
+            else:
+                print("Tidak ada data valid untuk referensi, konversi 8888 → NaN")
+                self.data['RR'] = self.data['RR'].replace(8888, np.nan)
+        
+        # Step 3: Analisis gap patterns untuk strategi imputasi (untuk data yang masih NaN)
         self.data['is_missing'] = self.data['RR'].isna()
         
         # Identifikasi consecutive missing periods
@@ -121,7 +236,7 @@ class RainfallPreprocessor:
         gap_analysis.columns = ['gap_group', 'is_missing', 'gap_length', 'start_date', 'end_date']
         missing_gaps = gap_analysis[gap_analysis['is_missing'] == True].copy()
         
-        print(f"Total missing values: {self.data['RR'].isna().sum()}")
+        print(f"\nTotal missing values (setelah estimasi 8888): {self.data['RR'].isna().sum()}")
         print(f"Jumlah gap periods: {len(missing_gaps)}")
         
         if len(missing_gaps) > 0:
@@ -144,7 +259,7 @@ class RainfallPreprocessor:
             # Simpan gap analysis untuk seasonal_imputation
             self.gap_analysis = missing_gaps
         
-        # Identifikasi outlier ekstrem (> 200mm/hari sangat jarang di Indonesia)
+        # Step 4: Identifikasi outlier ekstrem (> 200mm/hari sangat jarang di Indonesia)
         outlier_threshold = 200
         outliers = self.data[self.data['RR'] > outlier_threshold]
         
@@ -157,7 +272,7 @@ class RainfallPreprocessor:
         # Simpan outliers untuk analisis
         self.outliers = outliers
         
-        # Statistik dasar setelah cleaning
+        # Step 5: Statistik dasar setelah cleaning
         valid_data = self.data['RR'].dropna()
         if len(valid_data) > 0:
             print(f"\nStatistik RR setelah cleaning (n={len(valid_data)}):")
@@ -168,7 +283,14 @@ class RainfallPreprocessor:
             print(f"  Max: {valid_data.max():.2f}mm")
             print(f"  Zero days: {(valid_data == 0).sum()} ({(valid_data == 0).sum()/len(valid_data)*100:.1f}%)")
             print(f"  Rainy days: {(valid_data > 0).sum()} ({(valid_data > 0).sum()/len(valid_data)*100:.1f}%)")
-
+            
+            # Statistik khusus untuk data yang diestimasi
+            if 'RR_estimation_method' in self.data.columns:
+                estimated_data = self.data[self.data['RR_estimation_method'].notna()]
+                if len(estimated_data) > 0:
+                    print(f"\nData yang diestimasi dari 8888: {len(estimated_data)} records")
+                    print(f"  Mean estimated: {estimated_data['RR'].mean():.2f}mm")
+                    print(f"  Median estimated: {estimated_data['RR'].median():.2f}mm")
     
     def seasonal_imputation(self):
         """
@@ -958,6 +1080,9 @@ def main():
     """
     print("🌧️  PREPROCESSING CURAH HUJAN - DATASET BMKG")
     print("="*50)
+
+    import sys; sys.stdout = open("preprocessing_log.txt", "w")
+
     
     # Contoh data loading (sesuaikan dengan path file Anda)
     try:
