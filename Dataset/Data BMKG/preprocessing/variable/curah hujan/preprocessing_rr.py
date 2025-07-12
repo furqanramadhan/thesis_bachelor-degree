@@ -89,433 +89,328 @@ class RainfallPreprocessor:
         print(yearly_missing)
         
         return yearly_missing
+    
     def clean_rainfall_data(self):
         """
-        Cleaning data curah hujan dengan handling khusus dan analisis gap
+        Membersihkan data curah hujan dengan pendekatan yang disederhanakan
         """
         print("\n=== CLEANING DATA CURAH HUJAN ===")
         
-        # Backup data asli
+        # Backup data original
         self.data['RR_original'] = self.data['RR'].copy()
         
-        # Step 1: Konversi 9999 ke NaN (tidak ada data)
-        self.data['RR'] = self.data['RR'].replace(9999, np.nan)
+        # Step 1: Handle missing data codes
+        self.data['RR'] = self.data['RR'].replace(9999, np.nan)  # Missing data
         
-        # Step 2: Analisis dan estimasi nilai 8888 berdasarkan parameter meteorologi
+        # Step 2: Estimate unmeasured rainfall (8888)
+        self._estimate_unmeasured_rainfall()
+        
+        # Step 3: Identify and handle outliers
+        self._identify_outliers()
+        
+        # Step 4: Print summary statistics
+        self._print_cleaning_summary()
+        
+        print("✅ Data cleaning selesai\n")
+
+    def _estimate_unmeasured_rainfall(self):
+        """
+        Estimasi data 8888 (tidak terukur) berdasarkan kondisi meteorologi
+        """
         mask_8888 = self.data['RR'] == 8888
         count_8888 = mask_8888.sum()
         
-        print(f"Data dengan kode 8888 (tidak terukur): {count_8888} records")
-        
-        if count_8888 > 0:
-            print("\n=== ESTIMASI DATA 8888 ===")
-            
-            # Buat dataset referensi dari data yang valid (bukan 8888 atau NaN)
-            valid_data = self.data[(self.data['RR'] != 8888) & (self.data['RR'].notna())].copy()
-            
-            if len(valid_data) > 0:
-                print(f"Menggunakan {len(valid_data)} data valid sebagai referensi")
-                
-                # Estimasi untuk setiap record dengan 8888
-                estimated_values = []
-                estimation_methods = []
-                
-                for idx in self.data[mask_8888].index:
-                    row = self.data.loc[idx]
-                    
-                    # Ekstrak parameter meteorologi
-                    rh_avg = row['RH_AVG'] if not pd.isna(row['RH_AVG']) else 75  # default jika NaN
-                    ss = row['SS'] if not pd.isna(row['SS']) else 5  # default jika NaN
-                    tn = row['TN'] if not pd.isna(row['TN']) else 25  # default jika NaN
-                    
-                    # Logika estimasi berdasarkan kombinasi parameter
-                    if rh_avg >= 80 and ss <= 3 and tn <= 24:
-                        # Kondisi sangat mendukung hujan
-                        similar_conditions = valid_data[
-                            (valid_data['RH_AVG'] >= 80) & 
-                            (valid_data['SS'] <= 3) & 
-                            (valid_data['TN'] <= 24)
-                        ]
-                        
-                        if len(similar_conditions) >= 3:
-                            # Gunakan median dari kondisi serupa
-                            estimated_rr = similar_conditions['RR'].median()
-                            method = "similar_wet_conditions"
-                        else:
-                            # Fallback: rata-rata hari hujan
-                            rainy_days = valid_data[valid_data['RR'] > 0]
-                            estimated_rr = rainy_days['RR'].median() if len(rainy_days) > 0 else 10.0
-                            method = "median_rainy_days"
-                    
-                    elif rh_avg >= 70 and ss <= 5:
-                        # Kondisi sedang mendukung hujan ringan
-                        similar_conditions = valid_data[
-                            (valid_data['RH_AVG'] >= 70) & 
-                            (valid_data['RH_AVG'] < 80) & 
-                            (valid_data['SS'] <= 5)
-                        ]
-                        
-                        if len(similar_conditions) >= 3:
-                            estimated_rr = similar_conditions['RR'].median()
-                            method = "similar_moderate_conditions"
-                        else:
-                            # Estimasi hujan ringan
-                            estimated_rr = 2.0
-                            method = "light_rain_estimate"
-                    
-                    elif rh_avg <= 70 and ss >= 5:
-                        # Kondisi cerah, kemungkinan tidak hujan
-                        estimated_rr = 0.0
-                        method = "clear_weather"
-                    
-                    else:
-                        # Kondisi tidak jelas, gunakan interpolasi temporal
-                        # Cari nilai sebelum dan sesudah
-                        prev_idx = idx - 1
-                        next_idx = idx + 1
-                        
-                        prev_val = None
-                        next_val = None
-                        
-                        if prev_idx in self.data.index and self.data.loc[prev_idx, 'RR'] not in [8888, np.nan]:
-                            prev_val = self.data.loc[prev_idx, 'RR']
-                        
-                        if next_idx in self.data.index and self.data.loc[next_idx, 'RR'] not in [8888, np.nan]:
-                            next_val = self.data.loc[next_idx, 'RR']
-                        
-                        if prev_val is not None and next_val is not None:
-                            estimated_rr = (prev_val + next_val) / 2
-                            method = "temporal_interpolation"
-                        elif prev_val is not None:
-                            estimated_rr = prev_val
-                            method = "previous_day"
-                        elif next_val is not None:
-                            estimated_rr = next_val
-                            method = "next_day"
-                        else:
-                            # Fallback ke rata-rata musiman
-                            month = row['Month']
-                            monthly_data = valid_data[valid_data['Month'] == month]
-                            estimated_rr = monthly_data['RR'].median() if len(monthly_data) > 0 else 5.0
-                            method = "monthly_median"
-                    
-                    estimated_values.append(estimated_rr)
-                    estimation_methods.append(method)
-                    
-                    print(f"  {row['Date'].strftime('%Y-%m-%d')}: RH={rh_avg:.1f}%, SS={ss:.1f}h, TN={tn:.1f}°C → {estimated_rr:.1f}mm ({method})")
-                
-                # Terapkan estimasi ke dataset
-                self.data.loc[mask_8888, 'RR'] = estimated_values
-                self.data.loc[mask_8888, 'RR_estimation_method'] = estimation_methods
-                
-                print(f"\nRingkasan estimasi:")
-                method_counts = pd.Series(estimation_methods).value_counts()
-                for method, count in method_counts.items():
-                    print(f"  {method}: {count} records")
-            
-            else:
-                print("Tidak ada data valid untuk referensi, konversi 8888 → NaN")
-                self.data['RR'] = self.data['RR'].replace(8888, np.nan)
-        
-        # Step 3: Analisis gap patterns untuk strategi imputasi (untuk data yang masih NaN)
-        self.data['is_missing'] = self.data['RR'].isna()
-        
-        # Identifikasi consecutive missing periods
-        self.data['gap_group'] = (self.data['is_missing'] != self.data['is_missing'].shift()).cumsum()
-        gap_analysis = self.data.groupby('gap_group').agg({
-            'is_missing': ['first', 'count'],
-            'Date': ['first', 'last']
-        }).reset_index()
-        
-        # Flatten column names
-        gap_analysis.columns = ['gap_group', 'is_missing', 'gap_length', 'start_date', 'end_date']
-        missing_gaps = gap_analysis[gap_analysis['is_missing'] == True].copy()
-        
-        print(f"\nTotal missing values (setelah estimasi 8888): {self.data['RR'].isna().sum()}")
-        print(f"Jumlah gap periods: {len(missing_gaps)}")
-        
-        if len(missing_gaps) > 0:
-            print("\nAnalisis Gap Patterns:")
-            print(f"  • Gap terpendek: {missing_gaps['gap_length'].min()} hari")
-            print(f"  • Gap terpanjang: {missing_gaps['gap_length'].max()} hari")
-            print(f"  • Rata-rata gap: {missing_gaps['gap_length'].mean():.1f} hari")
-            
-            # Kategorisasi gap
-            short_gaps = missing_gaps[missing_gaps['gap_length'] <= 3]
-            medium_gaps = missing_gaps[(missing_gaps['gap_length'] > 3) & (missing_gaps['gap_length'] <= 7)]
-            long_gaps = missing_gaps[(missing_gaps['gap_length'] > 7) & (missing_gaps['gap_length'] <= 30)]
-            extreme_gaps = missing_gaps[missing_gaps['gap_length'] > 30]
-            
-            print(f"  • Gap pendek (≤3 hari): {len(short_gaps)} gaps")
-            print(f"  • Gap sedang (4-7 hari): {len(medium_gaps)} gaps")
-            print(f"  • Gap panjang (8-30 hari): {len(long_gaps)} gaps")
-            print(f"  • Gap ekstrem (>30 hari): {len(extreme_gaps)} gaps")
-            
-            # Simpan gap analysis untuk seasonal_imputation
-            self.gap_analysis = missing_gaps
-        
-        # Step 4: Identifikasi outlier ekstrem (> 200mm/hari sangat jarang di Indonesia)
-        outlier_threshold = 200
-        outliers = self.data[self.data['RR'] > outlier_threshold]
-        
-        print(f"\nOutlier ekstrem (RR > {outlier_threshold}mm): {len(outliers)} records")
-        if len(outliers) > 0:
-            print("Outlier dates:")
-            for idx, row in outliers.iterrows():
-                print(f"  {row['Date'].strftime('%Y-%m-%d')}: {row['RR']}mm")
-        
-        # Simpan outliers untuk analisis
-        self.outliers = outliers
-        
-        # Step 5: Statistik dasar setelah cleaning
-        valid_data = self.data['RR'].dropna()
-        if len(valid_data) > 0:
-            print(f"\nStatistik RR setelah cleaning (n={len(valid_data)}):")
-            print(f"  Mean: {valid_data.mean():.2f}mm")
-            print(f"  Median: {valid_data.median():.2f}mm")
-            print(f"  Std: {valid_data.std():.2f}mm")
-            print(f"  Min: {valid_data.min():.2f}mm")
-            print(f"  Max: {valid_data.max():.2f}mm")
-            print(f"  Zero days: {(valid_data == 0).sum()} ({(valid_data == 0).sum()/len(valid_data)*100:.1f}%)")
-            print(f"  Rainy days: {(valid_data > 0).sum()} ({(valid_data > 0).sum()/len(valid_data)*100:.1f}%)")
-            
-            # Statistik khusus untuk data yang diestimasi
-            if 'RR_estimation_method' in self.data.columns:
-                estimated_data = self.data[self.data['RR_estimation_method'].notna()]
-                if len(estimated_data) > 0:
-                    print(f"\nData yang diestimasi dari 8888: {len(estimated_data)} records")
-                    print(f"  Mean estimated: {estimated_data['RR'].mean():.2f}mm")
-                    print(f"  Median estimated: {estimated_data['RR'].median():.2f}mm")
-    
-    def seasonal_imputation(self):
-        """
-        Imputasi hybrid berdasarkan panjang gap dan pola musiman
-        """
-        print("\n=== IMPUTASI HYBRID BERDASARKAN GAP PATTERN ===")
-        
-        if not hasattr(self, 'gap_analysis'):
-            print("Tidak ada gap analysis, skip imputasi")
+        if count_8888 == 0:
             return
         
-        # Inisialisasi kolom hasil imputasi
-        self.data['RR_imputed'] = self.data['RR'].copy()
-        self.data['imputation_method'] = 'original'
+        print(f"Estimasi {count_8888} data tidak terukur (8888)...")
         
-        # Hitung seasonal statistics untuk berbagai metode
-        seasonal_stats = {}
+        # Mapping kondisi meteorologi ke kategori hujan
+        conditions = {
+            'heavy_rain': {'rh_min': 90, 'tn_max': 23, 'rain_range': (7, 20)},
+            'moderate_rain': {'rh_min': 80, 'tn_max': 24, 'rain_range': (2, 10)},
+            'light_rain': {'rh_min': 70, 'tn_max': 24, 'rain_range': (0.5, 5)},
+            'dry': {'rh_min': 0, 'tn_max': 100, 'rain_range': (0, 1)}  # default
+        }
         
-        # Monthly statistics
-        monthly_stats = self.data.groupby('Month')['RR'].agg(['mean', 'median', 'std', 'count']).reset_index()
-        monthly_stats['dry_day_prob'] = self.data.groupby('Month').apply(
-            lambda x: (x['RR'] == 0).sum() / x['RR'].notna().sum()
-        ).values
+        estimated_values = []
         
-        # Seasonal decomposition untuk gap panjang
-        try:
-            # Buat monthly aggregation untuk decomposition
-            monthly_data = self.data.groupby(['Year', 'Month'])['RR'].mean().reset_index()
-            monthly_data['date'] = pd.to_datetime(monthly_data[['Year', 'Month']].assign(day=1))
-            monthly_ts = monthly_data.set_index('date')['RR'].dropna()
+        for idx in self.data[mask_8888].index:
+            row = self.data.loc[idx]
+            rh = row.get('RH_AVG', 75)  # default humidity
+            tn = row.get('TN', 25)      # default temperature
             
-            if len(monthly_ts) >= 24:  # Minimal 2 tahun
-                from statsmodels.tsa.seasonal import seasonal_decompose
-                decomposition = seasonal_decompose(monthly_ts, model='additive', period=12)
-                
-                # Interpolate missing values dalam decomposition
-                trend_interp = decomposition.trend.interpolate(method='linear')
-                seasonal_interp = decomposition.seasonal.interpolate(method='linear')
-                
-                # Mapping back to daily data
-                seasonal_pattern = {}
-                for idx, row in monthly_data.iterrows():
-                    date_key = row['date']
-                    if date_key in seasonal_interp.index:
-                        seasonal_pattern[row['Month']] = seasonal_interp[date_key]
-                
-                seasonal_stats['decomposition'] = {
-                    'trend': trend_interp,
-                    'seasonal': seasonal_pattern,
-                    'available': True
-                }
-            else:
-                seasonal_stats['decomposition'] = {'available': False}
-                
-        except Exception as e:
-            print(f"Seasonal decomposition failed: {e}")
-            seasonal_stats['decomposition'] = {'available': False}
+            # Determine rainfall category based on conditions
+            category = 'dry'  # default
+            for cat, cond in conditions.items():
+                if cat != 'dry' and rh >= cond['rh_min'] and tn <= cond['tn_max']:
+                    category = cat
+                    break
+            
+            # Generate random value within category range
+            min_val, max_val = conditions[category]['rain_range']
+            estimated_value = np.random.uniform(min_val, max_val)
+            estimated_values.append(estimated_value)
         
-        # Iterasi setiap gap untuk imputasi
+        # Apply estimates
+        self.data.loc[mask_8888, 'RR'] = estimated_values
+        self.data.loc[mask_8888, 'RR_estimation_method'] = 'meteorological_estimate'
+        
+        print(f"  → {len(estimated_values)} nilai berhasil diestimasi")
+
+    def _identify_outliers(self):
+        """
+        Identifikasi outlier ekstrem (>150mm/hari)
+        """
+        outlier_threshold = 150
+        outliers = self.data[self.data['RR'] > outlier_threshold]
+        
+        print(f"Outlier ekstrem (>{outlier_threshold}mm): {len(outliers)} data")
+        
+        if len(outliers) > 0:
+            print("  Dates dengan outlier:")
+            for idx, row in outliers.head(5).iterrows():  # Show max 5
+                print(f"    {row['Date']}: {row['RR']:.1f}mm")
+        
+        # Store outliers for analysis
+        self.outliers = outliers
+    
+    def _print_cleaning_summary(self):
+        """
+        Print ringkasan hasil cleaning
+        """
+        valid_data = self.data['RR'].dropna()
+        
+        if len(valid_data) == 0:
+            print("⚠️  Tidak ada data valid setelah cleaning")
+            return
+        
+        print(f"\nRingkasan data setelah cleaning:")
+        print(f"  Total data valid: {len(valid_data)}")
+        print(f"  Mean: {valid_data.mean():.2f}mm")
+        print(f"  Median: {valid_data.median():.2f}mm")
+        print(f"  Min: {valid_data.min():.2f}mm")
+        print(f"  Max: {valid_data.max():.2f}mm")
+        
+        # Rainfall categories distribution
+        categories = self._categorize_rainfall(valid_data)
+        print(f"\nDistribusi kategori hujan:")
+        for cat, count in categories.items():
+            pct = count / len(valid_data) * 100
+            print(f"  {cat}: {count} ({pct:.1f}%)")
+
+    def _categorize_rainfall(self, data):
+        """
+        Kategorisasi curah hujan berdasarkan intensitas
+        """
+        return {
+            'Berawan (0mm)': (data == 0).sum(),
+            'Hujan ringan (0-20mm)': ((data > 0) & (data <= 20)).sum(),
+            'Hujan sedang (20-50mm)': ((data > 20) & (data <= 50)).sum(),
+            'Hujan lebat (50-100mm)': ((data > 50) & (data <= 100)).sum(),
+            'Hujan sangat lebat (>100mm)': (data > 100).sum()
+        }
+
+    def seasonal_imputation(self):
+        """
+        Imputasi missing values dengan pendekatan yang disederhanakan
+        """
+        print("\n=== IMPUTASI MISSING VALUES ===")
+        
+        # Initialize imputed column
+        self.data['RR_imputed'] = self.data['RR'].copy()
+        missing_count = self.data['RR_imputed'].isna().sum()
+        
+        if missing_count == 0:
+            print("Tidak ada missing values untuk diimputasi")
+            return True
+        
+        print(f"Memproses {missing_count} missing values...")
+        
+        # Calculate monthly statistics for imputation
+        monthly_stats = self._calculate_monthly_stats()
+        
+        # Identify missing data patterns
+        missing_patterns = self._identify_missing_patterns()
+        
+        # Apply imputation strategy based on gap length
         total_imputed = 0
         
-        for _, gap in self.gap_analysis.iterrows():
-            gap_length = gap['gap_length']
-            gap_group = gap['gap_group']
-            
-            # Identifikasi indices untuk gap ini
-            gap_indices = self.data[self.data['gap_group'] == gap_group].index
-            
-            print(f"\nProcessing gap: {gap['start_date'].strftime('%Y-%m-%d')} to {gap['end_date'].strftime('%Y-%m-%d')} ({gap_length} hari)")
+        for pattern in missing_patterns:
+            gap_length = pattern['length']
+            indices = pattern['indices']
             
             if gap_length <= 3:
-                # METODE 1: Linear interpolation untuk gap pendek
-                print("  → Menggunakan Linear Interpolation")
-                
-                # Log transformation untuk interpolation
-                self.data['RR_log_temp'] = np.log1p(self.data['RR'])
-                self.data['RR_log_temp'].iloc[gap_indices] = np.nan
-                
-                # Interpolasi linear
-                interpolated = self.data['RR_log_temp'].interpolate(method='linear', limit_direction='both')
-                
-                # Transform back dan assign
-                imputed_values = np.expm1(interpolated.iloc[gap_indices])
-                self.data.loc[gap_indices, 'RR_imputed'] = imputed_values
-                self.data.loc[gap_indices, 'imputation_method'] = 'linear_interpolation'
-                
-                # Cleanup temporary column
-                self.data.drop('RR_log_temp', axis=1, inplace=True)
-                
-            elif gap_length <= 7:
-                # METODE 2: Seasonal-aware interpolation untuk gap sedang
-                print("  → Menggunakan Seasonal-aware Interpolation")
-                
-                for idx in gap_indices:
-                    month = self.data.loc[idx, 'Month']
-                    
-                    # Ambil data bulan yang sama dari tahun lain
-                    same_month_data = self.data[
-                        (self.data['Month'] == month) & 
-                        (self.data['RR'].notna())
-                    ]['RR']
-                    
-                    if len(same_month_data) > 0:
-                        # Gunakan median dengan noise kecil
-                        base_value = same_month_data.median()
-                        
-                        # Tambahkan variability berdasarkan historical std
-                        noise_factor = same_month_data.std() * 0.1
-                        noise = np.random.normal(0, noise_factor)
-                        
-                        # Probabilitas hari kering
-                        dry_prob = monthly_stats[monthly_stats['Month'] == month]['dry_day_prob'].iloc[0]
-                        
-                        if np.random.random() < dry_prob:
-                            imputed_value = 0
-                        else:
-                            imputed_value = max(0, base_value + noise)
-                        
-                        self.data.loc[idx, 'RR_imputed'] = imputed_value
-                        self.data.loc[idx, 'imputation_method'] = 'seasonal_interpolation'
-                        
-            elif gap_length <= 30:
-                # METODE 3: Seasonal decomposition untuk gap panjang
-                print("  → Menggunakan Seasonal Decomposition")
-                
-                if seasonal_stats['decomposition']['available']:
-                    for idx in gap_indices:
-                        month = self.data.loc[idx, 'Month']
-                        
-                        # Gunakan seasonal pattern dari decomposition
-                        if month in seasonal_stats['decomposition']['seasonal']:
-                            seasonal_component = seasonal_stats['decomposition']['seasonal'][month]
-                            
-                            # Tambahkan baseline dari monthly median
-                            monthly_baseline = monthly_stats[monthly_stats['Month'] == month]['median'].iloc[0]
-                            
-                            # Combine dengan uncertainty
-                            monthly_std = monthly_stats[monthly_stats['Month'] == month]['std'].iloc[0]
-                            uncertainty = np.random.normal(0, monthly_std * 0.2)
-                            
-                            imputed_value = max(0, seasonal_component + monthly_baseline + uncertainty)
-                            
-                            # Probabilitas hari kering
-                            dry_prob = monthly_stats[monthly_stats['Month'] == month]['dry_day_prob'].iloc[0]
-                            if np.random.random() < dry_prob:
-                                imputed_value = 0
-                            
-                            self.data.loc[idx, 'RR_imputed'] = imputed_value
-                            self.data.loc[idx, 'imputation_method'] = 'seasonal_decomposition'
-                        else:
-                            # Fallback ke monthly median
-                            monthly_median = monthly_stats[monthly_stats['Month'] == month]['median'].iloc[0]
-                            self.data.loc[idx, 'RR_imputed'] = monthly_median
-                            self.data.loc[idx, 'imputation_method'] = 'monthly_median'
-                else:
-                    # Fallback: Monthly median dengan variability
-                    print("    → Fallback ke Monthly Median")
-                    for idx in gap_indices:
-                        month = self.data.loc[idx, 'Month']
-                        monthly_median = monthly_stats[monthly_stats['Month'] == month]['median'].iloc[0]
-                        self.data.loc[idx, 'RR_imputed'] = monthly_median
-                        self.data.loc[idx, 'imputation_method'] = 'monthly_median'
-                        
+                # Short gaps: linear interpolation
+                imputed_count = self._impute_short_gaps(indices)
+            elif gap_length <= 14:
+                # Medium gaps: seasonal average
+                imputed_count = self._impute_medium_gaps(indices, monthly_stats)
             else:
-                # METODE 4: Historical seasonal average untuk gap ekstrem
-                print("  → Menggunakan Historical Seasonal Average")
-                
-                for idx in gap_indices:
-                    month = self.data.loc[idx, 'Month']
-                    
-                    # Gunakan historical data dengan confidence bounds
-                    same_month_data = self.data[
-                        (self.data['Month'] == month) & 
-                        (self.data['RR'].notna())
-                    ]['RR']
-                    
-                    if len(same_month_data) > 0:
-                        # Gunakan percentile range untuk uncertainty
-                        p25 = same_month_data.quantile(0.25)
-                        p75 = same_month_data.quantile(0.75)
-                        median = same_month_data.median()
-                        
-                        # Random selection dalam IQR
-                        imputed_value = np.random.uniform(p25, p75)
-                        
-                        # Probabilitas hari kering
-                        dry_prob = monthly_stats[monthly_stats['Month'] == month]['dry_day_prob'].iloc[0]
-                        if np.random.random() < dry_prob:
-                            imputed_value = 0
-                        
-                        self.data.loc[idx, 'RR_imputed'] = imputed_value
-                        self.data.loc[idx, 'imputation_method'] = 'historical_seasonal'
-                    else:
-                        # Fallback ke 0 jika tidak ada data historical
-                        self.data.loc[idx, 'RR_imputed'] = 0
-                        self.data.loc[idx, 'imputation_method'] = 'zero_fallback'
+                # Long gaps: historical monthly median
+                imputed_count = self._impute_long_gaps(indices, monthly_stats)
             
-            total_imputed += gap_length
-            print(f"  ✓ {gap_length} values berhasil diimputasi")
+            total_imputed += imputed_count
         
-        # Summary imputasi
-        print(f"\n=== SUMMARY IMPUTASI ===")
-        print(f"Total values diimputasi: {total_imputed}")
+        print(f"✅ {total_imputed} values berhasil diimputasi")
         
-        method_counts = self.data['imputation_method'].value_counts()
-        for method, count in method_counts.items():
-            if method != 'original':
-                print(f"  • {method}: {count} values")
+        # Print final summary
+        self._print_imputation_summary()
         
-        # Statistik hasil imputasi
-        original_missing = self.data['RR'].isna().sum()
-        after_imputation = self.data['RR_imputed'].isna().sum()
-        improvement = original_missing - after_imputation
+        return self.data['RR_imputed'].isna().sum() == 0
+
+    def _calculate_monthly_stats(self):
+        """
+        Hitung statistik bulanan untuk imputasi
+        """
+        monthly_stats = {}
         
-        print(f"\nImprovement: {improvement} values berhasil diimputasi")
-        print(f"Missing values: {original_missing} → {after_imputation}")
-        print(f"Success rate: {improvement/original_missing*100:.1f}%")
+        for month in range(1, 13):
+            month_data = self.data[
+                (self.data['Month'] == month) & 
+                (self.data['RR'].notna())
+            ]['RR']
+            
+            if len(month_data) > 0:
+                monthly_stats[month] = {
+                    'mean': month_data.mean(),
+                    'median': month_data.median(),
+                    'std': month_data.std(),
+                    'count': len(month_data)
+                }
+            else:
+                # Fallback to overall statistics
+                overall_data = self.data['RR'].dropna()
+                monthly_stats[month] = {
+                    'mean': overall_data.mean() if len(overall_data) > 0 else 5.0,
+                    'median': overall_data.median() if len(overall_data) > 0 else 2.0,
+                    'std': overall_data.std() if len(overall_data) > 0 else 10.0,
+                    'count': 0
+                }
         
-        # Validasi hasil imputasi
-        imputed_data = self.data[self.data['imputation_method'] != 'original']['RR_imputed']
+        return monthly_stats
+
+    def _identify_missing_patterns(self):
+        """
+        Identifikasi pola missing data untuk strategi imputasi
+        """
+        missing_mask = self.data['RR_imputed'].isna()
+        
+        if not missing_mask.any():
+            return []
+        
+        # Group consecutive missing values
+        groups = []
+        current_group = []
+        
+        for idx, is_missing in missing_mask.items():
+            if is_missing:
+                current_group.append(idx)
+            else:
+                if current_group:
+                    groups.append({
+                        'indices': current_group,
+                        'length': len(current_group),
+                        'start': current_group[0],
+                        'end': current_group[-1]
+                    })
+                    current_group = []
+        
+        # Don't forget the last group
+        if current_group:
+            groups.append({
+                'indices': current_group,
+                'length': len(current_group),
+                'start': current_group[0],
+                'end': current_group[-1]
+            })
+        
+        return groups
+
+    def _impute_short_gaps(self, indices):
+        """
+        Imputasi gap pendek (≤3 hari) dengan linear interpolation
+        """
+        # Create temporary series for interpolation
+        temp_series = self.data['RR_imputed'].copy()
+        
+        # Apply linear interpolation
+        interpolated = temp_series.interpolate(method='linear', limit_direction='both')
+        
+        # Fill the gaps
+        for idx in indices:
+            if pd.isna(self.data.loc[idx, 'RR_imputed']):
+                self.data.loc[idx, 'RR_imputed'] = max(0, interpolated.loc[idx])
+                self.data.loc[idx, 'imputation_method'] = 'linear_interpolation'
+        
+        return len(indices)
+
+    def _impute_medium_gaps(self, indices, monthly_stats):
+        """
+        Imputasi gap sedang (4-14 hari) dengan monthly average + noise
+        """
+        for idx in indices:
+            if pd.isna(self.data.loc[idx, 'RR_imputed']):
+                month = self.data.loc[idx, 'Month']
+                
+                # Get monthly statistics
+                stats = monthly_stats[month]
+                
+                # Generate value with some randomness
+                base_value = stats['median']
+                noise = np.random.normal(0, stats['std'] * 0.3)  # 30% of std as noise
+                
+                imputed_value = max(0, base_value + noise)
+                
+                self.data.loc[idx, 'RR_imputed'] = imputed_value
+                self.data.loc[idx, 'imputation_method'] = 'monthly_average'
+        
+        return len(indices)
+
+    def _impute_long_gaps(self, indices, monthly_stats):
+        """
+        Imputasi gap panjang (>14 hari) dengan monthly median
+        """
+        for idx in indices:
+            if pd.isna(self.data.loc[idx, 'RR_imputed']):
+                month = self.data.loc[idx, 'Month']
+                
+                # Use monthly median for stability
+                imputed_value = monthly_stats[month]['median']
+                
+                self.data.loc[idx, 'RR_imputed'] = imputed_value
+                self.data.loc[idx, 'imputation_method'] = 'monthly_median'
+        
+        return len(indices)
+
+    def _print_imputation_summary(self):
+        """
+        Print ringkasan hasil imputasi
+        """
+        # Count imputation methods
+        imputed_data = self.data[self.data.get('imputation_method', '').str.len() > 0]
+        
         if len(imputed_data) > 0:
-            print(f"\nStatistik data hasil imputasi:")
-            print(f"  • Mean: {imputed_data.mean():.2f}mm")
-            print(f"  • Median: {imputed_data.median():.2f}mm")
-            print(f"  • Std: {imputed_data.std():.2f}mm")
-            print(f"  • Zero days: {(imputed_data == 0).sum()} ({(imputed_data == 0).sum()/len(imputed_data)*100:.1f}%)")
-            print(f"  • Range: {imputed_data.min():.2f} - {imputed_data.max():.2f}mm")
+            print("\nMetode imputasi yang digunakan:")
+            method_counts = imputed_data['imputation_method'].value_counts()
+            for method, count in method_counts.items():
+                print(f"  {method}: {count} values")
         
-        # Cleanup temporary columns
-        self.data.drop(['is_missing', 'gap_group'], axis=1, inplace=True)
+        # Final statistics
+        final_data = self.data['RR_imputed'].dropna()
+        if len(final_data) > 0:
+            print(f"\nStatistik final:")
+            print(f"  Total data: {len(final_data)}")
+            print(f"  Mean: {final_data.mean():.2f}mm")
+            print(f"  Median: {final_data.median():.2f}mm")
+            print(f"  Missing values: {self.data['RR_imputed'].isna().sum()}")
+            
+            # Compare with original
+            if 'RR_original' in self.data.columns:
+                original_clean = self.data['RR_original'].replace([8888, 9999], np.nan).dropna()
+                if len(original_clean) > 0:
+                    mean_diff = abs(final_data.mean() - original_clean.mean())
+                    print(f"  Deviasi dari original: {mean_diff:.2f}mm")
     
     def detect_outliers_advanced(self):
         """
