@@ -686,66 +686,118 @@ class RainfallPreprocessor:
         sns.set_palette("husl")
         
         # 1. Time Series Plot
-        plt.figure(figsize=(12, 6))
+        plt.figure(figsize=(16, 8))
         valid_data = self.data[self.data['RR_imputed'].notna()]
-        plt.plot(valid_data['Date'], valid_data['RR_imputed'], alpha=0.7, linewidth=0.5, color='blue')
-        plt.title('Time Series Curah Hujan (RR)', fontsize=14, fontweight='bold')
-        plt.xlabel('Tanggal', fontsize=12)
-        plt.ylabel('Curah Hujan (mm)', fontsize=12)
-        plt.xticks(rotation=45)
-        plt.grid(True, alpha=0.3)
+
+        if not valid_data.empty:
+            # Urutkan data
+            valid_data = valid_data.sort_values('Date')
+            
+            # Plot garis utama & moving average
+            plt.plot(valid_data['Date'], valid_data['RR_imputed'], color='blue', alpha=0.7, linewidth=1.0, label='Curah Hujan')
+            
+            # Scatter hari hujan tinggi (>50mm)
+            high_rain = valid_data[valid_data['RR_imputed'] > 50]
+            if not high_rain.empty:
+                plt.scatter(high_rain['Date'], high_rain['RR_imputed'], color='red', s=20, alpha=0.8, label='> 50 mm')
+
+            # Garis vertikal awal tahun dan label tiap 2 tahun
+            years = sorted(valid_data['Year'].unique())
+            for i, y in enumerate(years):
+                tgl_awal = pd.Timestamp(f"{y}-01-01")
+                plt.axvline(tgl_awal, color='gray', linestyle='--', linewidth=0.6, alpha=0.6)
+                if i % 2 == 0 or y == years[-1]:
+                    plt.text(tgl_awal, plt.ylim()[1]*0.95, str(y), rotation=90, va='top', ha='right', fontsize=9, color='gray')
+
+            # Sumbu X dan grid
+            start_date, end_date = valid_data['Date'].min(), valid_data['Date'].max()
+            date_ticks = pd.date_range(start=start_date, end=end_date, freq='YS')
+            plt.xticks(date_ticks, [d.year for d in date_ticks], rotation=45)
+            plt.gca().set_xticks(pd.date_range(start_date, end_date, freq='MS'), minor=True)
+            plt.grid(True, alpha=0.3, which='major')
+            plt.grid(True, alpha=0.1, which='minor')
+
+            # Judul dan keterangan
+            total_days = (end_date - start_date).days
+            plt.title(f'Time Series Curah Hujan Harian (RR)\n{start_date:%d %b %Y} - {end_date:%d %b %Y}', fontsize=14, fontweight='bold')
+            plt.xlabel('Tahun')
+            plt.ylabel('Curah Hujan (mm)')
+            plt.legend(loc='upper right', frameon=True)
+
+            # Statistik pojok kiri atas
+            plt.text(0.02, 0.98,
+                    f'Data Valid: {len(valid_data):,} hari\nMaksimum: {valid_data["RR_imputed"].max():.1f}mm\nMinimum: {valid_data["RR_imputed"].min():.1f}mm',
+                    transform=plt.gca().transAxes,
+                    fontsize=10, va='top',
+                    bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        else:
+            plt.text(0.5, 0.5, 'Tidak ada data valid untuk ditampilkan',
+                    ha='center', va='center', fontsize=14, transform=plt.gca().transAxes)
+
         plt.tight_layout()
-        
         if save_plots:
             plt.savefig(f'{output_dir}/01_time_series_plot.png', dpi=300, bbox_inches='tight')
             print("✅ 01_time_series_plot.png saved")
         plt.show()
-        
+
+
         # 2. Histogram dan Distribusi
         plt.figure(figsize=(10, 6))
         valid_rr = self.data['RR_imputed'].dropna()
-        if len(valid_rr) > 0:
-            plt.hist(valid_rr, bins=50, alpha=0.7, edgecolor='black', color='skyblue')
-            plt.axvline(valid_rr.mean(), color='red', linestyle='--', linewidth=2, label=f'Mean: {valid_rr.mean():.2f}mm')
-            plt.axvline(valid_rr.median(), color='green', linestyle='--', linewidth=2, label=f'Median: {valid_rr.median():.2f}mm')
-            plt.title('Distribusi Curah Hujan', fontsize=14, fontweight='bold')
-            plt.xlabel('Curah Hujan (mm)', fontsize=12)
-            plt.ylabel('Frekuensi', fontsize=12)
-            plt.legend()
+
+        if not valid_rr.empty:
+            # Filter upper limit untuk menghindari outlier ekstrem
+            upper_limit = min(valid_rr.quantile(0.95) * 1.1, 100)
+            filtered_rr = valid_rr[valid_rr <= upper_limit]
+
+            # Tentukan bin width merata
+            bin_width = 2  # 2 mm per bin
+            bins = np.arange(0, upper_limit + bin_width, bin_width)
+
+            # Plot histogram
+            plt.hist(filtered_rr, bins=bins, color='skyblue', edgecolor='black', alpha=0.8)
+
+            # Label dan tata letak
+            plt.title('Distribusi Curah Hujan Harian (Filtered ≤ {:.0f} mm)'.format(upper_limit), fontsize=13, fontweight='bold')
+            plt.xlabel('Curah Hujan (mm)', fontsize=11)
+            plt.ylabel('Frekuensi', fontsize=11)
             plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        
+            plt.legend(fontsize=9)
+            plt.tight_layout()
+        else:
+            plt.text(0.5, 0.5, 'Tidak ada data valid untuk ditampilkan',
+                    ha='center', va='center', fontsize=14, transform=plt.gca().transAxes)
+
+        # Simpan jika diminta
         if save_plots:
             plt.savefig(f'{output_dir}/02_histogram_distribusi.png', dpi=300, bbox_inches='tight')
             print("✅ 02_histogram_distribusi.png saved")
         plt.show()
         
-        # 3. Boxplot Bulanan
-        plt.figure(figsize=(12, 6))
-        monthly_data = []
-        months = []
-        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 
-                    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-        
-        for month in range(1, 13):
-            month_rr = self.data[self.data['Month'] == month]['RR_imputed'].dropna()
-            if len(month_rr) > 0:
-                monthly_data.append(month_rr)
-                months.append(month_names[month-1])
-        
-        if monthly_data:
-            plt.boxplot(monthly_data, labels=months)
-            plt.title('Boxplot Curah Hujan per Bulan', fontsize=14, fontweight='bold')
-            plt.xlabel('Bulan', fontsize=12)
-            plt.ylabel('Curah Hujan (mm)', fontsize=12)
+        # 3. Boxplot Curah Hukan per Tahun
+        plt.figure(figsize=(14, 6))
+        yearly_data = []
+        years = sorted(self.data['Year'].dropna().unique())
+
+        for year in years:
+            year_rr = self.data[self.data['Year'] == year]['RR_imputed'].dropna()
+            if len(year_rr) > 0:
+                yearly_data.append(year_rr)
+
+        if yearly_data:
+            plt.boxplot(yearly_data, labels=years, showfliers=True)
+            plt.title('Boxplot Curah Hujan Harian per Tahun', fontsize=14, fontweight='bold')
+            plt.xlabel('Tahun', fontsize=12)
+            plt.ylabel('Curah Hujan Harian (mm)', fontsize=12)
             plt.grid(True, alpha=0.3)
             plt.xticks(rotation=45)
         plt.tight_layout()
-        
+
         if save_plots:
-            plt.savefig(f'{output_dir}/03_boxplot_bulanan.png', dpi=300, bbox_inches='tight')
-            print("✅ 03_boxplot_bulanan.png saved")
+            plt.savefig(f'{output_dir}/03_boxplot_tahunan.png', dpi=300, bbox_inches='tight')
+            print("✅ 03_boxplot_tahunan.png saved")
         plt.show()
+        
         
         # 4. Pola Musiman (Bar Chart)
         plt.figure(figsize=(10, 6))
@@ -771,29 +823,50 @@ class RainfallPreprocessor:
             print("✅ 04_pola_musiman.png saved")
         plt.show()
         
-        # 5. Trend Tahunan
-        plt.figure(figsize=(12, 6))
+
+        # 5. Trend Rata-rata Curah Hujan Tahunan - Simplified
+        plt.figure(figsize=(14, 6))
+
+        # Hitung rata-rata tahunan
         yearly_mean = self.data.groupby('Year')['RR_imputed'].mean()
-        plt.plot(yearly_mean.index, yearly_mean.values, marker='o', linewidth=2, markersize=6, color='darkgreen')
-        plt.title('Trend Tahunan Curah Hujan', fontsize=14, fontweight='bold')
-        plt.xlabel('Tahun', fontsize=12)
-        plt.ylabel('Rata-rata Curah Hujan (mm)', fontsize=12)
-        plt.grid(True, alpha=0.3)
-        plt.xticks(rotation=45)
-        
+        years = yearly_mean.index.astype(int)
+        values = yearly_mean.values
+
+        # Plot garis utama
+        plt.plot(years, values, marker='o', linewidth=2, color='green', label='Rata-rata Tahunan')
+
         # Tambahkan trendline
-        if len(yearly_mean) > 1:
-            z = np.polyfit(yearly_mean.index, yearly_mean.values, 1)
-            p = np.poly1d(z)
-            plt.plot(yearly_mean.index, p(yearly_mean.index), "--", alpha=0.7, color='red', 
-                    label=f'Trendline: {z[0]:.2f}mm/tahun')
-            plt.legend()
+        z = np.polyfit(years, values, 1)
+        plt.plot(years, np.poly1d(z)(years), linestyle='--', color='red', label=f'Trend: {z[0]:.2f} mm/tahun')
+
+        # Highlight tahun tertinggi dan terendah
+        plt.scatter(years[np.argmax(values)], values.max(), color='red', s=80, label=f'Tertinggi: {years[np.argmax(values)]}')
+        plt.scatter(years[np.argmin(values)], values.min(), color='blue', s=80, label=f'Terendah: {years[np.argmin(values)]}')
+
+        # Label, sumbu, grid
+        plt.title('Rata-rata Curah Hujan Tahunan', fontsize=14, fontweight='bold')
+        plt.xlabel('Tahun')
+        plt.ylabel('Rata-rata (mm)')
+        plt.xticks(years[::max(1, len(years)//10)], rotation=45)
+        plt.grid(True, alpha=0.3)
+        plt.legend()
+
+        # Statistik ringkasan di pojok
+        text = f'''Periode: {years.min()} - {years.max()}
+        Rata-rata: {values.mean():.1f} mm/hari
+        Rentang: {values.min():.1f} – {values.max():.1f} mm/hari
+        Trend: {"↑" if z[0]>0 else "↓"} {abs(z[0]):.2f} mm/tahun'''
+        plt.text(0.02, 0.95, text, transform=plt.gca().transAxes, fontsize=10, va='top',
+                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+
         plt.tight_layout()
-        
+
+        # Simpan jika diminta
         if save_plots:
             plt.savefig(f'{output_dir}/05_trend_tahunan.png', dpi=300, bbox_inches='tight')
             print("✅ 05_trend_tahunan.png saved")
         plt.show()
+
         
         # 6. Pola Missing Values
         plt.figure(figsize=(12, 6))
@@ -810,10 +883,6 @@ class RainfallPreprocessor:
         plt.grid(True, alpha=0.3)
         plt.xticks(rotation=45)
         
-        # Tambahkan garis rata-rata
-        avg_missing = missing_pct.mean()
-        plt.axhline(y=avg_missing, color='orange', linestyle='--', linewidth=2, 
-                    label=f'Rata-rata: {avg_missing:.1f}%')
         plt.legend()
         plt.tight_layout()
         
@@ -822,52 +891,7 @@ class RainfallPreprocessor:
             print("✅ 06_missing_values_pattern.png saved")
         plt.show()
         
-        # 7. Deteksi Outlier
-        plt.figure(figsize=(14, 6))
-        if 'is_outlier' in self.data.columns:
-            outlier_data = self.data[self.data['is_outlier'] == True]
-            normal_data = self.data[self.data['is_outlier'] == False]
-            
-            plt.scatter(normal_data['Date'], normal_data['RR_imputed'], 
-                    alpha=0.6, s=2, label='Normal', color='blue')
-            plt.scatter(outlier_data['Date'], outlier_data['RR_imputed'], 
-                    alpha=0.8, s=15, label='Outlier', color='red', marker='^')
-            
-            plt.title('Deteksi Outlier dalam Time Series', fontsize=14, fontweight='bold')
-            plt.xlabel('Tanggal', fontsize=12)
-            plt.ylabel('Curah Hujan (mm)', fontsize=12)
-            plt.legend()
-            plt.grid(True, alpha=0.3)
-            plt.xticks(rotation=45)
-        plt.tight_layout()
-        
-        if save_plots:
-            plt.savefig(f'{output_dir}/07_deteksi_outlier.png', dpi=300, bbox_inches='tight')
-            print("✅ 07_deteksi_outlier.png saved")
-        plt.show()
-        
-        # 8. Curah Hujan dengan Error Bars
-        plt.figure(figsize=(10, 6))
-        correlation_data = self.data.groupby('Month')['RR_imputed'].agg(['mean', 'std', 'count'])
-        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 
-                    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-        
-        plt.errorbar(range(1, 13), correlation_data['mean'], 
-                    yerr=correlation_data['std'], marker='o', capsize=5, capthick=2, 
-                    linewidth=2, markersize=6, color='purple')
-        plt.title('Curah Hujan: Mean ± Std per Bulan', fontsize=14, fontweight='bold')
-        plt.xlabel('Bulan', fontsize=12)
-        plt.ylabel('Curah Hujan (mm)', fontsize=12)
-        plt.xticks(range(1, 13), month_names, rotation=45)
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        
-        if save_plots:
-            plt.savefig(f'{output_dir}/08_mean_std_bulanan.png', dpi=300, bbox_inches='tight')
-            print("✅ 08_mean_std_bulanan.png saved")
-        plt.show()
-        
-        # 9. Transformasi Comparison
+        # 7. Transformasi Comparison
         plt.figure(figsize=(15, 5))
         
         # Original distribution
@@ -902,11 +926,11 @@ class RainfallPreprocessor:
         plt.tight_layout()
         
         if save_plots:
-            plt.savefig(f'{output_dir}/09_transformasi_comparison.png', dpi=300, bbox_inches='tight')
-            print("✅ 09_transformasi_comparison.png saved")
+            plt.savefig(f'{output_dir}/07_transformasi_comparison.png', dpi=300, bbox_inches='tight')
+            print("✅ 07_transformasi_comparison.png saved")
         plt.show()
         
-        # 10. Curah Hujan Bulanan Kumulatif
+        # 8. Curah Hujan Bulanan Kumulatif
         plt.figure(figsize=(12, 6))
         monthly_cumsum = self.data.groupby(['Year', 'Month'])['RR_imputed'].sum().reset_index()
         monthly_cumsum['Date'] = pd.to_datetime(monthly_cumsum[['Year', 'Month']].assign(day=1))
@@ -929,11 +953,11 @@ class RainfallPreprocessor:
         plt.tight_layout()
         
         if save_plots:
-            plt.savefig(f'{output_dir}/10_curah_hujan_kumulatif.png', dpi=300, bbox_inches='tight')
-            print("✅ 10_curah_hujan_kumulatif.png saved")
+            plt.savefig(f'{output_dir}/08_curah_hujan_kumulatif.png', dpi=300, bbox_inches='tight')
+            print("✅ 08_curah_hujan_kumulatif.png saved")
         plt.show()
         
-        # 11. Seasonal Decomposition
+        # 9. Seasonal Decomposition
         plt.figure(figsize=(12, 10))
         try:
             # Buat monthly time series untuk decomposition
@@ -980,41 +1004,55 @@ class RainfallPreprocessor:
         plt.tight_layout()
         
         if save_plots:
-            plt.savefig(f'{output_dir}/11_seasonal_decomposition.png', dpi=300, bbox_inches='tight')
-            print("✅ 11_seasonal_decomposition.png saved")
+            plt.savefig(f'{output_dir}/09_seasonal_decomposition.png', dpi=300, bbox_inches='tight')
+            print("✅ 09_seasonal_decomposition.png saved")
         plt.show()
         
-        # 12. Data Quality Summary
-        plt.figure(figsize=(10, 6))
-        quality_data = [
-            self.missing_stats['missing_8888'],
-            self.missing_stats['missing_nan'],
-            self.missing_stats['zero_values'],
-            len(self.data) - self.missing_stats['missing_8888'] - self.missing_stats['missing_nan']
-        ]
-        quality_labels = ['Missing (8888)', 'Missing (NaN)', 'Zero Values', 'Valid Data']
-        colors = ['red', 'orange', 'yellow', 'green']
-        
-        bars = plt.bar(quality_labels, quality_data, color=colors, alpha=0.7, edgecolor='black')
-        plt.title('Data Quality Summary', fontsize=14, fontweight='bold')
-        plt.ylabel('Jumlah Records', fontsize=12)
-        plt.xticks(rotation=45)
-        plt.grid(True, alpha=0.3)
-        
-        # Tambahkan persentase di atas setiap bar
-        total_data = sum(quality_data)
-        for i, (bar, value) in enumerate(zip(bars, quality_data)):
-            percentage = (value / total_data) * 100
-            plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(quality_data)*0.01, 
-                    f'{value:,}\n({percentage:.1f}%)', ha='center', va='bottom', fontweight='bold')
-        
+        # 10. Data Quality Summary 
+        fig, ax = plt.subplots(figsize=(8, 7))
+
+        # Hitung metrik kualitas data
+        missing_8888 = self.missing_stats['missing_8888']
+        missing_nan = self.missing_stats['missing_nan']
+        zero_values = self.missing_stats['zero_values']
+        valid_data = len(self.data) - missing_8888 - missing_nan
+        total_data = len(self.data)
+        missing_data = missing_8888 + missing_nan
+
+        # Donut chart setup
+        donut_vals = [valid_data, missing_data, zero_values]
+        donut_labels = ['Valid', 'Missing', 'Zero']
+        colors = ['#4CAF50', '#FF6B6B', '#FFD700']
+
+        wedges, _, _ = ax.pie(donut_vals, labels=donut_labels, autopct='%1.1f%%',
+                            startangle=90, pctdistance=0.85, colors=colors,
+                            textprops={'fontsize': 10})
+        ax.add_artist(plt.Circle((0, 0), 0.70, fc='white'))  # Buat donut
+
+        ax.set_title('📊 Komposisi Kualitas Data', fontsize=14, fontweight='bold')
+
+        # Ringkasan statistik
+        score_valid = valid_data / total_data * 100
+
+        summary_text = f'''Ringkasan:
+        • Total: {total_data:,}
+        • Valid: {valid_data:,} ({score_valid:.1f}%)
+        • Missing: {missing_data:,} ({missing_data/total_data*100:.1f}%)
+        • Zero: {zero_values:,} ({zero_values/total_data*100:.1f}%)
+        '''
+
+        plt.figtext(0.5, 0.01, summary_text, fontsize=10, fontfamily='monospace',
+                    ha='center', va='bottom',
+                    bbox=dict(boxstyle='round', facecolor='whitesmoke', alpha=0.9))
+
         plt.tight_layout()
-        
+
+        # Simpan jika diminta
         if save_plots:
-            plt.savefig(f'{output_dir}/12_data_quality_summary.png', dpi=300, bbox_inches='tight')
-            print("✅ 12_data_quality_summary.png saved")
+            plt.savefig(f'{output_dir}/10_data_quality_summary.png', dpi=300, bbox_inches='tight')
+            print("✅ 10_data_quality_summary.png saved")
         plt.show()
-    
+
     def summary_report(self):
         """
         Laporan ringkasan preprocessing
