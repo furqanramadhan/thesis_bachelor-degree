@@ -6,6 +6,7 @@ from scipy import stats
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller, kpss
 from sklearn.preprocessing import StandardScaler
+from typing import Dict, List, Optional
 from scipy.stats import boxcox
 import warnings
 warnings.filterwarnings('ignore')
@@ -41,12 +42,6 @@ class RainfallPreprocessor:
         self.data['Month'] = self.data['Date'].dt.month
         self.data['Day'] = self.data['Date'].dt.day
         self.data['DayOfYear'] = self.data['Date'].dt.dayofyear
-        self.data['Season'] = self.data['Month'].map({
-            12: 'DJF', 1: 'DJF', 2: 'DJF',  # Musim Hujan
-            3: 'MAM', 4: 'MAM', 5: 'MAM',    # Peralihan
-            6: 'JJA', 7: 'JJA', 8: 'JJA',    # Kemarau
-            9: 'SON', 10: 'SON', 11: 'SON'   # Peralihan
-        })
         
         print(f"Data loaded: {len(self.data)} records from {self.data['Date'].min()} to {self.data['Date'].max()}")
         return self.data
@@ -1189,13 +1184,21 @@ def main():
         
         # Simpan hasil preprocessing
         output_path = "preprocessed_rainfall_data.csv"
-        preprocessor.data.to_csv(output_path, index=False)
+        
+        # Simpan hanya kolom terkait RR
+        rr_columns = [
+            'Date', 'Year', 'Month', 'Day',
+            'RR_original', 'RR_estimation_method',
+            'RR_imputed', 'imputation_method', 'is_outlier',
+            'RR_log', 'RR_sqrt', 'RR_boxcox'
+        ]
+        preprocessor.data[rr_columns].to_csv(output_path, index=False)
         print(f"\n💾 Data hasil preprocessing disimpan ke: {output_path}")
         
         # Informasi kolom hasil preprocessing
         print(f"\n📊 KOLOM HASIL PREPROCESSING:")
         processed_columns = [
-            'Date', 'Year', 'Month', 'Day', 'Season',
+            'Date', 'Year', 'Month', 'Day',
             'RR_original', 'RR_imputed', 'RR_log', 'RR_sqrt',
             'is_outlier'
         ]
