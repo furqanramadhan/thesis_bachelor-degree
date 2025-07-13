@@ -36,12 +36,14 @@ class RainfallPreprocessor:
         # Konversi Date ke datetime
         self.data['Date'] = pd.to_datetime(self.data['Date'])
         self.data = self.data.sort_values('Date').reset_index(drop=True)
+
+        if 'SS' in self.data.columns:
+            self.data['SS'] = self.data['SS'].replace(9999, np.nan)
         
         # Buat kolom tambahan untuk analisis
         self.data['Year'] = self.data['Date'].dt.year
         self.data['Month'] = self.data['Date'].dt.month
         self.data['Day'] = self.data['Date'].dt.day
-        self.data['DayOfYear'] = self.data['Date'].dt.dayofyear
         
         print(f"Data loaded: {len(self.data)} records from {self.data['Date'].min()} to {self.data['Date'].max()}")
         return self.data
@@ -115,7 +117,7 @@ class RainfallPreprocessor:
 
     def _estimate_unmeasured_rainfall(self):
         """
-        Estimasi data 8888 (tidak terukur) berdasarkan kondisi meteorologi
+        Estimasi data 8888 (tidak terukur) berdasarkan kondisi meteorologi dengan SS modifier
         """
         mask_8888 = self.data['RR'] == 8888
         count_8888 = mask_8888.sum()
@@ -123,7 +125,7 @@ class RainfallPreprocessor:
         if count_8888 == 0:
             return
         
-        print(f"Estimasi {count_8888} data tidak terukur (8888)...")
+        print(f"Estimasi {count_8888} data tidak terukur (8888) dengan SS modifier...")
         
         # Mapping kondisi meteorologi ke kategori hujan
         conditions = {
@@ -139,6 +141,7 @@ class RainfallPreprocessor:
             row = self.data.loc[idx]
             rh = row.get('RH_AVG', 75)  # default humidity
             tn = row.get('TN', 25)      # default temperature
+            ss = row.get('SS', 4.0)     # default sunshine duration
             
             # Determine rainfall category based on conditions
             category = 'dry'  # default
@@ -147,17 +150,42 @@ class RainfallPreprocessor:
                     category = cat
                     break
             
-            # Generate random value within category range
+            # Generate base value within category range
             min_val, max_val = conditions[category]['rain_range']
-            estimated_value = np.random.uniform(min_val, max_val)
+            base_estimated_value = np.random.uniform(min_val, max_val)
+            
+            # Apply SS modifier
+            ss_modifier = self._calculate_ss_modifier(ss)
+            estimated_value = base_estimated_value * ss_modifier
+            
             estimated_values.append(estimated_value)
         
         # Apply estimates
         self.data.loc[mask_8888, 'RR'] = estimated_values
-        self.data.loc[mask_8888, 'RR_estimation_method'] = 'meteorological_estimate'
-        self.data.loc[mask_8888, 'imputation_method'] = 'meteorological_estimate'
+        self.data.loc[mask_8888, 'RR_estimation_method'] = 'meteorological_estimate_with_ss'
+        self.data.loc[mask_8888, 'imputation_method'] = 'meteorological_estimate_with_ss'
         
-        print(f"  → {len(estimated_values)} nilai berhasil diestimasi")
+        print(f"  → {len(estimated_values)} nilai berhasil diestimasi dengan SS modifier")
+
+    def _calculate_ss_modifier(self, ss):
+        """
+        Hitung modifier berdasarkan sunshine duration
+        SS rendah → kemungkinan hujan lebih tinggi
+        SS tinggi → kemungkinan hujan lebih rendah
+        """
+        if pd.isna(ss):
+            return 1.0  # neutral if SS is missing
+        
+        if ss < 1.5:
+            return np.random.uniform(1.3, 1.5)  # boost estimation
+        elif ss < 3.0:
+            return np.random.uniform(1.1, 1.3)  # slight boost
+        elif ss < 6.0:
+            return np.random.uniform(0.9, 1.1)  # neutral
+        elif ss < 8.0:
+            return np.random.uniform(0.7, 0.9)  # reduce estimation
+        else:
+            return np.random.uniform(0.5, 0.7)  # strong reduction
 
     def _identify_outliers(self):
         """
@@ -354,7 +382,7 @@ class RainfallPreprocessor:
 
     def _impute_medium_gaps(self, indices, monthly_stats):
         """
-        Imputasi gap sedang (4-14 hari) dengan monthly average + noise
+        Imputasi gap sedang (4-14 hari) dengan monthly average + noise + SS modifier
         """
         for idx in indices:
             if pd.isna(self.data.loc[idx, 'RR_imputed']):
@@ -363,30 +391,45 @@ class RainfallPreprocessor:
                 # Get monthly statistics
                 stats = monthly_stats[month]
                 
-                # Generate value with some randomness
+                # Generate base value with some randomness
                 base_value = stats['median']
                 noise = np.random.normal(0, stats['std'] * 0.3)  # 30% of std as noise
+                base_imputed_value = max(0, base_value + noise)
                 
-                imputed_value = max(0, base_value + noise)
+                # Apply SS modifier if available
+                ss = self.data.loc[idx, 'SS'] if 'SS' in self.data.columns else 4.0
+                if not pd.isna(ss):
+                    ss_modifier = self._calculate_ss_modifier(ss)
+                    imputed_value = base_imputed_value * ss_modifier
+                else:
+                    imputed_value = base_imputed_value
                 
                 self.data.loc[idx, 'RR_imputed'] = imputed_value
-                self.data.loc[idx, 'imputation_method'] = 'monthly_average'
+                self.data.loc[idx, 'imputation_method'] = 'monthly_average_with_ss'
         
         return len(indices)
 
     def _impute_long_gaps(self, indices, monthly_stats):
         """
-        Imputasi gap panjang (>14 hari) dengan monthly median
+        Imputasi gap panjang (>14 hari) dengan monthly median + SS modifier
         """
         for idx in indices:
             if pd.isna(self.data.loc[idx, 'RR_imputed']):
                 month = self.data.loc[idx, 'Month']
                 
                 # Use monthly median for stability
-                imputed_value = monthly_stats[month]['median']
+                base_imputed_value = monthly_stats[month]['median']
+                
+                # Apply SS modifier if available
+                ss = self.data.loc[idx, 'SS'] if 'SS' in self.data.columns else 4.0
+                if not pd.isna(ss):
+                    ss_modifier = self._calculate_ss_modifier(ss)
+                    imputed_value = base_imputed_value * ss_modifier
+                else:
+                    imputed_value = base_imputed_value
                 
                 self.data.loc[idx, 'RR_imputed'] = imputed_value
-                self.data.loc[idx, 'imputation_method'] = 'monthly_median'
+                self.data.loc[idx, 'imputation_method'] = 'monthly_median_with_ss'
         
         return len(indices)
 
