@@ -155,6 +155,7 @@ class RainfallPreprocessor:
         # Apply estimates
         self.data.loc[mask_8888, 'RR'] = estimated_values
         self.data.loc[mask_8888, 'RR_estimation_method'] = 'meteorological_estimate'
+        self.data.loc[mask_8888, 'imputation_method'] = 'meteorological_estimate'
         
         print(f"  → {len(estimated_values)} nilai berhasil diestimasi")
 
@@ -256,7 +257,13 @@ class RainfallPreprocessor:
         
         # Print final summary
         self._print_imputation_summary()
-        
+
+        # Tandai sumber data berdasarkan RR_original
+        self.data['RR_source'] = 'original'  # default
+        self.data.loc[self.data['RR_original'] == 8888, 'RR_source'] = 'estimated_8888'
+        self.data.loc[self.data['RR_original'].isna(), 'RR_source'] = 'imputed_missing'
+
+        # Final return
         return self.data['RR_imputed'].isna().sum() == 0
 
     def _calculate_monthly_stats(self):
