@@ -50,14 +50,14 @@ Outlier ekstrem (>150mm): 2 data
 Ringkasan data setelah cleaning:
   Total data valid: 6955
   Mean: 7.31mm
-  Median: 3.00mm
+  Median: 3.03mm
   Min: 0.00mm
   Max: 180.80mm
 
 Distribusi kategori hujan:
   Berawan (0mm): 1686 (24.2%)
-  Hujan ringan (0-20mm): 4635 (66.6%)
-  Hujan sedang (20-50mm): 510 (7.3%)
+  Hujan ringan (0-20mm): 4629 (66.6%)
+  Hujan sedang (20-50mm): 516 (7.4%)
   Hujan lebat (50-100mm): 113 (1.6%)
   Hujan sangat lebat (>100mm): 11 (0.2%)
 ✅ Data cleaning selesai
@@ -83,28 +83,35 @@ Statistik final:
 
 🔄 FASE 5: Deteksi Outlier Advanced
 
-=== DETEKSI OUTLIER ADVANCED ===
-IQR Method outliers: 660 (threshold: 20.16mm)
-Z-Score outliers: 181 (threshold: z > 3)
-Modified Z-Score outliers: 743 (threshold: mz > 3.5)
-Total outliers flagged: 660
+=== DETEKSI OUTLIER (PERCENTILE 99%) ===
+📊 Threshold Percentile 99%: > 58.00 mm
+✅ Total outliers flagged: 77 dari 7784 data
+
+Contoh outliers terdeteksi:
+  - 64.00 mm (index: 98)
+  - 59.00 mm (index: 283)
+  - 88.00 mm (index: 376)
+  - 147.00 mm (index: 859)
+  - 73.00 mm (index: 1043)
+
+💡 Menggunakan threshold P99 sebagai pendekatan adaptif untuk iklim tropis.
 
 🔄 FASE 6: Transformasi Data
 
 === TRANSFORMASI DATA ===
-Box-Cox lambda parameter: 0.1341
+Box-Cox lambda parameter: 0.1256
 
 Evaluasi transformasi (skewness):
-  Original: 4.1385
-  Log(x+1): 0.3875
-  Sqrt: 1.1843
-  Box-Cox: 0.0021
+  Original: 4.1342
+  Log(x+1): 0.3882
+  Sqrt: 1.1835
+  Box-Cox: -0.0036
 
 🔄 FASE 7: Uji Stationarity
 
 === UJI STATIONARITY ===
 Augmented Dickey-Fuller Test:
-  ADF Statistic: -16.212605
+  ADF Statistic: -16.178358
   p-value: 0.000000
   Critical Values:
     1%: -3.431192
@@ -113,7 +120,7 @@ Augmented Dickey-Fuller Test:
   → Data STASIONER (p-value ≤ 0.05)
 
 KPSS Test:
-  KPSS Statistic: 1.826074
+  KPSS Statistic: 1.829383
   p-value: 0.010000
   Critical Values:
     10%: 0.347000
@@ -156,14 +163,10 @@ LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
 📈 STATISTIK DESKRIPTIF (setelah preprocessing):
    • Mean: 6.98 mm
    • Median: 3.00 mm
-   • Std Dev: 11.91 mm
+   • Std Dev: 11.92 mm
    • Min: 0.00 mm
    • Max: 180.80 mm
-   • Skewness: 4.14
-
-⚠️  OUTLIER DETECTION:
-   • IQR method: 660 outliers
-   • Upper bound: 20.16 mm
+   • Skewness: 4.13
 
 ✅ PREPROCESSING STEPS COMPLETED:
    • ✓ Data cleaning & special values handling
@@ -195,10 +198,10 @@ LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
 
 🎯 REKOMENDASI UNTUK HOLT-WINTERS:
    • Data tersedia untuk forecasting: 7,784 records
-   • Seasonal strength: 11.30
+   • Seasonal strength: 11.31
    • Gunakan Holt-Winters ADDITIVE (seasonal pattern kuat)
    • Seasonal period: 12 (bulanan) atau 365 (harian)
-   • Gunakan RR_log untuk forecasting (skewness tinggi: 4.14)
+   • Gunakan RR_log untuk forecasting (skewness tinggi: 4.13)
 
 🎉 PREPROCESSING SELESAI!
 📁 File output: preprocessed_rainfall_data.csv
