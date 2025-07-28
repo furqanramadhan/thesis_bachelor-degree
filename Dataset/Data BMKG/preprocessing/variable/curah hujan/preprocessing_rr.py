@@ -231,14 +231,15 @@ class RainfallPreprocessor:
 
     def _categorize_rainfall(self, data):
         """
-        Kategorisasi curah hujan berdasarkan intensitas
+        Kategorisasi curah hujan berdasarkan intensitas harian sesuai standar BMKG.
         """
         return {
-            'Berawan (0mm)': (data == 0).sum(),
-            'Hujan ringan (0-20mm)': ((data > 0) & (data <= 20)).sum(),
-            'Hujan sedang (20-50mm)': ((data > 20) & (data <= 50)).sum(),
-            'Hujan lebat (50-100mm)': ((data > 50) & (data <= 100)).sum(),
-            'Hujan sangat lebat (>100mm)': (data > 100).sum()
+            'Berawan (0–0.4 mm)': ((data >= 0) & (data <= 0.4)).sum(),
+            'Hujan ringan (0.5–19.9 mm)': ((data > 0.4) & (data <= 19.9)).sum(),
+            'Hujan sedang (20–49.9 mm)': ((data >= 20) & (data <= 49.9)).sum(),
+            'Hujan lebat (50–99.9 mm)': ((data >= 50) & (data <= 99.9)).sum(),
+            'Hujan sangat lebat (100–150 mm)': ((data >= 100) & (data <= 150)).sum(),
+            'Hujan ekstrem (>150 mm)': (data > 150).sum()
         }
 
     def seasonal_imputation(self):
@@ -502,99 +503,6 @@ class RainfallPreprocessor:
 
         print("\n💡 Menggunakan threshold P99 sebagai pendekatan adaptif untuk iklim tropis.")
 
-    def transform_data(self):
-        """
-        Transformasi data untuk stabilisasi varians
-        """
-        print("\n=== TRANSFORMASI DATA ===")
-        
-        valid_data = self.data['RR_imputed'].dropna()
-        
-        if len(valid_data) == 0:
-            print("Tidak ada data valid untuk transformasi")
-            return
-        
-        # Log transformation (log(x+1) untuk handle zero values)
-        self.data['RR_log'] = np.log1p(self.data['RR_imputed'])
-        
-        # Square root transformation
-        self.data['RR_sqrt'] = np.sqrt(self.data['RR_imputed'])
-        
-        # Box-Cox transformation (hanya untuk nilai positif)
-        positive_data = valid_data[valid_data > 0]
-        if len(positive_data) > 0:
-            try:
-                # Fit Box-Cox transformation
-                boxcox_data, lambda_param = boxcox(positive_data)
-                print(f"Box-Cox lambda parameter: {lambda_param:.4f}")
-                
-                # Apply Box-Cox to all positive values
-                self.data['RR_boxcox'] = np.nan
-                positive_mask = (self.data['RR_imputed'] > 0) & (self.data['RR_imputed'].notna())
-                self.data.loc[positive_mask, 'RR_boxcox'] = boxcox(self.data.loc[positive_mask, 'RR_imputed'], lmbda=lambda_param)
-                
-            except Exception as e:
-                print(f"Box-Cox transformation failed: {e}")
-                self.data['RR_boxcox'] = np.nan
-        
-        # Evaluasi transformasi
-        print("\nEvaluasi transformasi (skewness):")
-        print(f"  Original: {valid_data.skew():.4f}")
-        print(f"  Log(x+1): {self.data['RR_log'].skew():.4f}")
-        print(f"  Sqrt: {self.data['RR_sqrt'].skew():.4f}")
-        if 'RR_boxcox' in self.data.columns:
-            print(f"  Box-Cox: {self.data['RR_boxcox'].skew():.4f}")
-    
-    def stationarity_tests(self):
-        """
-        Test stationarity untuk time series
-        """
-        print("\n=== UJI STATIONARITY ===")
-        
-        # Buat time series dengan frekuensi harian
-        ts_data = self.data.set_index('Date')['RR_imputed'].dropna()
-        
-        if len(ts_data) < 50:
-            print("Data terlalu sedikit untuk uji stationarity")
-            return
-        
-        # Augmented Dickey-Fuller test
-        try:
-            adf_result = adfuller(ts_data)
-            print("Augmented Dickey-Fuller Test:")
-            print(f"  ADF Statistic: {adf_result[0]:.6f}")
-            print(f"  p-value: {adf_result[1]:.6f}")
-            print(f"  Critical Values:")
-            for key, value in adf_result[4].items():
-                print(f"    {key}: {value:.6f}")
-            
-            if adf_result[1] <= 0.05:
-                print("  → Data STASIONER (p-value ≤ 0.05)")
-            else:
-                print("  → Data NON-STASIONER (p-value > 0.05)")
-                
-        except Exception as e:
-            print(f"ADF test failed: {e}")
-        
-        # KPSS test
-        try:
-            kpss_result = kpss(ts_data)
-            print("\nKPSS Test:")
-            print(f"  KPSS Statistic: {kpss_result[0]:.6f}")
-            print(f"  p-value: {kpss_result[1]:.6f}")
-            print(f"  Critical Values:")
-            for key, value in kpss_result[3].items():
-                print(f"    {key}: {value:.6f}")
-            
-            if kpss_result[1] >= 0.05:
-                print("  → Data STASIONER (p-value ≥ 0.05)")
-            else:
-                print("  → Data NON-STASIONER (p-value < 0.05)")
-                
-        except Exception as e:
-            print(f"KPSS test failed: {e}")
-    
-
     def create_individual_plots(self, output_dir="rainfall_plots", save_plots=True):
         """
         Membuat plots individual untuk analisis dan menyimpannya ke direktori terpisah
@@ -612,334 +520,591 @@ class RainfallPreprocessor:
         
         print("\n=== MEMBUAT PLOTS INDIVIDUAL ===")
         
-        # Setup style untuk semua plots
-        plt.style.use('seaborn-v0_8')
-        sns.set_palette("husl")
-        
-        # 1. Time Series Plot
+     # 1. Time Series Plot - PERBAIKAN
+        plt.style.use('default')  # Ubah ke default (background putih)
+        plt.rcParams['figure.facecolor'] = 'white'
+        plt.rcParams['axes.facecolor'] = 'white'
+
         plt.figure(figsize=(16, 8))
         valid_data = self.data[self.data['RR_imputed'].notna()]
 
         if not valid_data.empty:
             # Urutkan data
             valid_data = valid_data.sort_values('Date')
-            
-            # Plot garis utama & moving average
-            plt.plot(valid_data['Date'], valid_data['RR_imputed'], color='blue', alpha=0.7, linewidth=1.0, label='Curah Hujan')
-            
-            # Scatter hari hujan tinggi (>50mm)
-            high_rain = valid_data[valid_data['RR_imputed'] > 50]
-            if not high_rain.empty:
-                plt.scatter(high_rain['Date'], high_rain['RR_imputed'], color='red', s=20, alpha=0.8, label='> 50 mm')
 
-            # Garis vertikal awal tahun dan label tiap 2 tahun
-            years = sorted(valid_data['Year'].unique())
-            for i, y in enumerate(years):
-                tgl_awal = pd.Timestamp(f"{y}-01-01")
-                plt.axvline(tgl_awal, color='gray', linestyle='--', linewidth=0.6, alpha=0.6)
-                if i % 2 == 0 or y == years[-1]:
-                    plt.text(tgl_awal, plt.ylim()[1]*0.95, str(y), rotation=90, va='top', ha='right', fontsize=9, color='gray')
+            # Plot garis utama dengan linewidth yang lebih tebal
+            plt.plot(valid_data['Date'], valid_data['RR_imputed'], 
+                    color='blue', alpha=0.7, linewidth=2.0)  # Ubah dari 1.0 ke 2.0
+            
+            categories = {
+                'Hujan Sedang (20–49.9 mm)': ((valid_data['RR_imputed'] >= 20) & (valid_data['RR_imputed'] <= 49.9)),
+                'Hujan Lebat (50–99.9 mm)': ((valid_data['RR_imputed'] >= 50) & (valid_data['RR_imputed'] <= 99.9)),
+                'Hujan Sangat Lebat (100–150 mm)': ((valid_data['RR_imputed'] >= 100) & (valid_data['RR_imputed'] <= 150)),
+                'Hujan Ekstrem (>150 mm)': (valid_data['RR_imputed'] > 150)
+            }
+            colors = {
+            'Hujan Sedang (20–49.9 mm)': '#06923E',
+            'Hujan Lebat (50–99.9 mm)': '#FFDE63',
+            'Hujan Sangat Lebat (100–150 mm)': '#DC2525',
+            'Hujan Ekstrem (>150 mm)': '#222831'
+            }
+
+            for label, mask in categories.items():
+                subset = valid_data[mask]
+                if not subset.empty:
+                    plt.scatter(subset['Date'], subset['RR_imputed'], label=label,
+                            color=colors[label], s=45, alpha=0.9) 
 
             # Sumbu X dan grid
             start_date, end_date = valid_data['Date'].min(), valid_data['Date'].max()
             date_ticks = pd.date_range(start=start_date, end=end_date, freq='YS')
-            plt.xticks(date_ticks, [d.year for d in date_ticks], rotation=45)
+            plt.xticks(date_ticks, [d.year for d in date_ticks], rotation=0, ha='center', fontsize=12)  # Tambah fontsize
             plt.gca().set_xticks(pd.date_range(start_date, end_date, freq='MS'), minor=True)
-            plt.grid(True, alpha=0.3, which='major')
-            plt.grid(True, alpha=0.1, which='minor')
+            
+            # Grid dengan style yang sama seperti plot #4
+            plt.grid(True, axis='y', alpha=0.6, linestyle='-', linewidth=0.4, color='gray')
+            plt.grid(True, axis='y', which='minor', alpha=0.3, linestyle=':', linewidth=0.5, color='lightgray')
 
-            # Judul dan keterangan
-            total_days = (end_date - start_date).days
-            plt.title(f'Time Series Curah Hujan Harian (RR)\n{start_date:%d %b %Y} - {end_date:%d %b %Y}', fontsize=14, fontweight='bold')
-            plt.xlabel('Tahun')
-            plt.ylabel('Curah Hujan (mm)')
-            plt.legend(loc='upper right', frameon=True)
+            # Label dengan fontsize yang sama seperti plot #4
+            plt.xlabel('Tahun', fontsize=12)
+            plt.ylabel('Curah Hujan (mm)', fontsize=12)
+            
+            # Legend dengan style yang sama seperti plot #4
+            plt.legend(loc='upper right', fontsize=10, frameon=True, fancybox=True, 
+                    shadow=True, framealpha=0.9)  # Style sama seperti plot #4
 
-            # Statistik pojok kiri atas
-            plt.text(0.02, 0.98,
-                    f'Data Valid: {len(valid_data):,} hari\nMaksimum: {valid_data["RR_imputed"].max():.1f}mm\nMinimum: {valid_data["RR_imputed"].min():.1f}mm',
-                    transform=plt.gca().transAxes,
-                    fontsize=10, va='top',
-                    bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
         else:
             plt.text(0.5, 0.5, 'Tidak ada data valid untuk ditampilkan',
                     ha='center', va='center', fontsize=14, transform=plt.gca().transAxes)
 
         plt.tight_layout()
+        plt.ylim(0, 200)
+
+        # Set background axes menjadi putih (sama seperti plot #4)
+        plt.gca().set_facecolor('white')
+
         if save_plots:
-            plt.savefig(f'{output_dir}/01_time_series_plot.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{output_dir}/01_time_series_plot.png', dpi=300, bbox_inches='tight',
+                        facecolor='white', edgecolor='none')  # Tambah facecolor dan edgecolor
             print("✅ 01_time_series_plot.png saved")
         plt.show()
 
 
-        # 2. Histogram dan Distribusi
-        plt.figure(figsize=(10, 6))
+       # 2. Histogram dan Distribusi 
+        plt.figure(figsize=(12, 8))
+
         valid_rr = self.data['RR_imputed'].dropna()
 
         if not valid_rr.empty:
-            # Filter upper limit untuk menghindari outlier ekstrem
-            upper_limit = min(valid_rr.quantile(0.95) * 1.1, 100)
-            filtered_rr = valid_rr[valid_rr <= upper_limit]
-
-            # Tentukan bin width merata
-            bin_width = 2  # 2 mm per bin
-            bins = np.arange(0, upper_limit + bin_width, bin_width)
-
-            # Plot histogram
-            plt.hist(filtered_rr, bins=bins, color='skyblue', edgecolor='black', alpha=0.8)
-
-            # Label dan tata letak
-            plt.title('Distribusi Curah Hujan Harian (Filtered ≤ {:.0f} mm)'.format(upper_limit), fontsize=13, fontweight='bold')
-            plt.xlabel('Curah Hujan (mm)', fontsize=11)
-            plt.ylabel('Frekuensi', fontsize=11)
-            plt.grid(True, alpha=0.3)
-            plt.legend(fontsize=9)
+            # Definisi kategori hujan BMKG
+            categories = [
+                (0, 0.4, 'Berawan'),
+                (0.5, 19.9, 'Hujan Ringan'),
+                (20, 49.9, 'Hujan Sedang'),
+                (50, 99.9, 'Hujan Lebat'),
+                (100, 150, 'Hujan Sangat Lebat'),
+                (150.1, 200, 'Hujan Ekstrem')
+            ]
+            
+            category_counts = []
+            category_labels = []
+            category_positions = []
+            
+            for i, (min_val, max_val, label) in enumerate(categories):
+                count = ((valid_rr >= min_val) & (valid_rr <= max_val)).sum()
+                category_counts.append(count)
+                category_labels.append(f'{label}')
+                category_positions.append(i)
+            
+            # Plot bar horizontal
+            bars = plt.barh(
+                category_positions, category_counts,
+                color=['green', 'skyblue', 'orange', 'red', 'darkred', 'purple'],
+                edgecolor='black', alpha=0.8, height=0.6
+            )
+            
+            # Kustomisasi visual
+            plt.xlabel('Frekuensi', fontsize=11)
+            plt.ylabel('Kategori Hujan', fontsize=11)
+            plt.yticks(category_positions, category_labels)
+            
+            for i, (bar, count) in enumerate(zip(bars, category_counts)):
+                percentage = (count / len(valid_rr)) * 100
+                plt.text(bar.get_width() + max(category_counts)*0.01, 
+                        bar.get_y() + bar.get_height()/2, 
+                        f'{percentage:.1f}%', ha='left', va='center', fontweight='bold')
+            
+            plt.grid(True, axis='x', alpha=0.3)
             plt.tight_layout()
+
+            # Simpan jika diminta
+            if save_plots:
+                plt.savefig(f'{output_dir}/02_histogram_kategori.png', dpi=300, bbox_inches='tight')
+                print("✅ 02_histogram_kategori.png saved")
         else:
             plt.text(0.5, 0.5, 'Tidak ada data valid untuk ditampilkan',
                     ha='center', va='center', fontsize=14, transform=plt.gca().transAxes)
 
-        # Simpan jika diminta
-        if save_plots:
-            plt.savefig(f'{output_dir}/02_histogram_distribusi.png', dpi=300, bbox_inches='tight')
-            print("✅ 02_histogram_distribusi.png saved")
         plt.show()
         
-        # 3. Boxplot Curah Hukan per Tahun
-        plt.figure(figsize=(14, 6))
-        yearly_data = []
-        years = sorted(self.data['Year'].dropna().unique())
-
-        for year in years:
-            year_rr = self.data[self.data['Year'] == year]['RR_imputed'].dropna()
-            if len(year_rr) > 0:
-                yearly_data.append(year_rr)
-
-        if yearly_data:
-            plt.boxplot(yearly_data, labels=years, showfliers=True)
-            plt.title('Boxplot Curah Hujan Harian per Tahun', fontsize=14, fontweight='bold')
-            plt.xlabel('Tahun', fontsize=12)
-            plt.ylabel('Curah Hujan Harian (mm)', fontsize=12)
-            plt.grid(True, alpha=0.3)
-            plt.xticks(rotation=45)
-        plt.tight_layout()
-
-        if save_plots:
-            plt.savefig(f'{output_dir}/03_boxplot_tahunan.png', dpi=300, bbox_inches='tight')
-            print("✅ 03_boxplot_tahunan.png saved")
-        plt.show()
-        
-        
-        # 4. Pola Musiman (Bar Chart)
-        plt.figure(figsize=(10, 6))
-        seasonal_mean = self.data.groupby('Month')['RR_imputed'].mean()
-        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 
-                    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-        
-        plt.bar(range(1, 13), seasonal_mean.values, alpha=0.7, color='lightcoral')
-        plt.title('Rata-rata Curah Hujan per Bulan', fontsize=14, fontweight='bold')
-        plt.xlabel('Bulan', fontsize=12)
-        plt.ylabel('Rata-rata Curah Hujan (mm)', fontsize=12)
-        plt.xticks(range(1, 13), month_names, rotation=45)
-        plt.grid(True, alpha=0.3)
-        
-        # Tambahkan nilai di atas setiap bar
-        for i, v in enumerate(seasonal_mean.values):
-            plt.text(i+1, v + max(seasonal_mean.values)*0.01, f'{v:.1f}', 
-                    ha='center', va='bottom', fontweight='bold')
-        plt.tight_layout()
-        
-        if save_plots:
-            plt.savefig(f'{output_dir}/04_pola_musiman.png', dpi=300, bbox_inches='tight')
-            print("✅ 04_pola_musiman.png saved")
-        plt.show()
-        
-
-        # 5. Trend Rata-rata Curah Hujan Tahunan - Simplified
+        # 3. Boxplot Curah Hujan Harian per Tahun
+        plt.style.use('default')  # Background putih
+        plt.rcParams['figure.facecolor'] = 'white'
+        plt.rcParams['axes.facecolor'] = 'white'
         plt.figure(figsize=(14, 6))
 
-        # Hitung rata-rata tahunan
-        yearly_mean = self.data.groupby('Year')['RR_imputed'].mean()
-        years = yearly_mean.index.astype(int)
-        values = yearly_mean.values
+        monthly_data = []
+        months = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
-        # Plot garis utama
-        plt.plot(years, values, marker='o', linewidth=2, color='green', label='Rata-rata Tahunan')
-
-        # Tambahkan trendline
-        z = np.polyfit(years, values, 1)
-        plt.plot(years, np.poly1d(z)(years), linestyle='--', color='red', label=f'Trend: {z[0]:.2f} mm/tahun')
-
-        # Highlight tahun tertinggi dan terendah
-        plt.scatter(years[np.argmax(values)], values.max(), color='red', s=80, label=f'Tertinggi: {years[np.argmax(values)]}')
-        plt.scatter(years[np.argmin(values)], values.min(), color='blue', s=80, label=f'Terendah: {years[np.argmin(values)]}')
-
-        # Label, sumbu, grid
-        plt.title('Rata-rata Curah Hujan Tahunan', fontsize=14, fontweight='bold')
-        plt.xlabel('Tahun')
-        plt.ylabel('Rata-rata (mm)')
-        plt.xticks(years[::max(1, len(years)//10)], rotation=45)
-        plt.grid(True, alpha=0.3)
-        plt.legend()
-
-        # Statistik ringkasan di pojok
-        text = f'''Periode: {years.min()} - {years.max()}
-        Rata-rata: {values.mean():.1f} mm/hari
-        Rentang: {values.min():.1f} – {values.max():.1f} mm/hari
-        Trend: {"↑" if z[0]>0 else "↓"} {abs(z[0]):.2f} mm/tahun'''
-        plt.text(0.02, 0.95, text, transform=plt.gca().transAxes, fontsize=10, va='top',
-                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-
-        plt.tight_layout()
-
-        # Simpan jika diminta
-        if save_plots:
-            plt.savefig(f'{output_dir}/05_trend_tahunan.png', dpi=300, bbox_inches='tight')
-            print("✅ 05_trend_tahunan.png saved")
-        plt.show()
-
-        
-        # 6. Pola Missing Values
-        plt.figure(figsize=(12, 6))
-        yearly_missing = self.data.groupby('Year').agg({
-            'RR_original': lambda x: (x == 8888).sum() + x.isna().sum(),
-            'Date': 'count'
-        })
-        missing_pct = yearly_missing['RR_original'] / yearly_missing['Date'] * 100
-        
-        plt.bar(missing_pct.index, missing_pct.values, alpha=0.7, color='red')
-        plt.title('Persentase Missing Values per Tahun', fontsize=14, fontweight='bold')
-        plt.xlabel('Tahun', fontsize=12)
-        plt.ylabel('Missing Values (%)', fontsize=12)
-        plt.grid(True, alpha=0.3)
-        plt.xticks(rotation=45)
-        
-        plt.legend()
-        plt.tight_layout()
-        
-        if save_plots:
-            plt.savefig(f'{output_dir}/06_missing_values_pattern.png', dpi=300, bbox_inches='tight')
-            print("✅ 06_missing_values_pattern.png saved")
-        plt.show()
-        
-        # 7. Transformasi Comparison
-        plt.figure(figsize=(15, 5))
-        
-        # Original distribution
-        plt.subplot(1, 3, 1)
-        valid_original = self.data['RR_imputed'].dropna()
-        plt.hist(valid_original, bins=30, alpha=0.7, color='blue', edgecolor='black')
-        plt.title('Distribusi Original', fontsize=12, fontweight='bold')
-        plt.xlabel('RR (mm)')
-        plt.ylabel('Frekuensi')
-        plt.grid(True, alpha=0.3)
-        
-        # Log transformation
-        plt.subplot(1, 3, 2)
-        if 'RR_log' in self.data.columns:
-            valid_log = self.data['RR_log'].dropna()
-            plt.hist(valid_log, bins=30, alpha=0.7, color='green', edgecolor='black')
-            plt.title('Distribusi Log Transform', fontsize=12, fontweight='bold')
-            plt.xlabel('Log(RR + 1)')
-            plt.ylabel('Frekuensi')
-            plt.grid(True, alpha=0.3)
-        
-        # Square root transformation
-        plt.subplot(1, 3, 3)
-        if 'RR_sqrt' in self.data.columns:
-            valid_sqrt = self.data['RR_sqrt'].dropna()
-            plt.hist(valid_sqrt, bins=30, alpha=0.7, color='orange', edgecolor='black')
-            plt.title('Distribusi Sqrt Transform', fontsize=12, fontweight='bold')
-            plt.xlabel('√RR')
-            plt.ylabel('Frekuensi')
-            plt.grid(True, alpha=0.3)
-        
-        plt.tight_layout()
-        
-        if save_plots:
-            plt.savefig(f'{output_dir}/07_transformasi_comparison.png', dpi=300, bbox_inches='tight')
-            print("✅ 07_transformasi_comparison.png saved")
-        plt.show()
-        
-        # 8. Curah Hujan Bulanan Kumulatif
-        plt.figure(figsize=(12, 6))
-        monthly_cumsum = self.data.groupby(['Year', 'Month'])['RR_imputed'].sum().reset_index()
-        monthly_cumsum['Date'] = pd.to_datetime(monthly_cumsum[['Year', 'Month']].assign(day=1))
-        monthly_cumsum = monthly_cumsum.sort_values('Date')
-        
-        plt.plot(monthly_cumsum['Date'], monthly_cumsum['RR_imputed'], linewidth=2, color='darkblue')
-        plt.title('Curah Hujan Bulanan Kumulatif', fontsize=14, fontweight='bold')
-        plt.xlabel('Tanggal', fontsize=12)
-        plt.ylabel('Curah Hujan Bulanan (mm)', fontsize=12)
-        plt.grid(True, alpha=0.3)
-        plt.xticks(rotation=45)
-        
-        # Tambahkan moving average
-        if len(monthly_cumsum) > 12:
-            monthly_cumsum['MA_12'] = monthly_cumsum['RR_imputed'].rolling(window=12).mean()
-            plt.plot(monthly_cumsum['Date'], monthly_cumsum['MA_12'], 
-                    linewidth=2, color='red', alpha=0.7, label='Moving Average (12 bulan)')
-            plt.legend()
-        
-        plt.tight_layout()
-        
-        if save_plots:
-            plt.savefig(f'{output_dir}/08_curah_hujan_kumulatif.png', dpi=300, bbox_inches='tight')
-            print("✅ 08_curah_hujan_kumulatif.png saved")
-        plt.show()
-        
-        # 9. Seasonal Decomposition
-        plt.figure(figsize=(12, 10))
-        try:
-            # Buat monthly time series untuk decomposition
-            monthly_ts = self.data.groupby(['Year', 'Month'])['RR_imputed'].mean().reset_index()
-            monthly_ts['Date'] = pd.to_datetime(monthly_ts[['Year', 'Month']].assign(day=1))
-            monthly_ts = monthly_ts.set_index('Date')['RR_imputed'].dropna()
-            
-            if len(monthly_ts) >= 24:  # Minimal 2 tahun
-                decomposition = seasonal_decompose(monthly_ts, model='additive', period=12)
-                
-                # Plot components
-                plt.subplot(4, 1, 1)
-                plt.plot(decomposition.observed, linewidth=2, color='blue')
-                plt.title('Observed', fontsize=12, fontweight='bold')
-                plt.grid(True, alpha=0.3)
-                
-                plt.subplot(4, 1, 2)
-                plt.plot(decomposition.trend, linewidth=2, color='green')
-                plt.title('Trend', fontsize=12, fontweight='bold')
-                plt.grid(True, alpha=0.3)
-                
-                plt.subplot(4, 1, 3)
-                plt.plot(decomposition.seasonal, linewidth=2, color='orange')
-                plt.title('Seasonal', fontsize=12, fontweight='bold')
-                plt.grid(True, alpha=0.3)
-                
-                plt.subplot(4, 1, 4)
-                plt.plot(decomposition.resid, linewidth=2, color='red')
-                plt.title('Residual', fontsize=12, fontweight='bold')
-                plt.grid(True, alpha=0.3)
-                
-                plt.suptitle('Seasonal Decomposition', fontsize=16, fontweight='bold')
-                
+        # Kumpulkan data curah hujan harian untuk tiap bulan (tanpa tahun)
+        for month in months:
+            month_rr = self.data[self.data['Month'] == month]['RR_imputed'].dropna()
+            if not month_rr.empty:
+                monthly_data.append(month_rr)
             else:
-                plt.text(0.5, 0.5, 'Data tidak cukup untuk decomposition\n(minimal 24 bulan)', 
-                        ha='center', va='center', fontsize=14, transform=plt.gca().transAxes)
-                plt.title('Seasonal Decomposition', fontsize=14, fontweight='bold')
-                
-        except Exception as e:
-            plt.text(0.5, 0.5, f'Decomposition error:\n{str(e)}', 
-                    ha='center', va='center', fontsize=12, transform=plt.gca().transAxes)
-            plt.title('Seasonal Decomposition', fontsize=14, fontweight='bold')
-        
+                monthly_data.append(pd.Series(dtype=float))  # Tambahkan placeholder jika kosong
+
+        # Plot jika ada data
+        if any(len(m) > 0 for m in monthly_data):
+            box = plt.boxplot(monthly_data, labels=[
+                'Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei',
+                'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov'
+            ], patch_artist=True, showfliers=True)
+
+            colors = plt.cm.Set3(np.linspace(0, 1, 12))
+            for patch, color in zip(box['boxes'], colors):
+                patch.set_facecolor(color)
+                patch.set_alpha(0.6)
+
+            plt.xlabel('Bulan', fontsize=12)
+            plt.ylabel('Curah Hujan Harian (mm)', fontsize=12)
+            plt.grid(True, axis='y', alpha=0.6, linestyle='-', linewidth=0.4, color='gray')
+            plt.grid(True, axis='y', which='minor', alpha=0.3, linestyle=':', linewidth=0.5, color='lightgray')
+            plt.xticks(rotation=0, ha='center')
+
         plt.tight_layout()
-        
+        plt.ylim(0, 200)
+
+        # Simpan jika diminta
         if save_plots:
-            plt.savefig(f'{output_dir}/09_seasonal_decomposition.png', dpi=300, bbox_inches='tight')
-            print("✅ 09_seasonal_decomposition.png saved")
+            plt.savefig(f'{output_dir}/03_boxplot_bulanan.png', dpi=300, bbox_inches='tight')
+            print("✅ 03_boxplot_bulanan.png saved")
+
         plt.show()
+
+        # 4. Pola Curah Hujan Harian (Des–Nov) - MODIFIED
+        print("🔄 Plot #4: Pola Curah Hujan Harian")
+
+        # Set background menjadi putih
+        plt.style.use('default')  # Reset ke style default
+        plt.rcParams['figure.facecolor'] = 'white'
+        plt.rcParams['axes.facecolor'] = 'white'
+
+        plt.figure(figsize=(16, 10))
+
+        # Periode yang diinginkan: tahun individual + gabungan
+        periods = {
+            '2020': [2020],
+            '2021': [2021],
+            '2022': [2022],
+            '2023': [2023],
+            '2024': [2024],
+            '2025': [2025],  # Hingga Juni 2025
+            '2005-2025': list(range(2005, 2026))
+        }
+
+        # Warna solid pekat sesuai permintaan
+        colors = {
+            '2020': '#A16D28',    # Coklat
+            '2021': '#DC143C',    # Merah
+            '2022': '#228B22',    # Hijau
+            '2023': '#0000FF',    # Biru
+            '2024': '#FF8C00',    # Jingga
+            '2025': '#FFD700',    # Emas
+            '2005-2025': '#000000'  # Hitam
+        }
+
+        custom_labels = {
+            '2020': 'Curah Hujan Harian 2020',
+            '2021': 'Curah Hujan Harian 2021',
+            '2022': 'Curah Hujan Harian 2022',
+            '2023': 'Curah Hujan Harian 2023',
+            '2024': 'Curah Hujan Harian 2024',
+            '2025': 'Curah Hujan Harian 2025 (Jan–Juni)',
+            '2005-2025': 'Rata-Rata Curah Hujan Harian 2005–2025'
+        }
+
+        # Filter data untuk batas maksimal 200mm
+        max_rainfall_limit = 200
+
+        for i, (label, years) in enumerate(periods.items()):
+            period_data = self.data[self.data['Year'].isin(years)].copy()
+            
+            # Filter curah hujan > 200mm
+            period_data = period_data[period_data['RR_imputed'] <= max_rainfall_limit]
+            
+            # Untuk 2025, filter hanya sampai Juni
+            if label == '2025':
+                period_data = period_data[period_data['Month'] <= 6]
+            
+            if period_data.empty:
+                continue
+            
+            # Buat kolom day-of-year untuk plotting
+            period_data['DayOfYear'] = period_data['Month'] * 30 + period_data.get('Day', 15)  # Approximation
+            
+            if label == '2005-2025':
+                # Untuk periode gabungan, hitung rata-rata harian per day-of-year
+                daily_avg = period_data.groupby('DayOfYear')['RR_imputed'].mean().reset_index()
+                
+                plt.plot(daily_avg['DayOfYear'], daily_avg['RR_imputed'], 
+                        linewidth=2.5, color=colors[label], 
+                        label=custom_labels[label], alpha=0.9)
+            else:
+                # Untuk tahun individual, plot semua data harian
+                # Menggunakan scatter plot untuk menghindari garis yang terlalu padat
+                plt.plot(period_data['DayOfYear'], period_data['RR_imputed'],
+                        linewidth=1.2, color=colors[label], label=custom_labels[label], alpha=0.8)
+
+        # Kustomisasi sumbu X untuk menampilkan nama bulan
+        month_positions = [15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345]
+        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 
+                    'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des']
+
+        plt.xticks(month_positions, month_names, rotation=0, ha='center')
+
+        # Kustomisasi grafik
+        plt.xlabel('Bulan', fontsize=12)
+        plt.ylabel('Curah Hujan Harian (mm)', fontsize=12)
+
+        # Set batas Y-axis ke 200mm
+        plt.ylim(0, 200)
+
+        # Grid 
+        plt.grid(True, axis='y', alpha=0.6, linestyle='-', linewidth=0.4, color='gray')
+        plt.grid(True, axis='x', alpha=0.3, linestyle=':', linewidth=0.5, color='lightgray')
+
+        # Urutkan legend berdasarkan urutan yang diinginkan
+        legend_order = ['2005-2025','2020','2021','2022','2023','2024','2025']
+        custom_legend_order = [custom_labels[k] for k in legend_order]  # Konversi ke label final
+
+        handles, labels = plt.gca().get_legend_handles_labels()
+        legend_dict = dict(zip(labels, handles))
+
+        ordered_handles = [legend_dict[label] for label in custom_legend_order if label in legend_dict]
+        ordered_labels = [label for label in custom_legend_order if label in legend_dict]
+
+        plt.legend(ordered_handles, ordered_labels, loc='upper right', fontsize=10, 
+                frameon=True, fancybox=True, shadow=True, framealpha=0.9)
+
+        # Set background axes menjadi putih
+        plt.gca().set_facecolor('white')
+
+        plt.tight_layout()
+
+        if save_plots:
+            plt.savefig(f'{output_dir}/04_pola_curah_hujan_harian.png', dpi=300, bbox_inches='tight', 
+                        facecolor='white', edgecolor='none')
+            print("✅ 04_pola_curah_hujan_harian.png saved")
+
+        plt.show()
+
+        #  # 4. Pergeseran Pola Curah Hujan Bulanan (Des–Nov) - MODIFIED
+        # print("🔄 Plot #4: Pergeseran Pola Curah Hujan Bulanan (Des–Nov)")
+
+        # # Set background menjadi putih
+        # plt.style.use('default')  # Reset ke style default
+        # plt.rcParams['figure.facecolor'] = 'white'
+        # plt.rcParams['axes.facecolor'] = 'white'
+
+        # plt.figure(figsize=(14, 8))
+
+        # # Periode yang diinginkan: tahun individual + gabungan
+        # periods = {
+        #     '2020': [2020],
+        #     '2021': [2021],
+        #     '2022': [2022],
+        #     '2023': [2023],
+        #     '2024': [2024],
+        #     '2025': [2025],  # Hingga Juni 2025
+        #     '2005-2025': list(range(2005, 2026))
+        # }
+
+        # month_order = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        # month_names = ['Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 
+        #             'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov']
+
+        # # Warna solid pekat sesuai permintaan
+        # colors = {
+        #     '2020': '#A16D28',    # Coklat
+        #     '2021': '#DC143C',    # Merah
+        #     '2022': '#228B22',    # Hijau
+        #     '2023': '#0000FF',    # Biru
+        #     '2024': '#FF8C00',    # Jingga
+        #     '2025': '#FFD700',    # Ungu untuk 2025
+        #     '2005-2025': '#000000'  # Hitam
+        # }
+
+        # custom_labels = {
+        #     '2020': 'Total Curah Hujan 2020',
+        #     '2021': 'Total Curah Hujan 2021',
+        #     '2022': 'Total Curah Hujan 2022',
+        #     '2023': 'Total Curah Hujan 2023',
+        #     '2024': 'Total Curah Hujan 2024',
+        #     '2025': 'Total Curah Hujan 2025 (Jan–Juni)',
+        #     '2005-2025': 'Rata-Rata Curah Hujan 2005–2025'
+        # }
         
-        # 10. Data Quality Summary 
+
+        # line_styles = ['-'] * len(periods)  
+
+        # shift_summary = {}
+
+        # for i, (label, years) in enumerate(periods.items()):
+        #     period_data = self.data[self.data['Year'].isin(years)]
+            
+        #     # Untuk 2025, filter hanya sampai Juni
+        #     if label == '2025':
+        #         period_data = period_data[period_data['Month'] <= 6]
+            
+        #     if period_data.empty:
+        #         continue
+            
+        #     # Hitung TOTAL curah hujan bulanan (bukan rata-rata)
+        #     monthly_total = period_data.groupby('Month')['RR_imputed'].sum()
+            
+        #     # Untuk periode gabungan 2005-2025, hitung rata-rata dari total tahunan
+        #     if label == '2005-2025':
+        #         # Hitung total per tahun per bulan, lalu rata-rata
+        #         yearly_monthly_total = period_data.groupby(['Year', 'Month'])['RR_imputed'].sum().reset_index()
+        #         monthly_avg_total = yearly_monthly_total.groupby('Month')['RR_imputed'].mean()
+        #         monthly_values = [monthly_avg_total.get(m, 0) for m in month_order]
+        #     else:
+        #         monthly_values = [monthly_total.get(m, 0) for m in month_order]
+            
+        #     # Untuk 2025, hanya tampilkan Jan-Jun (tidak termasuk Des)
+        #     if label == '2025':
+        #         # Buat array dengan NaN untuk semua bulan
+        #         full_monthly_values = [np.nan] * 12
+        #         for idx, month in enumerate(month_order):
+        #             if 1 <= month <= 6:  # Hanya isi Jan-Jun untuk 2025
+        #                 full_monthly_values[idx] = monthly_values[idx] if idx < len(monthly_values) else np.nan
+        #         monthly_values = full_monthly_values
+            
+        #     # Plot garis untuk semua periode
+        #     if label == '2005-2025':
+        #         plt.plot(month_names, monthly_values, marker='o', linewidth=3.5, markersize=8,
+        #                 color=colors[label], linestyle=line_styles[0], label=custom_labels[label], alpha=0.9)
+        #     elif label == '2025':
+        #         # Untuk 2025, plot hanya bagian yang memiliki data (Jan-Jun)
+        #         jan_idx = month_names.index('Jan')
+        #         jun_idx = month_names.index('Jun')
+        #         plt.plot(month_names[jan_idx:jun_idx+1], monthly_values[jan_idx:jun_idx+1], 
+        #                 marker='o', linewidth=2.5, markersize=6,
+        #                 color=colors[label], linestyle=line_styles[0], label=custom_labels[label], alpha=0.8)
+        #     else:
+        #         plt.plot(month_names, monthly_values, marker='o', linewidth=2.5, markersize=6,
+        #                 color=colors[label], linestyle=line_styles[0], label=custom_labels[label], alpha=0.8)
+            
+        #     max_idx = np.argmax(monthly_values)
+        #     min_idx = np.argmin(monthly_values)            
+           
+        #     # Simpan ringkasan untuk analisis pergeseran
+        #     shift_summary[label] = {
+        #         'max_month': month_order[max_idx],
+        #         'max_value': monthly_values[max_idx],
+        #         'min_month': month_order[min_idx],
+        #         'min_value': monthly_values[min_idx],
+        #         'total': sum(monthly_values)
+        #     }
+
+        # # Kustomisasi grafik
+        # plt.xlabel('Bulan', fontsize=12)
+        # plt.ylabel('Curah Hujan (mm)', fontsize=12)
+
+        # # Grid 
+        # plt.grid(True, axis='y', alpha=0.6, linestyle='-', linewidth=0.4, color='gray')
+        # plt.grid(True, axis='y', which='minor', alpha=0.3, linestyle=':', linewidth=0.5, color='lightgray')
+
+        # # Urutkan legend berdasarkan urutan yang diinginkan
+        # legend_order = ['2005-2025','2020','2021','2022','2023','2024','2025']
+        # custom_legend_order = [custom_labels[k] for k in legend_order]  # Konversi ke label final
+
+        # handles, labels = plt.gca().get_legend_handles_labels()
+        # legend_dict = dict(zip(labels, handles))
+
+        # ordered_handles = [legend_dict[label] for label in custom_legend_order if label in legend_dict]
+        # ordered_labels = [label for label in custom_legend_order if label in legend_dict]
+
+
+        # plt.legend(ordered_handles, ordered_labels, loc='upper right', fontsize=10, 
+        #         frameon=True, fancybox=True, shadow=True, framealpha=0.9)
+
+        # # Tulisan horizontal
+        # plt.xticks(rotation=0, ha='center')
+
+        # plt.ylim(bottom=0)
+
+        # # Set background axes menjadi putih
+        # plt.gca().set_facecolor('white')
+
+        # plt.tight_layout()
+
+        # if save_plots:
+        #     plt.savefig(f'{output_dir}/04_pergeseran_curah_hujan.png', dpi=300, bbox_inches='tight', 
+        #                 facecolor='white', edgecolor='none')
+        #     print("✅ 04_pergeseran_curah_hujan.png saved")
+
+        # plt.show()
+
+
+        # #5. Heatmap Season
+        # print("🔄 Plot #5: Seasonal Heatmap Analysis")
+        # plt.style.use('default')
+        # plt.rcParams['figure.facecolor'] = 'white'
+        # plt.rcParams['axes.facecolor'] = 'white'
+
+        # fig, ax = plt.subplots(figsize=(14, 8))
+
+        # # Definisi season
+        # seasons = {
+        #     'DJF': [12, 1, 2], 'JFM': [1, 2, 3], 'FMA': [2, 3, 4], 'MAM': [3, 4, 5],
+        #     'AMJ': [4, 5, 6], 'MJJ': [5, 6, 7], 'JJA': [6, 7, 8], 'JAS': [7, 8, 9],
+        #     'ASO': [8, 9, 10], 'SON': [9, 10, 11], 'OND': [10, 11, 12], 'NDJ': [11, 12, 1]
+        # }
+
+        # season_names = list(seasons.keys())
+        # years = sorted(self.data['Year'].dropna().unique())
+        # years = [y for y in years if y < 2025]
+
+        # # Buat matrix untuk heatmap
+        # heatmap_data = np.zeros((len(years), len(season_names)))
+
+        # for i, year in enumerate(years):
+        #     year_data = self.data[self.data['Year'] == year]
+            
+        #     for j, (season_name, months) in enumerate(seasons.items()):
+        #         season_total = 0
+        #         for month in months:
+        #             month_data = year_data[year_data['Month'] == month]['RR_imputed']
+        #             if not month_data.empty:
+        #                 season_total += month_data.sum()
+                
+        #         heatmap_data[i, j] = season_total
+
+        # # Buat heatmap
+        # im = ax.imshow(
+        #     heatmap_data, 
+        #     cmap='Reds',                 # 🔴 Ganti ke warna merah
+        #     aspect='auto', 
+        #     interpolation='nearest',
+        #     vmin=0, vmax=1600             # 🔒 Batasi skala 0–800 mm
+        # )
+
+        # # Set ticks dan labels
+        # ax.set_xticks(range(len(season_names)))
+        # ax.set_xticklabels(season_names, fontsize=11)
+        # ax.set_yticks(range(len(years)))  # Tampilkan semua tahun
+        # ax.set_yticklabels([str(int(y)) for y in years], fontsize=10)
+
+        # cbar = plt.colorbar(im, ax=ax, shrink=0.8)
+        # cbar.set_label('Total Curah Hujan (mm)', fontsize=11)
+        # cbar.ax.tick_params(labelsize=10)
+
+        # # Labels
+        # ax.set_xlabel('Season', fontsize=12)
+        # plt.tight_layout()
+
+        # if save_plots:
+        #     plt.savefig(f'{output_dir}/05_seasonal_heatmap.png', dpi=300, 
+        #                 bbox_inches='tight', facecolor='white', edgecolor='none')
+        #     print("✅ 05_seasonal_heatmap.png saved")
+
+        # plt.show()
+
+
+        #5. Heatmap Season
+        print("🔄 Plot #5: Seasonal Heatmap Analysis")
+        plt.style.use('default')
+        plt.rcParams['figure.facecolor'] = 'white'
+        plt.rcParams['axes.facecolor'] = 'white'
+
+        fig, ax = plt.subplots(figsize=(14, 8))
+
+        # Definisi season
+        seasons = {
+            'DJF': [12, 1, 2], 'JFM': [1, 2, 3], 'FMA': [2, 3, 4], 'MAM': [3, 4, 5],
+            'AMJ': [4, 5, 6], 'MJJ': [5, 6, 7], 'JJA': [6, 7, 8], 'JAS': [7, 8, 9],
+            'ASO': [8, 9, 10], 'SON': [9, 10, 11], 'OND': [10, 11, 12], 'NDJ': [11, 12, 1]
+        }
+
+        season_names = list(seasons.keys())
+        years = sorted(self.data['Year'].dropna().unique())
+        years = [y for y in years if y < 2025]
+
+        # Buat matrix untuk heatmap
+        heatmap_data = np.zeros((len(years), len(season_names)))
+
+        for i, year in enumerate(years):
+            year_data = self.data[self.data['Year'] == year]
+            
+            for j, (season_name, months) in enumerate(seasons.items()):
+                season_total = 0
+                for month in months:
+                    month_data = year_data[year_data['Month'] == month]['RR_imputed']
+                    if not month_data.empty:
+                        season_total += month_data.sum()
+                
+                heatmap_data[i, j] = season_total
+
+        # 🎯 Adaptive Percentile Scaling
+        # Hitung percentile 95 dari data untuk vmax yang optimal
+        valid_data = heatmap_data[heatmap_data > 0]  # Exclude zero values
+        if len(valid_data) > 0:
+            vmax_adaptive = np.percentile(valid_data, 95)
+            vmin_adaptive = 0
+            print(f"📊 Adaptive scaling: vmin={vmin_adaptive:.1f}mm, vmax={vmax_adaptive:.1f}mm")
+        else:
+            vmax_adaptive = 800  # Fallback value
+            vmin_adaptive = 0
+            print("⚠️ Using fallback scaling values")
+
+        # Buat heatmap dengan adaptive scaling
+        im = ax.imshow(
+            heatmap_data, 
+            cmap='Reds',                     # 🔴 Colormap merah
+            aspect='auto', 
+            interpolation='nearest',
+            vmin=vmin_adaptive,              # 🎯 Adaptive vmin
+            vmax=vmax_adaptive               # 🎯 Adaptive vmax (P95)
+        )
+
+        # Set ticks dan labels
+        ax.set_xticks(range(len(season_names)))
+        ax.set_xticklabels(season_names, fontsize=11)
+        ax.set_yticks(range(len(years)))  # Tampilkan semua tahun
+        ax.set_yticklabels([str(int(y)) for y in years], fontsize=10)
+
+        cbar = plt.colorbar(im, ax=ax, shrink=0.8)
+        cbar.set_label('Total Curah Hujan (mm)', fontsize=11)
+        cbar.ax.tick_params(labelsize=10)
+
+        # 📈 Tambahkan info scaling di title
+        # plt.title(f'Seasonal Rainfall Heatmap (Scale: 0-{vmax_adaptive:.0f}mm, P95)', 
+        #         fontsize=13, pad=15)
+
+        # Labels
+        ax.set_xlabel('Season', fontsize=12)
+        plt.tight_layout()
+
+        if save_plots:
+            plt.savefig(f'{output_dir}/05_seasonal_heatmap.png', dpi=300, 
+                        bbox_inches='tight', facecolor='white', edgecolor='none')
+            print("✅ 05_seasonal_heatmap.png saved")
+
+        plt.show()
+
+        # 6. Data Quality Summary 
         fig, ax = plt.subplots(figsize=(8, 7))
 
         # Hitung metrik kualitas data
@@ -980,8 +1145,8 @@ class RainfallPreprocessor:
 
         # Simpan jika diminta
         if save_plots:
-            plt.savefig(f'{output_dir}/10_data_quality_summary.png', dpi=300, bbox_inches='tight')
-            print("✅ 10_data_quality_summary.png saved")
+            plt.savefig(f'{output_dir}/06_data_quality_summary.png', dpi=300, bbox_inches='tight')
+            print("✅ 06_data_quality_summary.png saved")
         plt.show()
 
     def summary_report(self):
@@ -1005,13 +1170,20 @@ class RainfallPreprocessor:
         
         valid_data = self.data['RR_imputed'].dropna()
         if len(valid_data) > 0:
-            print(f"\n📈 STATISTIK DESKRIPTIF (setelah preprocessing):")
-            print(f"   • Mean: {valid_data.mean():.2f} mm")
-            print(f"   • Median: {valid_data.median():.2f} mm")
-            print(f"   • Std Dev: {valid_data.std():.2f} mm")
-            print(f"   • Min: {valid_data.min():.2f} mm")
-            print(f"   • Max: {valid_data.max():.2f} mm")
-            print(f"   • Skewness: {valid_data.skew():.2f}")
+            print(f"\n📉 STATISTIK RR_original (sebelum imputasi):")
+            original_rr = self.data['RR_original'].replace([8888, 9999], np.nan).dropna()
+            if len(original_rr) > 0:
+                print(f"   • Count: {len(original_rr):,}")
+                print(f"   • Mean: {original_rr.mean():.2f} mm")
+                print(f"   • Std Dev: {original_rr.std():.2f} mm")
+                print(f"   • Min: {original_rr.min():.2f} mm")
+                print(f"   • Q1 (25%): {original_rr.quantile(0.25):.2f} mm")
+                print(f"   • Median (Q2): {original_rr.median():.2f} mm")
+                print(f"   • Q3 (75%): {original_rr.quantile(0.75):.2f} mm")
+                print(f"   • Max: {original_rr.max():.2f} mm")
+                print(f"   • Skewness: {original_rr.skew():.2f}")
+        else:
+            print("   ⚠️ Tidak ada data valid dalam RR_original")
         
         if hasattr(self, 'outliers') and 'iqr' in self.outliers:
             print(f"\n⚠️  OUTLIER DETECTION:")
@@ -1022,9 +1194,7 @@ class RainfallPreprocessor:
         print(f"   • ✓ Data cleaning & special values handling")
         print(f"   • ✓ Missing values analysis")
         print(f"   • ✓ Outlier detection")
-        print(f"   • ✓ Data transformation")
-        print(f"   • ✓ Stationarity testing")
-        print(f"   • ✓ Comprehensive visualization")
+        print(f"   • ✓ Visualisasi utama")
         
         print(f"\n📋 REKOMENDASI UNTUK FORECASTING:")
         missing_pct = self.missing_stats['missing_percentage']
@@ -1034,11 +1204,6 @@ class RainfallPreprocessor:
             print(f"   • ⚠️  Missing values sedang ({missing_pct:.1f}%) - gunakan imputasi hati-hati")
         else:
             print(f"   • ✅ Missing values rendah ({missing_pct:.1f}%) - data cukup baik")
-        
-        if len(valid_data) > 0 and valid_data.skew() > 2:
-            print(f"   • ✅ Distribusi sangat skewed - gunakan transformasi log")
-        elif len(valid_data) > 0 and valid_data.skew() > 1:
-            print(f"   • ✅ Distribusi skewed - pertimbangkan transformasi")
         
         print(f"\n🎯 SIAP UNTUK HOLT-WINTERS FORECASTING!")
         print("="*60)
@@ -1085,7 +1250,7 @@ def main():
         
         # FASE 2: Analisis missing values
         print("\n🔄 FASE 2: Analisis Missing Values")
-        yearly_missing = preprocessor.analyze_missing_values()
+        preprocessor.analyze_missing_values()
         
         # FASE 3: Cleaning data
         print("\n🔄 FASE 3: Data Cleaning")
@@ -1099,20 +1264,12 @@ def main():
         print("\n🔄 FASE 5: Deteksi Outlier Advanced")
         preprocessor.detect_outliers_advanced()
         
-        # FASE 6: Transformasi data
-        print("\n🔄 FASE 6: Transformasi Data")
-        preprocessor.transform_data()
-        
-        # FASE 7: Uji stationarity
-        print("\n🔄 FASE 7: Uji Stationarity")
-        preprocessor.stationarity_tests()
-        
-        # FASE 8: Visualisasi komprehensif
-        print("\n🔄 FASE 8: Visualisasi Komprehensif")
+        # FASE 6: Visualisasi komprehensif
+        print("\n🔄 FASE 6: Visualisasi Komprehensif")
         preprocessor.create_individual_plots()
         
-        # FASE 9: Laporan ringkasan
-        print("\n🔄 FASE 9: Laporan Ringkasan")
+        # FASE 7: Laporan ringkasan
+        print("\n🔄 FASE 7: Laporan Ringkasan")
         preprocessor.summary_report()
         
         # Simpan hasil preprocessing
@@ -1122,18 +1279,15 @@ def main():
         rr_columns = [
             'Date', 'Year', 'Month', 'Day',
             'RR_original', 'RR_estimation_method',
-            'RR_imputed', 'imputation_method', 'is_outlier',
-            'RR_log', 'RR_sqrt', 'RR_boxcox'
+            'RR_imputed', 'imputation_method', 'is_outlier'
         ]
         preprocessor.data[rr_columns].to_csv(output_path, index=False)
-        print(f"\n💾 Data hasil preprocessing disimpan ke: {output_path}")
-        
+                
         # Informasi kolom hasil preprocessing
         print(f"\n📊 KOLOM HASIL PREPROCESSING:")
         processed_columns = [
             'Date', 'Year', 'Month', 'Day',
-            'RR_original', 'RR_imputed', 'RR_log', 'RR_sqrt',
-            'is_outlier'
+            'RR_original', 'RR_imputed', 'is_outlier'
         ]
         
         available_columns = [col for col in processed_columns if col in preprocessor.data.columns]
@@ -1151,27 +1305,9 @@ def main():
             print(f"   • Data tersedia untuk forecasting: {len(valid_data):,} records")
             print(f"   • Seasonal strength: {seasonal_strength:.2f}")
             
-            # Rekomendasi parameter Holt-Winters
-            if seasonal_strength > 10:
-                print(f"   • Gunakan Holt-Winters ADDITIVE (seasonal pattern kuat)")
-            else:
-                print(f"   • Gunakan Holt-Winters MULTIPLICATIVE (seasonal pattern lemah)")
             
-            # Rekomendasi periode seasonal
-            print(f"   • Seasonal period: 12 (bulanan) atau 365 (harian)")
-            
-            # Rekomendasi transformasi
-            skewness = valid_data.skew()
-            if skewness > 2:
-                print(f"   • Gunakan RR_log untuk forecasting (skewness tinggi: {skewness:.2f})")
-            elif skewness > 1:
-                print(f"   • Pertimbangkan RR_sqrt untuk forecasting (skewness sedang: {skewness:.2f})")
-            else:
-                print(f"   • Gunakan RR_imputed untuk forecasting (skewness rendah: {skewness:.2f})")
-        
         print(f"\n🎉 PREPROCESSING SELESAI!")
         print(f"📁 File output: {output_path}")
-        print(f"🚀 Siap untuk implementasi Holt-Winters forecasting!")
         
         return preprocessor
         

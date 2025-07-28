@@ -49,17 +49,18 @@ Outlier ekstrem (>150mm): 2 data
 
 Ringkasan data setelah cleaning:
   Total data valid: 6955
-  Mean: 7.31mm
-  Median: 3.03mm
+  Mean: 7.34mm
+  Median: 3.06mm
   Min: 0.00mm
   Max: 180.80mm
 
 Distribusi kategori hujan:
-  Berawan (0mm): 1686 (24.2%)
-  Hujan ringan (0-20mm): 4629 (66.6%)
-  Hujan sedang (20-50mm): 516 (7.4%)
-  Hujan lebat (50-100mm): 113 (1.6%)
-  Hujan sangat lebat (>100mm): 11 (0.2%)
+  Berawan (0–0.4 mm): 1908 (27.4%)
+  Hujan ringan (0.5–19.9 mm): 4393 (63.2%)
+  Hujan sedang (20–49.9 mm): 525 (7.5%)
+  Hujan lebat (50–99.9 mm): 117 (1.7%)
+  Hujan sangat lebat (100–150 mm): 9 (0.1%)
+  Hujan ekstrem (>150 mm): 2 (0.0%)
 ✅ Data cleaning selesai
 
 
@@ -76,10 +77,10 @@ Metode imputasi yang digunakan:
 
 Statistik final:
   Total data: 7784
-  Mean: 6.98mm
+  Mean: 7.01mm
   Median: 3.00mm
   Missing values: 0
-  Deviasi dari original: 0.73mm
+  Deviasi dari original: 0.70mm
 
 🔄 FASE 5: Deteksi Outlier Advanced
 
@@ -96,55 +97,20 @@ Contoh outliers terdeteksi:
 
 💡 Menggunakan threshold P99 sebagai pendekatan adaptif untuk iklim tropis.
 
-🔄 FASE 6: Transformasi Data
-
-=== TRANSFORMASI DATA ===
-Box-Cox lambda parameter: 0.1256
-
-Evaluasi transformasi (skewness):
-  Original: 4.1342
-  Log(x+1): 0.3882
-  Sqrt: 1.1835
-  Box-Cox: -0.0036
-
-🔄 FASE 7: Uji Stationarity
-
-=== UJI STATIONARITY ===
-Augmented Dickey-Fuller Test:
-  ADF Statistic: -16.178358
-  p-value: 0.000000
-  Critical Values:
-    1%: -3.431192
-    5%: -2.861912
-    10%: -2.566968
-  → Data STASIONER (p-value ≤ 0.05)
-
-KPSS Test:
-  KPSS Statistic: 1.829383
-  p-value: 0.010000
-  Critical Values:
-    10%: 0.347000
-    5%: 0.463000
-    2.5%: 0.574000
-    1%: 0.739000
-  → Data NON-STASIONER (p-value < 0.05)
-
-🔄 FASE 8: Visualisasi Komprehensif
-📁 Direktori rainfall_plots dibuat
+🔄 FASE 6: Visualisasi Komprehensif
 
 === MEMBUAT PLOTS INDIVIDUAL ===
 ✅ 01_time_series_plot.png saved
-✅ 02_histogram_distribusi.png saved
-✅ 03_boxplot_tahunan.png saved
-✅ 04_pola_musiman.png saved
-✅ 05_trend_tahunan.png saved
-✅ 06_missing_values_pattern.png saved
-✅ 07_transformasi_comparison.png saved
-✅ 08_curah_hujan_kumulatif.png saved
-✅ 09_seasonal_decomposition.png saved
-✅ 10_data_quality_summary.png saved
+✅ 02_histogram_kategori.png saved
+✅ 03_boxplot_bulanan.png saved
+🔄 Plot #4: Pola Curah Hujan Harian
+✅ 04_pola_curah_hujan_harian.png saved
+🔄 Plot #5: Seasonal Heatmap Analysis
+📊 Adaptive scaling: vmin=0.0mm, vmax=1127.5mm
+✅ 05_seasonal_heatmap.png saved
+✅ 06_data_quality_summary.png saved
 
-🔄 FASE 9: Laporan Ringkasan
+🔄 FASE 7: Laporan Ringkasan
 
 ============================================================
 LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
@@ -160,30 +126,28 @@ LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
    • Zero values: 1,686
    • Valid data: 4,944
 
-📈 STATISTIK DESKRIPTIF (setelah preprocessing):
-   • Mean: 6.98 mm
-   • Median: 3.00 mm
-   • Std Dev: 11.92 mm
+📉 STATISTIK RR_original (sebelum imputasi):
+   • Count: 4,944
+   • Mean: 7.71 mm
+   • Std Dev: 14.21 mm
    • Min: 0.00 mm
+   • Q1 (25%): 0.00 mm
+   • Median (Q2): 2.00 mm
+   • Q3 (75%): 8.80 mm
    • Max: 180.80 mm
-   • Skewness: 4.13
+   • Skewness: 3.61
 
 ✅ PREPROCESSING STEPS COMPLETED:
    • ✓ Data cleaning & special values handling
    • ✓ Missing values analysis
    • ✓ Outlier detection
-   • ✓ Data transformation
-   • ✓ Stationarity testing
-   • ✓ Comprehensive visualization
+   • ✓ Visualisasi utama
 
 📋 REKOMENDASI UNTUK FORECASTING:
    • ⚠️  Missing values sedang (36.5%) - gunakan imputasi hati-hati
-   • ✅ Distribusi sangat skewed - gunakan transformasi log
 
 🎯 SIAP UNTUK HOLT-WINTERS FORECASTING!
 ============================================================
-
-💾 Data hasil preprocessing disimpan ke: preprocessed_rainfall_data.csv
 
 📊 KOLOM HASIL PREPROCESSING:
    • Date: 7,784 non-null values
@@ -192,17 +156,11 @@ LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
    • Day: 7,784 non-null values
    • RR_original: 6,955 non-null values
    • RR_imputed: 7,784 non-null values
-   • RR_log: 7,784 non-null values
-   • RR_sqrt: 7,784 non-null values
    • is_outlier: 7,784 non-null values
 
 🎯 REKOMENDASI UNTUK HOLT-WINTERS:
    • Data tersedia untuk forecasting: 7,784 records
-   • Seasonal strength: 11.31
-   • Gunakan Holt-Winters ADDITIVE (seasonal pattern kuat)
-   • Seasonal period: 12 (bulanan) atau 365 (harian)
-   • Gunakan RR_log untuk forecasting (skewness tinggi: 4.13)
+   • Seasonal strength: 11.33
 
 🎉 PREPROCESSING SELESAI!
 📁 File output: preprocessed_rainfall_data.csv
-🚀 Siap untuk implementasi Holt-Winters forecasting!
