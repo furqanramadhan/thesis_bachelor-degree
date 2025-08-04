@@ -1182,6 +1182,17 @@ class RainfallPreprocessor:
                 print(f"   • Q3 (75%): {original_rr.quantile(0.75):.2f} mm")
                 print(f"   • Max: {original_rr.max():.2f} mm")
                 print(f"   • Skewness: {original_rr.skew():.2f}")
+
+                print(f"\n📉 STATISTIK RR_imputed (setelah imputasi):")
+                print(f"   • Count: {len(valid_data):,}")
+                print(f"   • Mean: {valid_data.mean():.2f} mm")
+                print(f"   • Std Dev: {valid_data.std():.2f} mm")
+                print(f"   • Min: {valid_data.min():.2f} mm")
+                print(f"   • Q1 (25%): {valid_data.quantile(0.25):.2f} mm")
+                print(f"   • Median (Q2): {valid_data.median():.2f} mm")
+                print(f"   • Q3 (75%): {valid_data.quantile(0.75):.2f} mm")
+                print(f"   • Max: {valid_data.max():.2f} mm")
+                print(f"   • Skewness: {valid_data.skew():.2f}")
         else:
             print("   ⚠️ Tidak ada data valid dalam RR_original")
         
