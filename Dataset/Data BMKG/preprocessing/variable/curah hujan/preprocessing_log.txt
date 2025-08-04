@@ -49,15 +49,15 @@ Outlier ekstrem (>150mm): 2 data
 
 Ringkasan data setelah cleaning:
   Total data valid: 6955
-  Mean: 7.34mm
-  Median: 3.06mm
+  Mean: 7.32mm
+  Median: 3.00mm
   Min: 0.00mm
   Max: 180.80mm
 
 Distribusi kategori hujan:
-  Berawan (0–0.4 mm): 1908 (27.4%)
-  Hujan ringan (0.5–19.9 mm): 4393 (63.2%)
-  Hujan sedang (20–49.9 mm): 525 (7.5%)
+  Berawan (0–0.4 mm): 1917 (27.6%)
+  Hujan ringan (0.5–19.9 mm): 4379 (63.0%)
+  Hujan sedang (20–49.9 mm): 531 (7.6%)
   Hujan lebat (50–99.9 mm): 117 (1.7%)
   Hujan sangat lebat (100–150 mm): 9 (0.1%)
   Hujan ekstrem (>150 mm): 2 (0.0%)
@@ -77,10 +77,10 @@ Metode imputasi yang digunakan:
 
 Statistik final:
   Total data: 7784
-  Mean: 7.01mm
-  Median: 3.00mm
+  Mean: 7.00mm
+  Median: 2.96mm
   Missing values: 0
-  Deviasi dari original: 0.70mm
+  Deviasi dari original: 0.72mm
 
 🔄 FASE 5: Deteksi Outlier Advanced
 
@@ -106,7 +106,7 @@ Contoh outliers terdeteksi:
 🔄 Plot #4: Pola Curah Hujan Harian
 ✅ 04_pola_curah_hujan_harian.png saved
 🔄 Plot #5: Seasonal Heatmap Analysis
-📊 Adaptive scaling: vmin=0.0mm, vmax=1127.5mm
+📊 Adaptive scaling: vmin=0.0mm, vmax=1119.2mm
 ✅ 05_seasonal_heatmap.png saved
 ✅ 06_data_quality_summary.png saved
 
@@ -160,7 +160,7 @@ LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
 
 🎯 REKOMENDASI UNTUK HOLT-WINTERS:
    • Data tersedia untuk forecasting: 7,784 records
-   • Seasonal strength: 11.33
+   • Seasonal strength: 11.30
 
 🎉 PREPROCESSING SELESAI!
 📁 File output: preprocessed_rainfall_data.csv
