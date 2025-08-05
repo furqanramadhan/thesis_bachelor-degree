@@ -705,12 +705,16 @@ def main():
         # Load data
         if not analyzer.load_data():
             return
-        
-        # Analisis statistik deskriptif untuk TN
+
+        # Imputasi missing values dengan seasonal linear interpolation
+        analyzer.impute_temperature_seasonal_interpolation('TN')
+        analyzer.impute_temperature_seasonal_interpolation('TX')
+
+        # 🔥 Analisis statistik deskriptif untuk TN
         print("\n" + "🔥"*20 + " ANALISIS TN " + "🔥"*20)
         analyzer.calculate_descriptive_statistics('TN')
         
-        # Analisis statistik deskriptif untuk TX  
+        # ☀️ Analisis statistik deskriptif untuk TX  
         print("\n" + "☀️"*20 + " ANALISIS TX " + "☀️"*20)
         analyzer.calculate_descriptive_statistics('TX')
         
@@ -719,10 +723,6 @@ def main():
         
         # Analisis musiman
         analyzer.seasonal_analysis_temperature()
-
-        # Imputasi missing values dengan seasonal linear interpolation
-        analyzer.impute_temperature_seasonal_interpolation('TN')
-        analyzer.impute_temperature_seasonal_interpolation('TX')
 
         # Cek outliers TN
         tn_outliers = analyzer.detect_outliers_iqr('TN')
@@ -733,7 +733,15 @@ def main():
         # Generate tabel ringkasan final
         final_table = analyzer.generate_summary_table()
         
-        # Simpan hasil
+        # ✅ Simpan data yang sudah diimputasi
+        output_cols = ['Date', 'Year', 'Month', 'Day', 'TN', 'TX']
+        if all(col in analyzer.data.columns for col in output_cols):
+            analyzer.data[output_cols].to_csv("preprocessed_temp_data.csv", index=False)
+            print("💾 Data suhu setelah imputasi berhasil disimpan ke: imputed_temperature_data.csv")
+        else:
+            print("⚠️ Kolom untuk ekspor tidak lengkap. Data tidak disimpan.")
+
+        # Simpan hasil log ke file teks
         analyzer.save_results()
         
         print(f"\n🎉 ANALISIS TEMPERATURE SELESAI!")
