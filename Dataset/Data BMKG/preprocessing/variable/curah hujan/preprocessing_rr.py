@@ -1226,7 +1226,7 @@ def main():
     print("🌧️  PREPROCESSING CURAH HUJAN - DATASET BMKG")
     print("="*50)
 
-    sys.stdout = open("preprocessing_log.txt", "w")
+    sys.stdout = open("preprocessing_log_rainfall.txt", "w")
 
     try:
         data_path = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"  # atau "data_bmkg.xlsx"
@@ -1327,12 +1327,11 @@ def main():
         print("📋 Pastikan file data BMKG tersedia dengan kolom:")
         print("   • Date: Tanggal observasi")
         print("   • RR: Curah hujan (mm)")
-        print("   • Kolom lain (opsional): RH_AVG, Temperature, dll.")
+
         return None
         
     except Exception as e:
         print(f"❌ Error dalam preprocessing: {str(e)}")
-        print("🔍 Periksa kembali format data dan kolom yang tersedia")
         return None
     
 if __name__== "__main__":

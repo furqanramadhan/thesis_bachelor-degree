@@ -261,17 +261,182 @@ class Temperature_Analyzer:
                 print(f"\n🔄 ANALISIS HUBUNGAN TN-TX:")
                 print(f"   • Korelasi TN-TX: {correlation:.3f}")
                 print(f"   • Rata-rata selisih (TX-TN): {avg_diurnal_range:.2f}°C")
-                print(f"   • Data valid bersamaan: {len(valid_both):,} records")
 
-    def seasonal_analysis_temperature(self):
+    def calculate_and_validate_tavg(self):
         """
-        Analisis pola musiman untuk temperature
+        Menghitung TAVG dari TN dan TX yang sudah diimputasi, 
+        validasi dengan TAVG original, dan replace jika valid
         """
-        print(f"\n=== ANALISIS MUSIMAN TEMPERATURE ===")
+        print(f"\n=== KALKULASI DAN VALIDASI TAVG ===")
         
-        # Filter data valid untuk TN dan TX
+        # 1. PASTIKAN TN DAN TX SUDAH VALID
+        if 'TN' not in self.data.columns or 'TX' not in self.data.columns:
+            print("❌ TN atau TX tidak ditemukan! Lakukan imputasi terlebih dahulu.")
+            return None
+        
+        # Filter data yang valid untuk TN dan TX
+        valid_mask = (
+            self.data['TN'].notna() & 
+            self.data['TX'].notna() &
+            (self.data['TN'] != 9999) & (self.data['TN'] != 8888) &
+            (self.data['TX'] != 9999) & (self.data['TX'] != 8888) &
+            (self.data['TN'] != -999) & (self.data['TN'] != -9999) &
+            (self.data['TX'] != -999) & (self.data['TX'] != -9999)
+        )
+        
+        valid_data = self.data[valid_mask].copy()
+        
+        if len(valid_data) == 0:
+            print("❌ Tidak ada data TN-TX yang valid untuk kalkulasi TAVG")
+            return None
+        
+        # 2. HITUNG TAVG_CALCULATED
+        self.data['TAVG_calculated'] = (self.data['TN'] + self.data['TX']) / 2
+        tavg_calculated = valid_data['TN'] + valid_data['TX']
+        tavg_calculated = tavg_calculated / 2
+        
+        print(f"✅ TAVG_calculated berhasil dihitung untuk {len(valid_data)} records")
+        print(f"   • Range TAVG_calculated: {tavg_calculated.min():.2f}°C - {tavg_calculated.max():.2f}°C")
+        print(f"   • Mean TAVG_calculated: {tavg_calculated.mean():.2f}°C")
+        
+        # 3. VALIDASI DENGAN TAVG ORIGINAL (JIKA ADA)
+        validation_results = {}
+        
+        if 'TAVG' in self.data.columns:
+            print(f"\n📊 VALIDASI DENGAN TAVG ORIGINAL:")
+            
+            # Filter data yang memiliki TAVG original valid
+            tavg_original_valid = (
+                valid_data['TAVG'].notna() &
+                (valid_data['TAVG'] != 9999) & 
+                (valid_data['TAVG'] != 8888) &
+                (valid_data['TAVG'] != -999) & 
+                (valid_data['TAVG'] != -9999)
+            )
+            
+            comparison_data = valid_data[tavg_original_valid].copy()
+            
+            if len(comparison_data) > 0:
+                tavg_original = comparison_data['TAVG']
+                tavg_calc_subset = (comparison_data['TN'] + comparison_data['TX']) / 2
+                
+                # Statistik perbandingan
+                correlation = tavg_original.corr(tavg_calc_subset)
+                mean_diff = (tavg_calc_subset - tavg_original).mean()
+                rmse = np.sqrt(((tavg_calc_subset - tavg_original) ** 2).mean())
+                mae = (tavg_calc_subset - tavg_original).abs().mean()
+                
+                print(f"   • Records dengan TAVG original valid: {len(comparison_data):,}")
+                print(f"   • Correlation (original vs calculated): {correlation:.4f}")
+                print(f"   • Mean difference: {mean_diff:.3f}°C")
+                print(f"   • RMSE: {rmse:.3f}°C")  
+                print(f"   • MAE: {mae:.3f}°C")
+                
+                # Kategori validasi
+                if correlation >= 0.95 and rmse <= 1.0:
+                    validation_status = "EXCELLENT - Safe to replace"
+                    confidence = "Very High"
+                elif correlation >= 0.90 and rmse <= 1.5:
+                    validation_status = "GOOD - Acceptable to replace"
+                    confidence = "High"
+                elif correlation >= 0.80 and rmse <= 2.0:
+                    validation_status = "MODERATE - Consider with caution"
+                    confidence = "Medium"
+                else:
+                    validation_status = "POOR - Manual review needed"
+                    confidence = "Low"
+                
+                print(f"   • Validation Status: {validation_status}")
+                print(f"   • Confidence Level: {confidence}")
+                
+                validation_results = {
+                    'correlation': correlation,
+                    'rmse': rmse,
+                    'mae': mae,
+                    'mean_diff': mean_diff,
+                    'status': validation_status,
+                    'confidence': confidence,
+                    'comparison_count': len(comparison_data)
+                }
+                
+            else:
+                print("   ⚠️  Tidak ada TAVG original yang valid untuk perbandingan")
+        else:
+            print("   ℹ️  Kolom TAVG original tidak ditemukan - menggunakan calculated")
+        
+        # 4. DECISION MAKING - REPLACE TAVG
+        replace_decision = True
+        
+        if validation_results:
+            if validation_results['confidence'] in ['Very High', 'High']:
+                replace_decision = True
+                print(f"\n✅ DECISION: Replace TAVG dengan TAVG_calculated")
+            elif validation_results['confidence'] == 'Medium':
+                replace_decision = True
+                print(f"\n⚠️  DECISION: Replace TAVG dengan TAVG_calculated (dengan catatan)")
+            else:
+                replace_decision = False
+                print(f"\n❌ DECISION: TIDAK replace TAVG - perlu review manual")
+        else:
+            print(f"\n✅ DECISION: Gunakan TAVG_calculated (no original for comparison)")
+        
+        # 5. EXECUTE REPLACEMENT
+        if replace_decision:
+            # Backup TAVG original jika ada
+            if 'TAVG' in self.data.columns:
+                self.data['TAVG_original_backup'] = self.data['TAVG'].copy()
+                print(f"   💾 TAVG original disimpan ke kolom 'TAVG_original_backup'")
+            
+            # Replace dengan calculated
+            self.data['TAVG'] = self.data['TAVG_calculated'].copy()
+            print(f"   🔄 TAVG berhasil di-replace dengan TAVG_calculated")
+            
+            # Generate final statistics
+            final_tavg = self.data[valid_mask]['TAVG']
+            print(f"\n📈 STATISTIK FINAL TAVG:")
+            print(f"   • Count: {len(final_tavg):,}")
+            print(f"   • Mean: {final_tavg.mean():.2f}°C")
+            print(f"   • Std: {final_tavg.std():.2f}°C") 
+            print(f"   • Min: {final_tavg.min():.2f}°C")
+            print(f"   • Max: {final_tavg.max():.2f}°C")
+            
+        else:
+            print(f"   ⏭️  TAVG tidak di-replace - gunakan data original")
+            # 👉 Tambahan: isi NaN dengan TAVG_calculated
+            self.data['TAVG'] = self.data['TAVG'].fillna(self.data['TAVG_calculated'])
+        
+        
+        return {
+            'tavg_calculated': True,
+            'replacement_done': replace_decision,
+            'validation_results': validation_results,
+            'final_count': len(valid_data)
+        }
+        
+
+    # MODIFIKASI 2: Tambah TAVG analysis ke method yang sudah ada
+    def calculate_descriptive_statistics_tavg(self):
+        """
+        Statistik deskriptif khusus untuk TAVG (copy dari method existing tapi untuk TAVG)
+        """
+        return self.calculate_descriptive_statistics('TAVG')
+
+    def seasonal_analysis_all_temperature(self):
+        """
+        Analisis musiman untuk TN, TX, dan TAVG
+        """
+        print(f"\n=== ANALISIS MUSIMAN TEMPERATURE (TN, TX, TAVG) ===")
+        
+        # Filter data valid untuk semua kolom temperature
+        temp_columns = ['TN', 'TX', 'TAVG']
+        available_columns = [col for col in temp_columns if col in self.data.columns]
+        
+        if not available_columns:
+            print("⚠️ Tidak ada kolom temperature yang tersedia")
+            return
+        
         valid_data = self.data.copy()
-        for col in ['TN', 'TX']:
+        for col in available_columns:
             valid_mask = (
                 valid_data[col].notna() & 
                 (valid_data[col] != 9999) & 
@@ -285,120 +450,111 @@ class Temperature_Analyzer:
             print("⚠️ Tidak ada data valid untuk analisis musiman")
             return
         
-        # Hitung statistik bulanan
-        monthly_stats = valid_data.groupby('Month')[['TN', 'TX']].agg([
+        # Hitung statistik bulanan untuk semua kolom temperature
+        monthly_stats = valid_data.groupby('Month')[available_columns].agg([
             'count', 'mean', 'median', 'std', 'min', 'max'
         ]).round(2)
         
         month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-                      'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des']
+                    'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des']
         
         print(f"\n📅 STATISTIK BULANAN TEMPERATURE:")
-        print("Bulan | TN Mean | TN Med | TX Mean | TX Med | Diurnal Range")
-        print("-" * 65)
         
-        for month in range(1, 13):
-            if month in monthly_stats.index:
-                tn_mean = monthly_stats.loc[month, ('TN', 'mean')]
-                tn_med = monthly_stats.loc[month, ('TN', 'median')]
-                tx_mean = monthly_stats.loc[month, ('TX', 'mean')]
-                tx_med = monthly_stats.loc[month, ('TX', 'median')]
-                diurnal = tx_mean - tn_mean
-                
-                print(f"{month_names[month-1]:5s} | {tn_mean:7.1f} | {tn_med:6.1f} | "
-                      f"{tx_mean:7.1f} | {tx_med:6.1f} | {diurnal:13.1f}")
-            else:
-                print(f"{month_names[month-1]:5s} | {'N/A':7s} | {'N/A':6s} | "
-                      f"{'N/A':7s} | {'N/A':6s} | {'N/A':13s}")
-        
-        # Identifikasi bulan ekstrem
-        if not monthly_stats.empty:
-            # TN
-            warmest_tn_month = monthly_stats[('TN', 'mean')].idxmax()
-            coolest_tn_month = monthly_stats[('TN', 'mean')].idxmin()
+        # Header tabel dinamis berdasarkan kolom yang tersedia
+        if len(available_columns) == 3:  # TN, TX, TAVG semua ada
+            print("Bulan | TN Mean | TX Mean | TAVG Mean | Diurnal Range")
+            print("-" * 55)
             
-            # TX  
-            warmest_tx_month = monthly_stats[('TX', 'mean')].idxmax()
-            coolest_tx_month = monthly_stats[('TX', 'mean')].idxmin()
+            for month in range(1, 13):
+                if month in monthly_stats.index:
+                    tn_mean = monthly_stats.loc[month, ('TN', 'mean')]
+                    tx_mean = monthly_stats.loc[month, ('TX', 'mean')] 
+                    tavg_mean = monthly_stats.loc[month, ('TAVG', 'mean')]
+                    diurnal = tx_mean - tn_mean
+                    
+                    print(f"{month_names[month-1]:5s} | {tn_mean:7.1f} | {tx_mean:7.1f} | "
+                        f"{tavg_mean:9.1f} | {diurnal:13.1f}")
+        else:
+            # Fallback ke format original jika tidak semua kolom tersedia
+            header = "Bulan |"
+            for col in available_columns:
+                header += f" {col} Mean |"
+            print(header)
+            print("-" * len(header))
             
-            print(f"\n🌡️  KARAKTERISTIK MUSIMAN:")
-            print(f"   • TN tertinggi: {month_names[warmest_tn_month-1]} ({monthly_stats.loc[warmest_tn_month, ('TN', 'mean')]:.1f}°C)")
-            print(f"   • TN terendah: {month_names[coolest_tn_month-1]} ({monthly_stats.loc[coolest_tn_month, ('TN', 'mean')]:.1f}°C)")
-            print(f"   • TX tertinggi: {month_names[warmest_tx_month-1]} ({monthly_stats.loc[warmest_tx_month, ('TX', 'mean')]:.1f}°C)")
-            print(f"   • TX terendah: {month_names[coolest_tx_month-1]} ({monthly_stats.loc[coolest_tx_month, ('TX', 'mean')]:.1f}°C)")
+            for month in range(1, 13):
+                if month in monthly_stats.index:
+                    row = f"{month_names[month-1]:5s} |"
+                    for col in available_columns:
+                        mean_val = monthly_stats.loc[month, (col, 'mean')]
+                        row += f" {mean_val:7.1f} |"
+                    print(row)
 
     def generate_summary_table(self):
         """
-        Generate tabel ringkasan untuk kedua parameter temperature
+        Generate tabel ringkasan untuk TN, TX, dan TAVG
         """
-        print(f"\n" + "="*70)
-        print("TABEL RINGKASAN STATISTIK DESKRIPTIF TEMPERATURE")
-        print("="*70)
+        print(f"\n" + "="*80)
+        print("TABEL RINGKASAN STATISTIK DESKRIPTIF TEMPERATURE (TN, TX, TAVG)")
+        print("="*80)
         
-        # Hitung statistik untuk TN dan TX
-        tn_analysis = self.analyze_missing_values('TN', show_details=False)
-        tx_analysis = self.analyze_missing_values('TX', show_details=False)
+        temp_columns = ['TN', 'TX', 'TAVG']
+        available_columns = [col for col in temp_columns if col in self.data.columns]
         
-        if tn_analysis is None or tx_analysis is None:
-            print("❌ Tidak dapat generate tabel - data tidak valid")
-            return
+        if not available_columns:
+            print("❌ Tidak ada kolom temperature yang tersedia")
+            return None
         
-        tn_data = tn_analysis['valid_data']
-        tx_data = tx_analysis['valid_data']
+        stats_data = {}
         
-        # Buat tabel final sesuai format yang diminta
-        final_stats = {
-            'Statistik': [
-                'Jumlah Data',
-                'Jumlah Missing Value', 
-                'Minimum',
-                'Q1',
-                'Median',
-                'Mean',
-                'Q3',
-                'Maksimum',
-                'Standar Deviasi'
-            ],
-            'TN (°C)': [
-                len(tn_data),
-                tn_analysis['missing_count'],
-                tn_data.min(),
-                tn_data.quantile(0.25),
-                tn_data.median(),
-                tn_data.mean(),
-                tn_data.quantile(0.75), 
-                tn_data.max(),
-                tn_data.std()
-            ],
-            'TX (°C)': [
-                len(tx_data),
-                tx_analysis['missing_count'],
-                tx_data.min(),
-                tx_data.quantile(0.25),
-                tx_data.median(),
-                tx_data.mean(),
-                tx_data.quantile(0.75),
-                tx_data.max(),
-                tx_data.std()
-            ]
-        }
+        # Hitung statistik untuk setiap kolom yang tersedia
+        for col in available_columns:
+            analysis = self.analyze_missing_values(col, show_details=False)
+            if analysis is not None and len(analysis['valid_data']) > 0:
+                data = analysis['valid_data']
+                stats_data[col] = {
+                    'Jumlah Data': len(data),
+                    'Jumlah Missing Value': analysis['missing_count'], 
+                    'Minimum': data.min(),
+                    'Q1': data.quantile(0.25),
+                    'Median': data.median(),
+                    'Mean': data.mean(),
+                    'Q3': data.quantile(0.75),
+                    'Maksimum': data.max(),
+                    'Standar Deviasi': data.std()
+                }
         
-        print(f"{'Statistik':<20} {'TN (°C)':<15} {'TX (°C)':<15}")
-        print("-" * 50)
+        if not stats_data:
+            print("❌ Tidak ada data valid untuk generate tabel")
+            return None
         
-        for i, stat in enumerate(final_stats['Statistik']):
-            tn_val = final_stats['TN (°C)'][i]
-            tx_val = final_stats['TX (°C)'][i]
-            
-            if stat in ['Jumlah Data', 'Jumlah Missing Value']:
-                print(f"{stat:<20} {int(tn_val):<15,} {int(tx_val):<15,}")
-            else:
-                print(f"{stat:<20} {tn_val:<15.2f} {tx_val:<15.2f}")
+        # Print header
+        header = f"{'Statistik':<20}"
+        for col in available_columns:
+            header += f" {col+' (°C)':<15}"
+        print(header)
+        print("-" * len(header))
         
-        print("-" * 50)
+        # Print rows
+        stat_order = ['Jumlah Data', 'Jumlah Missing Value', 'Minimum', 'Q1', 'Median', 'Mean', 'Q3', 'Maksimum', 'Standar Deviasi']
+        
+        for stat in stat_order:
+            row = f"{stat:<20}"
+            for col in available_columns:
+                if col in stats_data and stat in stats_data[col]:
+                    value = stats_data[col][stat]
+                    if stat in ['Jumlah Data', 'Jumlah Missing Value']:
+                        row += f" {int(value):<15,}"
+                    else:
+                        row += f" {value:<15.2f}"
+                else:
+                    row += f" {'N/A':<15}"
+            print(row)
+        
+        print("-" * len(header))
         print("🎯 Tabel statistik deskriptif lengkap selesai!")
         
-        return final_stats
+        return stats_data
     
     def impute_temperature_seasonal_interpolation(self, column_name):
         """
@@ -687,15 +843,16 @@ class Temperature_Analyzer:
             self.calculate_descriptive_statistics('TN')
             self.calculate_descriptive_statistics('TX')
             self.compare_tn_tx()
-            self.seasonal_analysis_temperature()
+            self.seasonal_analysis_all_temperature()
             self.generate_summary_table()
         
         # Kembalikan stdout
         sys.stdout = original_stdout
         print(f"✅ Hasil berhasil disimpan ke: {output_path}")
 
+# MODIFIKASI 5: Update main function untuk include TAVG workflow
 def main():
-    # Path ke dataset BMKG
+    # Path ke dataset BMKG  
     data_path = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"
     
     # Inisialisasi analyzer
@@ -706,48 +863,44 @@ def main():
         if not analyzer.load_data():
             return
 
-        # Imputasi missing values dengan seasonal linear interpolation
+        # 🔥 TAHAP 1: Imputasi missing values TN dan TX
+        print("\n" + "🔥"*20 + " TAHAP 1: IMPUTASI TN & TX " + "🔥"*20)
         analyzer.impute_temperature_seasonal_interpolation('TN')
         analyzer.impute_temperature_seasonal_interpolation('TX')
 
-        # 🔥 Analisis statistik deskriptif untuk TN
-        print("\n" + "🔥"*20 + " ANALISIS TN " + "🔥"*20)
+        # 🌡️ TAHAP 2: Kalkulasi dan validasi TAVG
+        print("\n" + "🌡️"*20 + " TAHAP 2: KALKULASI TAVG " + "🌡️"*20)
+        tavg_results = analyzer.calculate_and_validate_tavg()
+
+        # 📊 TAHAP 3: Analisis statistik deskriptif lengkap
+        print("\n" + "📊"*20 + " TAHAP 3: ANALISIS STATISTIK " + "📊"*20)
+        
         analyzer.calculate_descriptive_statistics('TN')
+        analyzer.calculate_descriptive_statistics('TX') 
         
-        # ☀️ Analisis statistik deskriptif untuk TX  
-        print("\n" + "☀️"*20 + " ANALISIS TX " + "☀️"*20)
-        analyzer.calculate_descriptive_statistics('TX')
+        # Tambahan: Analisis TAVG jika berhasil dikalkulasi
+        if tavg_results and tavg_results.get('tavg_calculated'):
+            analyzer.calculate_descriptive_statistics('TAVG')
         
-        # Perbandingan TN vs TX
         analyzer.compare_tn_tx()
         
-        # Analisis musiman
-        analyzer.seasonal_analysis_temperature()
+        # Update seasonal analysis untuk include TAVG
+        analyzer.seasonal_analysis_all_temperature()
 
-        # Cek outliers TN
-        tn_outliers = analyzer.detect_outliers_iqr('TN')
-
-        # Cek outliers TX
-        tx_outliers = analyzer.detect_outliers_iqr('TX')
+        # Generate tabel ringkasan yang include TAVG
+        analyzer.generate_summary_table()
         
-        # Generate tabel ringkasan final
-        final_table = analyzer.generate_summary_table()
-        
-        # ✅ Simpan data yang sudah diimputasi
+        # ✅ Simpan data final dengan TAVG
         output_cols = ['Date', 'Year', 'Month', 'Day', 'TN', 'TX']
+        if 'TAVG' in analyzer.data.columns:
+            output_cols.append('TAVG')
+        
         if all(col in analyzer.data.columns for col in output_cols):
             analyzer.data[output_cols].to_csv("preprocessed_temp_data.csv", index=False)
-            print("💾 Data suhu setelah imputasi berhasil disimpan ke: imputed_temperature_data.csv")
-        else:
-            print("⚠️ Kolom untuk ekspor tidak lengkap. Data tidak disimpan.")
-
-        # Simpan hasil log ke file teks
+            print("💾 Data temperature final (TN, TX, TAVG) disimpan ke: preprocessed_temperature_final.csv")
+        
+        print(f"\n🎉 ANALISIS TEMPERATURE + TAVG SELESAI!")
         analyzer.save_results()
-        
-        print(f"\n🎉 ANALISIS TEMPERATURE SELESAI!")
-        print(f"📊 Semua statistik deskriptif telah dihitung")
-        print(f"📁 Check file output untuk detail lengkap")
-        
         return analyzer
         
     except Exception as e:

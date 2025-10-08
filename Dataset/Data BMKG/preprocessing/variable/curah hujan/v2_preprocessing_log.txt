@@ -1,0 +1,141 @@
+📂 Loading data dari: /run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv
+✅ Data berhasil dimuat: 7784 records
+📋 Kolom tersedia: ['Date', 'Year', 'Month', 'Day', 'TN', 'TX', 'TAVG', 'RH_AVG', 'RR', 'SS', 'FF_X', 'DDD_X', 'FF_AVG', 'DDD_CAR']
+
+🔄 FASE 1: Loading dan Persiapan Data
+Data loaded: 7784 records from 2005-01-01 00:00:00 to 2025-06-30 00:00:00
+
+🔄 FASE 2: Analisis Missing Values
+=== ANALISIS MISSING VALUES DAN NILAI KHUSUS ===
+Total records: 7784
+Nilai 8888 (tidak terukur): 2011 (25.8%)
+Missing/NaN values: 829 (10.7%)
+Zero values (tidak hujan): 1686 (21.7%)
+
+=== MISSING VALUES PER TAHUN ===
+      Missing_8888  Missing_NaN  Zero_Values  Total_Records  Missing_Percentage
+Year                                                                           
+2005           241            0            2            365           66.027397
+2006           233            0           27            365           63.835616
+2007           242            0           15            365           66.301370
+2008           224            0           21            366           61.202186
+2009           126            0          114            365           34.520548
+2010            66            0          163            365           18.082192
+2011           214            0            1            365           58.630137
+2012           219            1            4            365           60.273973
+2013            27            0          170            365            7.397260
+2014            28            0          168            365            7.671233
+2015            19          116           46            244           55.327869
+2016            28          117           59            248           58.467742
+2017            17          130           28            232           63.362069
+2018            27          129           35            235           66.382979
+2019            29           68          113            295           32.881356
+2020            41           76           74            329           35.562310
+2021            51          113          147            510           32.156863
+2022            58           43          102            322           31.366460
+2023            49           35          140            343           24.489796
+2024            51            1          174            365           14.246575
+2025            21            0           83            181           11.602210
+
+🔄 FASE 3: Data Cleaning
+
+=== CLEANING DATA CURAH HUJAN ===
+Estimasi 2011 data tidak terukur (8888) dengan SS modifier...
+  → 2011 nilai berhasil diestimasi dengan SS modifier
+Outlier ekstrem (>150mm): 2 data
+  Dates dengan outlier:
+    2012-11-01 00:00:00: 162.0mm
+    2024-11-26 00:00:00: 180.8mm
+
+Ringkasan data setelah cleaning:
+  Total data valid: 6955
+  Mean: 7.32mm
+  Median: 3.10mm
+  Min: 0.00mm
+  Max: 180.80mm
+
+Distribusi kategori hujan:
+  Berawan (0–0.4 mm): 1925 (27.7%)
+  Hujan ringan (0.5–19.9 mm): 4380 (63.0%)
+  Hujan sedang (20–49.9 mm): 521 (7.5%)
+  Hujan lebat (50–99.9 mm): 117 (1.7%)
+  Hujan sangat lebat (100–150 mm): 9 (0.1%)
+  Hujan ekstrem (>150 mm): 2 (0.0%)
+✅ Data cleaning selesai
+
+
+🔄 FASE 4: Imputasi Berbasis Musiman
+
+=== IMPUTASI MISSING VALUES ===
+Memproses 829 missing values...
+✅ 829 values berhasil diimputasi
+
+Metode imputasi yang digunakan:
+  meteorological_estimate_with_ss: 2011 values
+  linear_interpolation: 662 values
+  monthly_average_with_ss: 167 values
+
+Statistik final:
+  Total data: 7784
+  Mean: 7.00mm
+  Median: 3.00mm
+  Missing values: 0
+  Deviasi dari original: 0.72mm
+
+🔄 FASE 5: Deteksi Outlier Advanced
+
+=== DETEKSI OUTLIER (PERCENTILE 99%) ===
+📊 Threshold Percentile 99%: > 58.00 mm
+✅ Total outliers flagged: 77 dari 7784 data
+
+Contoh outliers terdeteksi:
+  - 64.00 mm (index: 98)
+  - 59.00 mm (index: 283)
+  - 88.00 mm (index: 376)
+  - 147.00 mm (index: 859)
+  - 73.00 mm (index: 1043)
+
+💡 Menggunakan threshold P99 sebagai pendekatan adaptif untuk iklim tropis.
+
+🔄 FASE 7: Laporan Ringkasan
+
+============================================================
+LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
+============================================================
+📊 DATASET OVERVIEW:
+   • Total records: 7,784
+   • Periode: 2005-01-01 00:00:00 s/d 2025-06-30 00:00:00
+   • Rentang tahun: 21 tahun
+
+🔍 DATA QUALITY:
+   • Missing values (8888): 2,011 (25.8%)
+   • Missing values (NaN): 829
+   • Zero values: 1,686
+   • Valid data: 4,944
+
+📉 STATISTIK RR_original (sebelum imputasi):
+   • Count: 4,944
+   • Mean: 7.71 mm
+   • Std Dev: 14.21 mm
+   • Min: 0.00 mm
+   • Q1 (25%): 0.00 mm
+   • Median (Q2): 2.00 mm
+   • Q3 (75%): 8.80 mm
+   • Max: 180.80 mm
+   • Skewness: 3.61
+
+📉 STATISTIK RR_imputed (setelah imputasi):
+   • Count: 7,784
+   • Mean: 7.00 mm
+   • Std Dev: 11.90 mm
+   • Min: 0.00 mm
+   • Q1 (25%): 0.14 mm
+   • Median (Q2): 3.00 mm
+   • Q3 (75%): 8.20 mm
+   • Max: 180.80 mm
+   • Skewness: 4.14
+   • Data tersedia untuk forecasting: 7,784 records
+   • Seasonal strength: 11.29
+
+🎉 PREPROCESSING SELESAI!
+📁 File output: preprocessed_rainfall_data.csv

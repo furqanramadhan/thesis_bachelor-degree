@@ -1,0 +1,22 @@
+[1] Config.pm:328> INFO - This is Biber 2.21
+[1] Config.pm:331> INFO - Logfile is 'src/04-tugas_akhir/seminar_proposal.blg'
+[288] biber:342> INFO - === Thu Oct  2, 2025, 14:43:07
+[344] Biber.pm:421> INFO - Reading 'src/04-tugas_akhir/seminar_proposal.bcf'
+[711] Biber.pm:1002> INFO - Found 35 citekeys in bib section 0
+[822] Biber.pm:4487> INFO - Processing section 0
+[864] Biber.pm:4678> INFO - Looking for bibtex file 'src/05-daftar_pustaka/daftar_pustaka.bib' for section 0
+[870] bibtex.pm:1713> INFO - LaTeX decoding ...
+[1081] bibtex.pm:1519> INFO - Found BibTeX data source 'src/05-daftar_pustaka/daftar_pustaka.bib'
+[2485] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[2485] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[2486] Biber.pm:4307> INFO - Sorting list 'apa/apasortcite//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
+[2486] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[2857] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[2857] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[2858] Biber.pm:4307> INFO - Sorting list 'apa/global//global/global/global' of type 'entry' with template 'apa' and locale 'en-US'
+[2858] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[3049] bbl.pm:676> INFO - Writing 'src/04-tugas_akhir/seminar_proposal.bbl' with encoding 'UTF-8'
+[3210] bbl.pm:779> INFO - Output to src/04-tugas_akhir/seminar_proposal.bbl
+[3211] Biber.pm:132> WARN - legacy month field 'Mar' in entry 'azadi2021' is not an integer - this will probably not sort properly.
+[3211] Biber.pm:132> WARN - BibTeX subsystem: warning: comma(s) at end of name (removing)
+[3211] Biber.pm:134> INFO - WARNINGS: 2

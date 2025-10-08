@@ -1,0 +1,53 @@
+%-----------------------------------------------------------------------------%
+\chapter{\babSatu}
+\thispagestyle{fancy}
+%-----------------------------------------------------------------------------%
+% 1.1 LATAR BELAKANG
+\section{Latar Belakang}
+    Perubahan iklim menjadi masalah lingkungan universal diakibatkan oleh berbagai faktor manusia, sehingga memunculkan tren pemanasan global \parencite{rahmayanti2022}. Laporan Intergovernmental Panel on Climate Change (IPCC) AR6 \textit{Synthesis Report} 2023 menyebutkan, suhu rata-rata dunia meningkat sebesar 1.5°C dengan potensi melebihi 2°C. Jika tidak ada pengurangan emisi yang signifikan, maka berisiko memicu dampak lingkungan lebih ekstrem \parencite{ipcc2023}. 
+    
+    Berbagai faktor pemanasan global disebabkan oleh aktivitas manusia. Pertumbuhan penduduk mendorong deforestasi masif, penggunaan bahan bakar fosil turut memperparah emisi gas rumah kaca (GRK). Berbagai jenis gas terakumulasi mencakup CO$_2$, CH$_4$, NO$_2$, SO$_2$, dan CFC membentuk lapisan atmosfer. Lapisan akan menahan radiasi inframerah sehingga panas tidak dapat dipantulkan kembali ke luar angkasa \parencite{azadi2021}. Dampaknya terlihat pada kenaikan intensitas bencana hidrometeorologis. Menurut Indeks Risiko Bencana Indonesia (IRBI), pada tahun 2023 sebanyak 1.255 kasus banjir di Indonesia \parencite{bnpb2024}. Hal ini menyebabkan ketidakseimbangan ekosistem keberlangsungan produksi pertanian serta meningkatkan Suhu Permukaan Laut (SPL) \parencite{malau2023}.
+        
+    Penelitian menunjukkan bahwa kenaikan SPL di wilayah Indonesia, Samudera Hindia dan Laut Jawa, berpotensi mengganggu pola curah hujan, mempersingkat musim tanam, serta meningkatkan risiko banjir atau kekeringan. \textcite{yusuf2022} menemukan bahwa intensitas SPL di Wilayah Pengelolaan Perikanan Indonesia (WPPN-RI) 713 diantara 29,52–30,19°C, dengan suhu tertinggi pada musim pancaroba dan terendah pada musim timur. Anomali ini menyebabkan distribusi curah hujan yang tidak merata. Beberapa daerah mengalami hujan berlebih, sementara daerah lain justru kekeringan. Kondisi ini memperumit upaya mitigasi keberlanjutan pertanian, khususnya dalam ketersediaan air irigasi.
+
+    Indonesia sebagai negara kepulauan di garis khatulistiwa menghadapi tantangan sektor pertanian akibat perubahan iklim. Salah satu daerah yang memiliki peran penting dalam ketahanan pangan nasional adalah Provinsi Aceh. Terletak di ujung barat Indonesia, Aceh adalah salah satu penyumbang hasil pangan nasional. Berdasarkan data dari Badan Pusat Statistik (BPS) tahun 2024, Provinsi Aceh mencatat total produksi padi sebesar 1.659.966,28 ton \parencite{bpsindonesia2024}.
+
+    Kabupaten Aceh Besar secara khusus berperan sebagai penyangga produksi pangan bagi Kota Banda Aceh dan pusat administrasi pertanian di wilayah Aceh, menunjukkan dinamika produksi padi cukup signifikan. Data produksi padi di Kabupaten Aceh Besar periode 2018–2022 menunjukkan fluktuasi mencolok. Pada tahun 2018, produksi mencapai puncak tertinggi sebesar 232.540,64 ton, mengalami penurunan pada tahun 2019 dan 2020, masing-masing menjadi 187.596,67 ton dan 179.856,23 ton. Meski sempat meningkat kembali pada 2021, produksi kembali turun selama 2022 dan mencapai titik terendah pada 2023, sekitar 155.477,39 ton \parencite{bpsaceh2022-2018}. Fluktuasi mencerminkan banyak faktor yang mempengaruhi produktivitas, termasuk perubahan iklim dengan dampaknya pada pola curah hujan, ketersediaan air, serta risiko bencana alam. Semua faktor tersebut secara langsung memengaruhi hasil panen dan ketahanan pangan di Kabupaten Aceh Besar.
+
+    Saat ini teknologi informasi telah menjadi tulang punggung aktivitas manusia termasuk penerimaan informasi terkini, meski seringkali informasi terlambat diterima karena ketiadaan fasilitas media informasi \parencite{Khoirunnisa2019}. Variasi dalam data diakibatkan oleh lokasi sensor berada serta waktu pengambilan data tersebut diambil. Sistem akan mencatat dan para pengamat cukup mengakses aplikasi web, melihat data menggunakan modul AWS di unit Philippine \textit{Atmospheric, Geophysical and Astronomical Services Administration} (PAGASA) dengan dukungan modul GSM, dan perangkat lunak yaitu Apache Web Server, MySQL dan PHP \textit{Scripts} \parencite{cesar2019}.
+
+    Berbagai studi telah menekankan pentingnya penggunaan metode \textit{smoothing} untuk mengurangi \textit{noise} dan meningkatkan kualitas data \textit{time-series}. \textcite{cai2017} menunjukkan bahwa metode \textit{smoothing} Savitzky-Golay, LOESS, dan pendekatan \textit{function fitting} dengan \textit{double logistic} dan \textit{Asymmetric Gaussian} secara signifikan meningkatkan representasi data. Metode ini membantu mereduksi variabilitas acak dan fluktuasi harian tidak representatif, sehingga pola musiman yang konsisten dapat di ekstrak. Temuan tersebut mendukung penerapan teknik \textit{smoothing} dalam penelitian ini untuk memproses dan mengintegrasikan data iklim dari berbagai sumber untuk meningkatkan keakuratan analisis perubahan iklim di Kabupaten Aceh Besar. 
+    
+    \Saya{} mengambil pendekatan melalui pengembangan sistem data iklim otomatis dan integrasi data menjadi platform berbasis web. Sistem ini dirancang untuk mengolah, menginterpretasikan, dan memprediksi data iklim dari tiga sumber utama, yaitu data BMKG, citra satelit, dan data NASA POWER. Penelitian dilakukan oleh tiga anggota tim, di mana \saya{} bertugas dalam mengotomasi pemprosesan data dan mengintegrasikan kedalam sistem. Rekan \saya{} akan menganalisis dataset menggunakan Algoritma Holt-Winters dan LSTM. Sistem ini diharapkan mampu memonitor dan menginterpretasikan data secara akurat, sehingga membantu pemangku kepentingan dalam memantau perubahan pola cuaca, memprediksi risiko bencana, serta merancang strategi adaptasi lebih efektif.
+    
+%-----------------------------------------------------------------------------%
+\section{Rumusan Masalah}
+%-----------------------------------------------------------------------------%
+Berdasarkan latar belakang berikut, disusun rumusan masalah dalam penelitian ini:
+
+\begin{enumerate}
+    \item Bagaimana cara memproses data iklim secara dinamis dari berbagai sumber (BMKG, citra satelit, dan NASA POWER) di Kabupaten Aceh Besar menggunakan metode \textit{smoothing} untuk mengurangi \textit{noise} dan meningkatkan kualitas data?
+
+    \item Bagaimana merancang sistem otomasi dengan metode \textit{smoothing} baik secara berkala maupun bantuan \textit{trigger} agar data dapat \textit{load} cepat melalui API?
+
+    \item Bagaimana memastikan sistem \textit{backend} dengan metode \textit{smoothing} mampu menangani volume data yang besar dan frekuensi pembaruan tinggi, sekaligus menjaga konsistensi data serta kinerja \textit{website} tetap optimal? 
+\end{enumerate}
+
+%-----------------------------------------------------------------------------%
+\section{Tujuan Penelitian}
+%-----------------------------------------------------------------------------%
+    Berdasarkan rumusan masalah, tujuan penelitian ini adalah:
+%-----------------------------------------------------------------------------%
+\begin{enumerate}
+    \item Menerapkan metode \textit{smoothing} data iklim dari berbagai sumber (BMKG, citra satelit, dan NASA POWER) Kabupaten Aceh Besar untuk meningkatkan kualitas data.
+
+    \item Merancang dan mengimplementasikan sistem otomasi pemrosesan data iklim, baik secara berkala maupun melalui peran admin, serta menyediakan API agar data dapat di \textit{load} cepat oleh sistem \textit{website}.
+    
+    \item Memastikan \textit{backend} mampu menangani volume data besar dan frekuensi tinggi, di samping menjaga konsistensi data dan kinerja \textit{website} optimal dengan memperhatikan aspek skalabilitas dan kemudahan akses.
+\end{enumerate}
+%-----------------------------------------------------------------------------%
+\section{Manfaat Penelitian}
+Penelitian ini membantu meningkatkan keterampilan teknis peneliti dalam merancang strategi mitigasi dan adaptasi perubahan iklim dengan dukungan data melalui sistem pengelolaan informasi. Sistem ini diharapkan menjadi langkah awal menuju integrasi teknologi informasi mendukung ketahanan pangan berkelanjutan di wilayah rawan perubahan iklim dan memerlukan studi lanjut dalam hal pengembangan riset.
+
+
+

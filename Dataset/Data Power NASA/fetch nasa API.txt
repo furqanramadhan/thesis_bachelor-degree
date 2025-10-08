@@ -1,0 +1,38 @@
+fetch API POWER LARC NASA TEMPLATE
+
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude={LAT}&longitude={LON}&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+1. Aceh Utara
+a. Lhoksukon
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.051701&longitude=97.318123&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+http://localhost:3000/api/v1/nasa-power?start=20050101&end=20250831&latitude=5.051701&longitude=97.318123&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+b. Baktiya
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.0901929&longitude=97.4056928&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+2. Bireun
+a. Simpang Mamplam
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.1007814&longitude=96.418385&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+b. Peusangan
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.2008992&longitude=96.7601057&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+3. Aceh Timur
+a. Peureulak Kota
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=4.809286&longitude=97.892303&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+b. Ranto Peureulak
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=4.7466594&longitude=97.7199454&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+4. Aceh Besar
+a. Indrapuri
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.4218918&longitude=95.4463322&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+b. Montasik
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.4803&longitude=95.4594&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+c. Darussalam
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.5945451&longitude=95.4201377&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+5. Aceh Jaya
+a. Panga
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=4.51396&longitude=95.457805&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+b. Jaya (Lamno)
+https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.1617309&longitude=95.435853&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
