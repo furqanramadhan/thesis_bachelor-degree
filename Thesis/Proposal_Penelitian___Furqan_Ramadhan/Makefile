@@ -1,7 +1,7 @@
 # Tools
 RM = rm -fr
 LATEX = xelatex -shell-escape -interaction=nonstopmode -output-directory=$(TEXDIR)
-BIBER = biber --input-directory=$(TEXDIR) --output-directory=$(TEXDIR)
+BIBTEX = bibtex
 
 # Directory tempat file .tex
 TEXDIR = src/04-tugas_akhir
@@ -20,19 +20,21 @@ hasil: seminar_hasil.pdf
 proposal: seminar_proposal.pdf
 skripsi: sidang_skripsi.pdf
 
-thesis.pdf: $(TEXDIR)/main.tex
-	$(LATEX) $<
-	$(BIBER) main
-	$(LATEX) $<
-	$(LATEX) $<
-	mv $(TEXDIR)/main.pdf $@
-
+# Individual document targets
 %.pdf: $(TEXDIR)/%.tex
 	$(LATEX) $<
-	$(BIBER) $*
+	$(BIBTEX) $(TEXDIR)/$*
 	$(LATEX) $<
 	$(LATEX) $<
 	mv $(TEXDIR)/$*.pdf $@
+
+# Same for your thesis.pdf target
+thesis.pdf: $(TEXDIR)/main.tex
+	$(LATEX) $<
+	$(BIBTEX) $(TEXDIR)/main
+	$(LATEX) $<
+	$(LATEX) $<
+	mv $(TEXDIR)/main.pdf $@
 
 # Cleaning intermediate files
 mostlyclean:

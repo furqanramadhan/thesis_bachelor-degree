@@ -114,7 +114,18 @@
 % 
 % Membuat seluruh tulisan menjadi Times New Roman.
 % 
-\usepackage{pslatex}
+% \usepackage{pslatex}
+
+\usepackage{mathptmx}
+
+% Atau jika ingin lebih spesifik:
+\usepackage{fontspec}
+\setmainfont{Times New Roman}[
+  BoldFont       = Times New Roman Bold,
+  ItalicFont     = Times New Roman Italic,
+  BoldItalicFont = Times New Roman Bold Italic
+]
+
 
 % 
 % Package untuk membuat header dan footer pada dokumen. 

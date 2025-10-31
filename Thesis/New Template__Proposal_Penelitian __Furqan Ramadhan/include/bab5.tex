@@ -1,0 +1,39 @@
+%-------------------------------------------------------------------------------
+%                            BAB V
+%               		KESIMPULAN DAN SARAN
+%-------------------------------------------------------------------------------
+% \fancyhf{} 
+% \fancyfoot[R]{\thepage}
+\chapter{KESIMPULAN DAN SARAN}
+%\thispagestyle{plain} % Halaman pertama bab menggunakan gaya plain
+
+\section{Kesimpulan}
+
+\par Berdasarkan hasil eksperimen dan evaluasi, diperoleh kesimpulan sebagai berikut:
+\begin{enumerate}
+    \item Model dengan skenario 14 (Ensemble Method) memberikan performa tertinggi dengan nilai akurasi, presisi, recall, dan F1-score masing-masing sebesar 94.10\%, 93.50\%, 94.50\%, dan 94.00\%. 
+
+    \item Pada skenario 6 (data tidak seimbang ), performa model turun cukup signifikan menjadi 85.90\% akurasi , yang menandakan bahwa ketidakseimbangan jumlah sampel antar kelas bisa sangat memengaruhi hasil prediksi. Oleh karena itu, teknik seperti oversampling (misalnya SMOTE) perlu dipertimbangkan untuk mengatasi masalah ini pada tahap pra-pemrosesan.
+
+    \item Peningkatan performa yang stabil terjadi pada skenario 3 hingga skenario 5, yaitu saat dilakukan tuning parameter, augmentasi data, dan penerapan regularisasi. Ini membuktikan bahwa optimasi hiperparameter dan kualitas data memiliki peran penting dalam meningkatkan performa model machine learning.
+\end{enumerate}
+
+\section{Saran}
+
+\par Berdasarkan kesimpulan yang telah dijelaskan sebelumnya, maka penulis memberikan saran untuk penelitian selanjutnya sebagai berikut:
+\begin{enumerate}
+    \item  untuk mencoba metode ensemble learning seperti Random Forest atau Gradient Boosting, karena berdasarkan hasil evaluasi, pendekatan ini memberikan performa terbaik. Selain itu, ensemble method lebih stabil dalam menghadapi noise dan outlier dibandingkan algoritma tunggal seperti KNN.
+    
+    \item Jika dataset nyata akan digunakan, perlu dilakukan analisis awal terhadap distribusi kelas untuk memastikan tidak ada ketidakseimbangan. Jika ditemukan ketidakseimbangan, metode seperti SMOTE (Synthetic Minority Over-sampling Technique) atau undersampling dapat diterapkan.
+    
+    \item Sebagai eksplorasi tambahan, disarankan untuk melakukan uji coba dengan validasi silang (cross-validation) selain 5-fold, seperti 10-fold atau stratified cross-validation, untuk mendapatkan estimasi performa yang lebih akurat dan stabil
+\end{enumerate}
+
+%-----------------------------------------------------------------------------%
+
+% Baris ini digunakan untuk membantu dalam melakukan sitasi
+% Karena diapit dengan comment, maka baris ini akan diabaikan
+% oleh compiler LaTeX.
+\begin{comment}
+\bibliography{daftar-pustaka}
+\end{comment}

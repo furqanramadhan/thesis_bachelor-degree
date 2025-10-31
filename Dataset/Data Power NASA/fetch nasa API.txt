@@ -11,6 +11,9 @@ http://localhost:3000/api/v1/nasa-power?start=20050101&end=20250831&latitude=5.0
 b. Baktiya
 https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.0901929&longitude=97.4056928&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
 
+http://localhost:3000/api/v1/nasa-power?start=20050101&end=20250831&latitude=5.0901929&longitude=97.4056928&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+
 2. Bireun
 a. Simpang Mamplam
 https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.1007814&longitude=96.418385&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
@@ -36,3 +39,7 @@ a. Panga
 https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=4.51396&longitude=95.457805&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
 b. Jaya (Lamno)
 https://power.larc.nasa.gov/api/temporal/daily/point?start=20050101&end=20250831&latitude=5.1617309&longitude=95.435853&community=ag&parameters=T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,WD10M&format=json
+
+
+POST TO DATABASE
+

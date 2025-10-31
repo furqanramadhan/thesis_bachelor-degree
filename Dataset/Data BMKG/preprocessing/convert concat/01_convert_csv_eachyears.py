@@ -64,18 +64,21 @@ def process_bmkg_excel(file_path):
     # Konversi kolom TANGGAL ke datetime dan ekstrak Year, Month, Day
     # Format tanggal biasanya DD-MM-YYYY
     df['Date'] = pd.to_datetime(df['TANGGAL'], format='%d-%m-%Y', errors='coerce')
-    
-    # Jika konversi gagal, coba format lain
+
     if df['Date'].isna().all():
         df['Date'] = pd.to_datetime(df['TANGGAL'], errors='coerce')
-    
-    # Ekstrak komponen tanggal sebagai integer
-    df['Year'] = df['Date'].dt.year.astype('Int64')  # Gunakan Int64 untuk mendukung nilai NaN
-    df['Month'] = df['Date'].dt.month.astype('Int64')
-    df['Day'] = df['Date'].dt.day.astype('Int64')
-    
+
+    df['Year'] = df['Date'].dt.year.astype('Int64')
+    df['month'] = df['Date'].dt.month.astype('Int64')
+    df['day'] = df['Date'].dt.day.astype('Int64')
+
+    # 🧹 Hapus versi lama (huruf besar)
+    df = df.drop(columns=['Month', 'Day'], errors='ignore')
+
     # Reorganisasi kolom
-    new_cols = ['Date', 'Year', 'Month', 'Day'] + [col for col in df.columns if col not in ['Date', 'Year', 'Month', 'Day', 'TANGGAL']]
+    new_cols = ['Date', 'Year', 'month', 'day'] + [
+        col for col in df.columns if col not in ['Date', 'Year', 'month', 'day', 'TANGGAL']
+    ]
     df = df[new_cols]
     
     # Ganti nilai 8888 dan 9999 dengan NaN - Memperbaiki warning
@@ -149,10 +152,10 @@ def process_year_directory(year_dir):
 
 def main():
     # Direktori induk yang berisi subfolder tahun (Excel data)
-    parent_dir = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/EXCEL'
+    parent_dir = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/EXCEL'
     
     # Output direktori untuk file CSV (folder terpisah di direktori yang sama)
-    output_dir = '/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV'
+    output_dir = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV'
     os.makedirs(output_dir, exist_ok=True)
     
     # Cari semua subfolder tahun

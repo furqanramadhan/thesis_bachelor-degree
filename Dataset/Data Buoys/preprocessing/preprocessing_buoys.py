@@ -6,6 +6,7 @@ import os
 from scipy import stats
 from windrose import WindroseAxes
 from datetime import datetime
+from sklearn.ensemble import RandomForestRegressor
 import matplotlib.dates as mdates
 import glob
 
@@ -238,6 +239,157 @@ def handle_missing_values(df, variable_type, variables=None):
     
     return df_imputed
 
+def meteorological_imputation_for_precipitation(df, location_code, cleaned_data):
+    """
+    Implement meteorological model-based imputation for negative precipitation values.
+    Uses relationships between meteorological variables (RH, SWRad, WSPD, SST) to estimate precipitation.
+    
+    Parameters:
+    -----------
+    df : DataFrame
+        DataFrame containing precipitation data with negative values
+    location_code : str
+        Location identifier (for logging)
+    cleaned_data : dict
+        Dictionary containing other cleaned meteorological variables
+        
+    Returns:
+    --------
+    DataFrame
+        DataFrame with imputed values for negative precipitation
+    """
+    
+    df_imputed = df.copy()
+    if 'Prec' not in df_imputed.columns:
+        print("No 'Prec' column found for meteorological imputation.")
+        return df_imputed
+    
+    # Count negative precipitation values
+    neg_prec_mask = df_imputed['Prec'] < 0
+    neg_prec_count = neg_prec_mask.sum()
+    
+    if neg_prec_count == 0:
+        print("No negative precipitation values found. Skipping meteorological imputation.")
+        return df_imputed
+    
+    print(f"Found {neg_prec_count} negative precipitaion values in {location_code}")
+    
+    # Check if we have the necessary meteorological variables
+    required_vars = ['RH', 'SWRad', 'WSPD', 'SST']
+    available_vars = [var for var in required_vars if var in cleaned_data]
+    
+    if len(available_vars) < 2:
+        print(f"Not enough meteorological variables available for imputation. Using trace values (0.01).")
+        df_imputed.loc[neg_prec_mask, 'Prec'] = 0.01
+        return df_imputed
+    
+    print(f"Using meteorological variables for imputation: {', '.join(available_vars)}")
+    
+    # Create a training dataset with valid precipitation values and meteorological variables
+    valid_prec_mask = (df_imputed['Prec'] >= 0) & (~df_imputed['Prec'].isna())
+    valid_dates = df_imputed.loc[valid_prec_mask].index
+    
+    # Ectract features and target for the model
+    X_train_data = {}
+    for var in available_vars:
+        if var in cleaned_data and var != 'Prec':  # Skip Prec as it's the target
+            var_data = cleaned_data[var]
+            if not var_data.empty:
+                # Extract data only for dates with valid precipitation
+                X_train_data[var] = var_data.loc[var_data.index.intersection(valid_dates), var]
+
+    # Get a valid precipitation series
+    y_train = df_imputed.loc[valid_prec_mask, 'Prec']
+    
+    # Create a combined feature DataFrame
+    train_dates = set.intersection(*[set(data.index) for data in X_train_data.values()])
+    if len(train_dates) < 100:  # Require at least 100 training samples
+        print(f"Insufficient overlapping data for model training. Using trace values (0.01).")
+        df_imputed.loc[neg_prec_mask, 'Prec'] = 0.01
+        return df_imputed        
+    
+    # Create X_train DataFrame with aligned dates
+    X_train = pd.DataFrame({var: X_train_data[var].loc[X_train_data[var].index.intersection(train_dates)]
+                           for var in X_train_data.keys()})
+    y_train = y_train.loc[y_train.index.intersection(train_dates)]
+    
+      # Ensure we have the same dates for features and target
+    common_dates = X_train.index.intersection(y_train.index)
+    X_train = X_train.loc[common_dates]
+    y_train = y_train.loc[common_dates]
+    
+    # Check if we have sufficient data for training
+    if len(X_train) < 100:
+        print(f"Insufficient aligned data for model training. Using trace values (0.01).")
+        df_imputed.loc[neg_prec_mask, 'Prec'] = 0.01
+        return df_imputed
+    
+    try:
+        from sklearn.ensemble import RandomForestRegressor
+        # Train a RandomForest model
+        model = RandomForestRegressor(
+            n_estimators=100, 
+            max_depth=10,
+            min_samples_split=5,
+            min_samples_leaf=2,
+            random_state=42
+        )
+        model.fit(X_train, y_train)
+        
+        print(f"Successfully trained Random Forest model with {len(X_train)} samples")
+        
+        # Now prepare data for prediction (dates with negative precipitation)
+        neg_prec_dates = df_imputed.loc[neg_prec_mask].index
+        
+        # Create features for prediction
+        X_pred_data = {}
+        for var in available_vars:
+            if var in cleaned_data and var != 'Prec':
+                var_data = cleaned_data[var]
+                if not var_data.empty:
+                    X_pred_data[var] = var_data.loc[var_data.index.intersection(neg_prec_dates), var]
+        
+        # Create prediction DataFrame with aligned dates
+        pred_dates = set.intersection(*[set(data.index) for data in X_pred_data.values()])
+        if len(pred_dates) == 0:
+            print(f"No overlapping data for prediction. Using trace values (0.01).")
+            df_imputed.loc[neg_prec_mask, 'Prec'] = 0.01
+            return df_imputed
+        
+        X_pred = pd.DataFrame({var: X_pred_data[var].loc[X_pred_data[var].index.intersection(pred_dates)]
+                               for var in X_pred_data.keys()})
+        
+        # Make predictions
+        predictions = model.predict(X_pred)
+        
+        # Ensure no negative predictions
+        predictions = np.maximum(predictions, 0.01)  # Minimum of 0.01 mm (trace rainfall)
+        
+        # Apply predictions to the original DataFrame
+        for i, date in enumerate(X_pred.index):
+            df_imputed.loc[date, 'Prec'] = predictions[i]
+        
+        # For any remaining negative values that we couldn't predict, use trace values
+        remaining_neg_mask = df_imputed['Prec'] < 0
+        remaining_neg_count = remaining_neg_mask.sum()
+        if remaining_neg_count > 0:
+            print(f"Setting {remaining_neg_count} remaining negative values to trace values (0.01)")
+            df_imputed.loc[remaining_neg_mask, 'Prec'] = 0.01
+        
+        print(f"Successfully imputed {len(pred_dates)}/{neg_prec_count} negative precipitation values using meteorological model")
+        
+    except ImportError:
+        print("scikit-learn not installed. Using trace values (0.01) for negative precipitation.")
+        df_imputed.loc[neg_prec_mask, 'Prec'] = 0.01
+    
+    except Exception as e:
+        print(f"Error in meteorological imputation: {e}")
+        print("Using trace values (0.01) for negative precipitation.")
+        df_imputed.loc[neg_prec_mask, 'Prec'] = 0.01
+    
+    return df_imputed
+    
+
 def preprocess_buoy_data(data_dict, location_code, output_dir="output", cleaned_dir="cleaned"):
     """
     Preprocess all buoy data variables.
@@ -307,20 +459,20 @@ def preprocess_buoy_data(data_dict, location_code, output_dir="output", cleaned_
         
         # Process Prec variable
         if 'Prec' in df_rain_clean.columns:
+            # Check for negative precipitation values and apply meteorological imputation
+            # neg_prec_count = (df_rain_clean['Prec'] < 0).sum()
+            # if neg_prec_count > 0:
+            #     df_rain_clean = meteorological_imputation_for_precipitation(df_rain_clean, location_code, cleaned_data)
+            
             # Handle outliers
             df_rain_clean = handle_outliers(df_rain_clean, 'Prec')
             
-            # Visualize
-            plot_time_series(df_rain_clean, 'Prec', 'Rainfall', 'mm', location_code, loc_output_dir)
-            plot_seasonal_patterns(df_rain_clean, 'Prec', 'Rainfall', 'mm', location_code, loc_output_dir)
-            plot_annual_trends(df_rain_clean, 'Prec', 'Rainfall', 'mm', location_code, loc_output_dir)
-            
             # Store cleaned data
             cleaned_data['Prec'] = df_rain_clean[['Prec']].copy()
-            
+                        
             # Save to CSV
             df_rain_clean.to_csv(f"{cleaned_dir}/{location_code}_Prec_clean.csv")
-            print(f"Saved cleaned rainfall data to {cleaned_dir}/{location_code}_Prec_clean.csv")
+            print(f"Saved cleaned precipitation data to {cleaned_dir}/{location_code}_Prec_clean.csv")
     
     # Process humidity data
     if 'humidity' in data_dict:
@@ -463,7 +615,23 @@ def preprocess_buoy_data(data_dict, location_code, output_dir="output", cleaned_
         # Wind direction visualization (if both components available)
         if 'UWND' in df_wind_clean.columns and 'VWND' in df_wind_clean.columns:
             plot_wind_rose(df_wind_clean, location_code, loc_output_dir)
-        
+            
+        # Process negative precipitation values using meteorological model
+        if 'Prec' in cleaned_data:
+            df_rain = cleaned_data['Prec'].copy()
+            neg_prec_count = (df_rain['Prec'] < 0).sum()
+            
+            if neg_prec_count > 0:
+                print(f"Found {neg_prec_count} negative precipitation values - applying meteorological imputation")
+                df_rain_improved = meteorological_imputation_for_precipitation(df_rain, location_code, cleaned_data)
+                
+                # Update the cleaned data with improved precipitation values
+                cleaned_data['Prec'] = df_rain_improved[['Prec']].copy()
+                
+                # Also update the CSV file
+                df_rain_improved.to_csv(f"{cleaned_dir}/{location_code}_Prec_clean.csv")
+                print(f"Updated cleaned precipitation data with meteorological imputation")
+                        
         # Save to CSV
         df_wind_clean.to_csv(f"{cleaned_dir}/{location_code}_WIND_clean.csv")
         print(f"Saved cleaned wind data to {cleaned_dir}/{location_code}_WIND_clean.csv")
