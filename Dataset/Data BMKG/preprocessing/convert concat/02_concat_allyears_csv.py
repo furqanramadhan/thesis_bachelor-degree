@@ -65,7 +65,7 @@ def merge_csv_files(csv_directory):
 
 def main():
     # Direktori yang berisi file CSV
-    csv_directory = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV'
+    csv_directory = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV'
     
     # Output file untuk dataset gabungan
     output_file = os.path.join(csv_directory, "BMKG_Data_All.csv")

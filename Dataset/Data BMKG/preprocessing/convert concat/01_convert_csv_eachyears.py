@@ -152,10 +152,10 @@ def process_year_directory(year_dir):
 
 def main():
     # Direktori induk yang berisi subfolder tahun (Excel data)
-    parent_dir = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/EXCEL'
+    parent_dir = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/EXCEL'
     
     # Output direktori untuk file CSV (folder terpisah di direktori yang sama)
-    output_dir = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV'
+    output_dir = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV'
     os.makedirs(output_dir, exist_ok=True)
     
     # Cari semua subfolder tahun
