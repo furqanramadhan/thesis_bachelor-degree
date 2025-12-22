@@ -891,9 +891,9 @@ def create_seasonal_plots(processed_df, output_file='BMKG_Data_Seasonal_Analysis
     print(f"Seasonal analysis plots saved to '{output_file}'")
 
 if __name__ == "__main__":
-    input_file = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"
-    output_file = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV CLEANED/BMKG_Data_Cleaned.csv"
-    
+    input_file = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV/BMKG_Data_All.csv"
+    output_file = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV CLEANED/BMKG_Data_Cleaned.csv"
+
     try:
         processed_df = preprocess_bmkg_data(input_file, output_file)
         

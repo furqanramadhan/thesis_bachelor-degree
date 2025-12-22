@@ -9,6 +9,23 @@ import seaborn as sns
 import numpy as np
 import re
 
+COLOR_PALETTE = {
+    'blue': '#1E88E5',
+    'orange': '#FF6F00',
+    'green': '#388E3C',
+    'red': '#D32F2F',
+    'purple': '#7B1FA2',
+    'cyan': '#00ACC1',
+    'yellow': '#FBC02D',
+    'pink': '#C2185B',
+    'teal': '#00897B',
+    'indigo': '#3949AB',
+    'lime': '#689F38',
+    'amber': '#FFA000',
+    'brown': '#5D4037',
+    'gray': '#757575'
+}
+
 # Load data periode tanam
 df_periode = pd.read_csv("kuisioner_tanam_padi - PeriodeTanam.csv")
 
@@ -21,29 +38,105 @@ print(df_periode.head())
 
 # Fungsi untuk mapping kabupaten berdasarkan ID petani
 def get_kabupaten(id_petani):
-    # Extract nomor dari ID (PTN001 -> 1)
-    try:
-        # Handle special cases first
-        if id_petani in ['PTN130', 'PTN131', 'PTN132', 'PTN133', 'PTN134', 
-                         'PTN200', 'PTN201', 'PTN202', 'PTN203', 'PTN204', 
-                         'PTN205', 'PTN206', 'PTN207', 'PTN208', 'PTN209']:
-            return 'Aceh Besar'
-        
-        # Process regular pattern IDs
-        nomor = int(id_petani.replace('PTN', ''))
-        if 1 <= nomor <= 35:
-            return 'Aceh Besar'
-        elif 36 <= nomor <= 77:
-            return 'Aceh Jaya'
-        elif 78 <= nomor <= 109:
-            return 'Pidie'
-        elif 110 <= nomor <= 129:
-            return 'Aceh Utara'
-        else:
+    if pd.isna(id_petani):
+        return np.nan
+    
+    # Convert to string and extract numeric part
+    id_str = str(id_petani).strip()
+    
+    # Handle PTN prefix format (PTN001, PTN002, etc.)
+    if id_str.startswith('PTN'):
+        try:
+            # Extract numeric part after PTN
+            id_num = int(id_str[3:])
+        except (ValueError, IndexError):
             return 'Tidak Diketahui'
-    except:
+    else:
+        # Try direct numeric conversion
+        try:
+            id_num = int(id_petani)
+        except:
+            return 'Tidak Diketahui'
+    
+    # Map to kabupaten based on numeric ID
+    if 1 <= id_num <= 50:
+        return 'Aceh Besar'
+    elif 51 <= id_num <= 92:
+        return 'Aceh Jaya'
+    elif 93 <= id_num <= 136:
+        return 'Pidie'
+    elif 137 <= id_num <= 156:
+        return 'Aceh Utara'
+    elif 157 <= id_num <= 196:
+        return 'Bireuen'
+    else:
         return 'Tidak Diketahui'
 df_periode['kabupaten'] = df_periode['id_petani'].apply(get_kabupaten)
+
+def get_kabupaten(id_petani):
+    if pd.isna(id_petani):
+        return np.nan
+    
+    id_str = str(id_petani).strip()
+    
+    if id_str.startswith('PTN'):
+        try:
+            id_num = int(id_str[3:])
+        except (ValueError, IndexError):
+            return 'Tidak Diketahui'
+    else:
+        try:
+            id_num = int(id_petani)
+        except:
+            return 'Tidak Diketahui'
+    
+    if 1 <= id_num <= 50:
+        return 'Aceh Besar'
+    elif 51 <= id_num <= 92:
+        return 'Aceh Jaya'
+    elif 93 <= id_num <= 136:
+        return 'Pidie'
+    elif 137 <= id_num <= 156:
+        return 'Aceh Utara'
+    elif 157 <= id_num <= 196:
+        return 'Bireuen'
+    else:
+        return 'Tidak Diketahui'
+
+df_periode['kabupaten'] = df_periode['id_petani'].apply(get_kabupaten)
+
+# Fungsi untuk membersihkan data gunca
+def clean_gunca(value):
+    if pd.isna(value):
+        return None
+    
+    cleaned = str(value).strip()
+    
+    if cleaned == '' or cleaned.lower() == 'nan' or cleaned == '-':
+        return None
+    
+    try:
+        return float(cleaned)
+    except (ValueError, TypeError):
+        return None
+
+# Fungsi untuk membersihkan data pengeluaran
+def clean_pengeluaran_data(value):
+    if pd.isna(value):
+        return None
+
+    cleaned = str(value).strip()
+
+    if cleaned == '' or cleaned.lower() == 'nan' or cleaned == '-':
+        return None
+
+    # Hapus titik sebagai pemisah ribuan, lalu konversi ke float
+    cleaned = cleaned.replace('.', '')
+    try:
+        return float(cleaned)
+    except (ValueError, TypeError):
+        return None
+
 
 # Debug: Cek data bulan tanam dan kabupaten
 print("\nBulan tanam yang tersedia:")
@@ -79,7 +172,8 @@ else:
     print("Menggunakan semua periode yang tersedia dalam dataset")
 
 # Gunakan warna yang menarik (tambahkan warna untuk periode baru)
-colors = ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854']
+colors = [COLOR_PALETTE['blue'], COLOR_PALETTE['orange'], COLOR_PALETTE['green'], 
+          COLOR_PALETTE['purple'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = bulan_by_kabupaten.plot(
@@ -99,8 +193,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
                 
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -130,7 +223,13 @@ plt.title('Distribusi Periode Tanam berdasarkan Kabupaten', fontsize=14)
 plt.xlabel('Bulan Tanam', fontsize=12)
 plt.ylabel('Jumlah Petani', fontsize=12)
 plt.xticks(rotation=45)
-plt.legend(title='Kabupaten')
+plt.legend(
+    title='Kabupaten',
+    bbox_to_anchor=(1.02, 1),
+    loc='upper left',
+    framealpha=0.9,
+    fontsize=10
+)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
 # Dynamic Y-axis scaling
@@ -157,7 +256,6 @@ plt.ylim(0, y_limit)  # Explicitly set the y-axis limits
 
 plt.tight_layout(pad=2.0)
 plt.savefig('07_distribusi_bulan_tanam_kabupaten_petani_unik.png', dpi=300)
-
 
 print("\nVisualisasi 1 selesai!")
 
@@ -211,7 +309,8 @@ available_luas = [l for l in luas_order if l in luas_by_kabupaten.columns]
 luas_by_kabupaten = luas_by_kabupaten[available_luas]
 
 # Gunakan warna gradasi untuk ukuran lahan
-colors = ['#32CD32', '#FFD700', '#FF8C00', '#DC143C', '#8B0000', '#808080']
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['yellow'], COLOR_PALETTE['orange'], 
+          COLOR_PALETTE['red'], '#8B0000', COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = luas_by_kabupaten.plot(
@@ -233,8 +332,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -264,7 +362,13 @@ plt.xlabel('Kabupaten', fontsize=12)
 plt.ylabel('Jumlah Petani', fontsize=12)  # Changed from 'Jumlah Periode Tanam'
 plt.xticks(rotation=45)
 #plt.legend(title='Luas Tanam (m²)', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.legend(title='Luas Tanam (m²)', loc='upper right')
+plt.legend(
+    title='Luas Tanam (m²)',
+    bbox_to_anchor=(1.02, 1),
+    loc='upper left',
+    framealpha=0.9,
+    fontsize=10
+)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
 # Set y-axis
@@ -304,7 +408,6 @@ def kategorisasi_periode_panen(bulan):
     else:
         return 'Tidak Diketahui'
 
-
 # Kategorikan bulan panen ke dalam range periode
 df_periode['periode_panen'] = df_periode['bulan_panen'].apply(kategorisasi_periode_panen)
 
@@ -312,18 +415,15 @@ df_periode['periode_panen'] = df_periode['bulan_panen'].apply(kategorisasi_perio
 print("\nPeriode panen setelah kategorisasi:")
 print(df_periode['periode_panen'].value_counts())
 
-# Penting: Kita perlu mengambil nilai unik per petani, bukan per periode
-# Ambil data petani unik dan periode panen mereka
-petani_periode_panen = df_periode[['id_petani', 'kabupaten', 'periode_panen']].drop_duplicates(subset=['id_petani'])
+# PENTING: Gunakan SEMUA data periode (TIDAK pakai drop_duplicates)
+# Karena satu petani bisa punya 2 periode tanam
+print(f"\nJumlah total periode panen: {len(df_periode)}")
+print(f"Distribusi periode panen:")
+print(df_periode['periode_panen'].value_counts())
 
-# Debug: Cek jumlah petani unik
-print(f"\nJumlah total petani unik: {len(petani_periode_panen)}")
-print(f"Distribusi periode panen per petani unik:")
-print(petani_periode_panen['periode_panen'].value_counts())
-
-# Membuat crosstab untuk periode panen berdasarkan kabupaten (data petani unik)
-# PENTING: Kabupaten di sumbu X, periode panen sebagai kolom
-panen_by_kabupaten = pd.crosstab(petani_periode_panen['kabupaten'], petani_periode_panen['periode_panen'])
+# Membuat crosstab untuk periode panen berdasarkan kabupaten
+# Kabupaten di sumbu X, periode panen sebagai kolom (legend)
+panen_by_kabupaten = pd.crosstab(df_periode['kabupaten'], df_periode['periode_panen'])
 
 # Urutkan kolom berdasarkan urutan periode (4 musim)
 periode_order = ['des - feb', 'mar - mei', 'jun - agt', 'sep - nov']
@@ -341,8 +441,9 @@ if available_periode:
 else:
     print("Tidak ada data periode panen yang valid")
 
-# Gunakan warna yang menarik untuk periode panen (4 warna berbeda)
-colors = ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#808080']
+# Gunakan warna solid dari COLOR_PALETTE
+colors = [COLOR_PALETTE['blue'], COLOR_PALETTE['orange'], COLOR_PALETTE['green'], 
+          COLOR_PALETTE['purple'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = panen_by_kabupaten.plot(
@@ -351,9 +452,8 @@ ax = panen_by_kabupaten.plot(
     color=colors[:len(available_periode)]
 )
 
-# Tambahkan label jumlah pada setiap bar
-# Calculate total count for percentage calculation
-total_count = sum([rect.get_height() for container in ax.containers for rect in container])
+# Calculate total count untuk percentage calculation
+total_count = df_periode['periode_panen'].count()
 
 # Clear existing labels
 for container in ax.containers:
@@ -364,12 +464,11 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
-            y = height + 0.5  # Adjust this value based on your data scale
+            y = height + 0.5
             
             # Create text with frame
             ax.annotate(
@@ -392,32 +491,47 @@ for container in ax.containers:
 # Percantik plot
 plt.title('Distribusi Periode Panen berdasarkan Kabupaten', fontsize=14)
 plt.xlabel('Kabupaten', fontsize=12)
-plt.ylabel('Jumlah Petani', fontsize=12)  # Changed from 'Jumlah Periode Panen'
+plt.ylabel('Jumlah Periode Panen', fontsize=12)  # Changed label
 plt.xticks(rotation=45)
-plt.legend(title='Periode Panen')
+plt.legend(title='Periode Panen', loc='upper right')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
-# Set y-axis dengan interval yang sesuai
+# Dynamic Y-axis scaling
 y_max = panen_by_kabupaten.values.max() if len(panen_by_kabupaten) > 0 else 10
-y_ticks = np.arange(0, min(y_max + 10, 50), 5)
+
+# Buat interval yang dinamis berdasarkan nilai maksimum
+if y_max <= 10:
+    interval = 1
+    y_limit = y_max + 2
+elif y_max <= 25:
+    interval = 2
+    y_limit = y_max + 5
+elif y_max <= 50:
+    interval = 5
+    y_limit = y_max + 5
+else:
+    interval = 10
+    y_limit = y_max + 10
+
+# Set y-axis ticks with dynamic interval
+y_ticks = np.arange(0, y_limit + interval, interval)
 plt.yticks(y_ticks)
-plt.ylim(0, min(y_max + 5, 45))
+plt.ylim(0, y_limit)
 
 plt.tight_layout()
-plt.savefig('09_distribusi_periode_panen_kabupaten_petani_unik.png', dpi=300)
+plt.savefig('09_distribusi_periode_panen_kabupaten.png', dpi=300)
 
 print("\nVisualisasi 3 selesai!")
+print(f"Total periode panen yang divisualisasikan: {total_count}")
 
-# Visualisasi 4: Distribusi Luas Panen berdasarkan Kabupaten
+# Visualisasi 4: Distribusi Luas Panen berdasarkan Kabupaten (Per Periode)
+print("VISUALISASI 4: DISTRIBUSI LUAS PANEN BERDASARKAN KABUPATEN (PER PERIODE)")
+
 plt.figure(figsize=(12, 6))
 
-# Debug: Cek data luas panen
 print("\nStatistik luas panen (m2):")
 print(df_periode['luas_panen_m2'].describe())
-print("\nUnique values luas panen:")
-print(sorted(df_periode['luas_panen_m2'].unique()))
 
-# Fungsi untuk kategorisasi luas panen
 def kategorisasi_luas_panen(luas):
     if pd.isna(luas):
         return 'Tidak Diketahui'
@@ -434,124 +548,72 @@ def kategorisasi_luas_panen(luas):
     else:
         return '> 7.000 m²'
 
-# Membuat kolom kategori luas panen
 df_periode['kategori_luas_panen'] = df_periode['luas_panen_m2'].apply(kategorisasi_luas_panen)
 
-# Debug: Cek distribusi kategori luas panen
-print("\nDistribusi kategori luas panen:")
+print("\nDistribusi kategori luas panen (per periode):")
 print(df_periode['kategori_luas_panen'].value_counts())
+print(f"Jumlah total periode panen: {len(df_periode)}")
 
-# Penting: Kita perlu mengambil nilai unik per petani, bukan per periode
-# Ambil data petani unik dan luas panen mereka
-petani_luas_panen = df_periode[['id_petani', 'kabupaten', 'kategori_luas_panen']].drop_duplicates(subset=['id_petani'])
+luas_panen_by_kabupaten = pd.crosstab(df_periode['kabupaten'], df_periode['kategori_luas_panen'])
 
-# Debug: Cek jumlah petani unik
-print(f"\nJumlah total petani unik: {len(petani_luas_panen)}")
-print(f"Distribusi kategori luas panen per petani unik:")
-print(petani_luas_panen['kategori_luas_panen'].value_counts())
-
-# Membuat crosstab untuk luas panen berdasarkan kabupaten (data petani unik)
-luas_panen_by_kabupaten = pd.crosstab(petani_luas_panen['kabupaten'], petani_luas_panen['kategori_luas_panen'])
-
-# Urutkan kolom berdasarkan urutan luas
 luas_order = ['≤ 1.000 m²', '1.001-2.000 m²', '2.001-3.000 m²', '3.001-5.000 m²', '5.001-7.000 m²', '> 7.000 m²', 'Tidak Diketahui']
 available_luas_panen = [l for l in luas_order if l in luas_panen_by_kabupaten.columns]
 luas_panen_by_kabupaten = luas_panen_by_kabupaten[available_luas_panen]
 
-# Gunakan warna gradasi untuk ukuran lahan (sama seperti luas tanam)
-colors = ['#32CD32', '#FFD700', '#FF8C00', '#DC143C', '#8B0000', '#808080']
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['yellow'], COLOR_PALETTE['orange'], 
+          COLOR_PALETTE['red'], '#8B0000', COLOR_PALETTE['gray']]
 
-# Membuat plot
-ax = luas_panen_by_kabupaten.plot(
-    kind='bar', 
-    width=0.6,
-    color=colors[:len(available_luas_panen)]
-)
+ax = luas_panen_by_kabupaten.plot(kind='bar', width=0.6, color=colors[:len(available_luas_panen)])
 
-# Calculate total count for percentage calculation
-total_count = sum([rect.get_height() for container in ax.containers for rect in container])
+total_count = df_periode['kategori_luas_panen'].count()
 
-# Clear existing labels
 for container in ax.containers:
-    ax.bar_label(container, labels=[''] * len(container), padding=5)
-
-# Add labels with count and percentage in frames
-for container in ax.containers:
-    for i, rect in enumerate(container):
+    for rect in container:
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
-            
-            # Position for the annotation
-            x = rect.get_x() + rect.get_width()/2
-            y = height + 0.5  # Adjust this value based on your data scale
-            
-            # Create text with frame
-            ax.annotate(
-                label_text, 
-                xy=(x, y),
-                xytext=(0, 0),
-                textcoords='offset points',
-                ha='center', va='bottom',
-                bbox=dict(
-                    boxstyle="round,pad=0.3",
-                    fc='white',
-                    ec='gray',
-                    lw=1,
-                    alpha=0.9
-                ),
-                fontsize=9,
-                fontweight='bold'
-            )
+            label_text = f'{int(height)}'
+            x = rect.get_x() + rect.get_width() / 2
+            y = height + 0.5
+            ax.annotate(label_text, xy=(x, y), xytext=(0, 0), textcoords='offset points',
+                        ha='center', va='bottom',
+                        bbox=dict(boxstyle="round,pad=0.3", fc='white', ec='gray', lw=1, alpha=0.9),
+                        fontsize=9, fontweight='bold')
 
-# Percantik plot
-plt.title('Distribusi Luas Panen berdasarkan Kabupaten', fontsize=14)
+plt.title('Distribusi Luas Panen berdasarkan Kabupaten (Per Periode)', fontsize=14)
 plt.xlabel('Kabupaten', fontsize=12)
-plt.ylabel('Jumlah Petani', fontsize=12)  # Changed from 'Jumlah Periode Panen'
+plt.ylabel('Jumlah Periode Panen', fontsize=12)
 plt.xticks(rotation=45)
-plt.legend(title='Luas Panen (m²)', loc='upper right')
+plt.legend(
+    title='Luas Panen (m²)',
+    bbox_to_anchor=(1.02, 1),
+    loc='upper left',
+    framealpha=0.9,
+    fontsize=10
+)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
-# Set y-axis
-y_max = luas_panen_by_kabupaten.values.max()
-y_ticks = np.arange(0, min(y_max + 10, 50), 5)
-plt.yticks(y_ticks)
-plt.ylim(0, min(y_max + 5, 45))
+y_max = luas_panen_by_kabupaten.values.max() if not luas_panen_by_kabupaten.empty else 10
+interval = 10 if y_max > 50 else 5 if y_max > 25 else 2
+y_limit = y_max + 10
+plt.yticks(np.arange(0, y_limit + interval, interval))
+plt.ylim(0, y_limit)
 
 plt.tight_layout()
-plt.savefig('10_distribusi_luas_panen_kabupaten_petani_unik.png', dpi=300)
+plt.savefig('10_distribusi_luas_panen_kabupaten_per_periode.png', dpi=300)
+print("\nVisualisasi 4 (Per Periode) selesai!")
+print(f"Total periode yang divisualisasikan: {total_count}")
 
-print("\nVisualisasi 4 selesai!")
+# Visualisasi 5: Distribusi Tingkat Produktivitas (Gunca) berdasarkan Kabupaten (Per Periode)
+print("\n" + "="*80)
+print("VISUALISASI 5: DISTRIBUSI PRODUKTIVITAS (GUNCA) BERDASARKAN KABUPATEN (PER PERIODE)")
+print("="*80)
 
-# Visualisasi 5: Distribusi Produksi Gunca berdasarkan Kabupaten
 plt.figure(figsize=(12, 6))
 
-# Debug: Cek data produksi gunca
-print("\nUnique values produksi gunca (raw):")
-print(df_periode['produksi_dalam_gunca'].unique())
-
-# Bersihkan data produksi gunca
-def clean_gunca(value):
-    if pd.isna(value) or value == '-' or value == '' or value is None:
-        return np.nan
-    try:
-        return float(value)
-    except (ValueError, TypeError):
-        return np.nan
-
-# Terapkan pembersihan data
 df_periode['produksi_gunca_clean'] = df_periode['produksi_dalam_gunca'].apply(clean_gunca)
 
-# Debug: Cek hasil pembersihan data
-print("\nStatistik produksi gunca setelah dibersihkan:")
-print(df_periode['produksi_gunca_clean'].describe())
-print("\nUnique values produksi gunca setelah dibersihkan:")
-print(sorted(df_periode['produksi_gunca_clean'].dropna().unique()))
-
-# Fungsi untuk kategorisasi produksi gunca berdasarkan tingkat produktivitas
 def kategorisasi_produksi_gunca(gunca):
-    if pd.isna(gunca) or gunca is None:
+    if pd.isna(gunca):
         return 'Tidak Diketahui'
     elif gunca <= 5:
         return 'Rendah (≤ 5)'
@@ -564,232 +626,135 @@ def kategorisasi_produksi_gunca(gunca):
     else:
         return 'Exceptional (> 30)'
 
-# Membuat kolom kategori produksi gunca menggunakan data yang sudah dibersihkan
 df_periode['kategori_produksi_gunca'] = df_periode['produksi_gunca_clean'].apply(kategorisasi_produksi_gunca)
 
-# Debug: Cek distribusi kategori produksi gunca
-print("\nDistribusi kategori produksi gunca:")
+print("\nDistribusi kategori produksi gunca (per periode):")
 print(df_periode['kategori_produksi_gunca'].value_counts())
+print(f"Jumlah total periode: {len(df_periode)}")
 
-# Penting: Kita perlu mengambil nilai unik per petani, bukan per periode
-# Ambil data petani unik dan kategori produksi gunca mereka
-petani_produksi_gunca = df_periode[['id_petani', 'kabupaten', 'kategori_produksi_gunca']].drop_duplicates(subset=['id_petani'])
+produksi_by_kabupaten = pd.crosstab(df_periode['kabupaten'], df_periode['kategori_produksi_gunca'])
 
-# Debug: Cek jumlah petani unik
-print(f"\nJumlah total petani unik: {len(petani_produksi_gunca)}")
-print(f"Distribusi kategori produksi gunca per petani unik:")
-print(petani_produksi_gunca['kategori_produksi_gunca'].value_counts())
-
-# Membuat crosstab untuk produksi gunca berdasarkan kabupaten (data petani unik)
-produksi_by_kabupaten = pd.crosstab(petani_produksi_gunca['kabupaten'], petani_produksi_gunca['kategori_produksi_gunca'])
-
-# Urutkan kolom berdasarkan urutan produktivitas
-produktivitas_order = ['Rendah (≤ 5)', 'Sedang (6-10)', 
-                      'Tinggi (11-20)', 'Sangat Tinggi (21-30)', 
-                      'Exceptional (> 30)', 'Tidak Diketahui']
+produktivitas_order = ['Rendah (≤ 5)', 'Sedang (6-10)', 'Tinggi (11-20)', 'Sangat Tinggi (21-30)', 'Exceptional (> 30)', 'Tidak Diketahui']
 available_produktivitas = [p for p in produktivitas_order if p in produksi_by_kabupaten.columns]
 produksi_by_kabupaten = produksi_by_kabupaten[available_produktivitas]
 
-# Gunakan warna gradasi dari merah (rendah) ke hijau tua (exceptional)
-colors = ['#DC143C', '#FF8C00', '#FFD700', '#32CD32', '#228B22', '#808080']
+colors = [COLOR_PALETTE['blue'], COLOR_PALETTE['orange'], COLOR_PALETTE['yellow'], 
+          COLOR_PALETTE['green'], '#1B5E20', COLOR_PALETTE['gray']]
 
-# Membuat plot
-ax = produksi_by_kabupaten.plot(
-    kind='bar', 
-    width=0.6,
-    color=colors[:len(available_produktivitas)]
-)
+ax = produksi_by_kabupaten.plot(kind='bar', width=0.6, color=colors[:len(available_produktivitas)])
 
-total_count = sum([rect.get_height() for container in ax.containers for rect in container])
+total_count = df_periode['kategori_produksi_gunca'].count()
 
-# Tambahkan label jumlah pada setiap bar
 for container in ax.containers:
-    ax.bar_label(container, labels=[''] * len(container), padding=5)
-
-# Add labels with count and percentage in frames
-for container in ax.containers:
-    for i, rect in enumerate(container):
+    for rect in container:
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
-            
-            # Position for the annotation
-            x = rect.get_x() + rect.get_width()/2
-            y = height + 0.5  # Adjust this value based on your data scale
-            
-            # Create text with frame
-            ax.annotate(
-                label_text, 
-                xy=(x, y),
-                xytext=(0, 0),
-                textcoords='offset points',
-                ha='center', va='bottom',
-                bbox=dict(
-                    boxstyle="round,pad=0.3",
-                    fc='white',
-                    ec='gray',
-                    lw=1,
-                    alpha=0.9
-                ),
-                fontsize=9,
-                fontweight='bold'
-            )
+            label_text = f'{int(height)}'
+            x = rect.get_x() + rect.get_width() / 2
+            y = height + 0.5
+            ax.annotate(label_text, xy=(x, y), xytext=(0, 0), textcoords='offset points',
+                        ha='center', va='bottom',
+                        bbox=dict(boxstyle="round,pad=0.3", fc='white', ec='gray', lw=1, alpha=0.9),
+                        fontsize=9, fontweight='bold')
 
-# Percantik plot
-plt.title('Distribusi Tingkat Produktivitas (Gunca) berdasarkan Kabupaten', fontsize=14)
+plt.title('Distribusi Tingkat Produktivitas (Gunca) berdasarkan Kabupaten (Per Periode)', fontsize=14)
 plt.xlabel('Kabupaten', fontsize=12)
-plt.ylabel('Jumlah Petani', fontsize=12)  # Changed from 'Jumlah Periode Tanam'
+plt.ylabel('Jumlah Periode Panen', fontsize=12)
 plt.xticks(rotation=45)
 plt.legend(title='Tingkat Produktivitas', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
-# Set y-axis
-y_max = produksi_by_kabupaten.values.max()
-y_ticks = np.arange(0, min(y_max + 10, 50), 5)
-plt.yticks(y_ticks)
-plt.ylim(0, min(y_max + 5, 45))
+y_max = produksi_by_kabupaten.values.max() if not produksi_by_kabupaten.empty else 10
+interval = 10 if y_max > 50 else 5 if y_max > 25 else 2
+y_limit = y_max + 10
+plt.yticks(np.arange(0, y_limit + interval, interval))
+plt.ylim(0, y_limit)
 
 plt.tight_layout()
-plt.savefig('11_distribusi_produktivitas_gunca_kabupaten_petani_unik.png', dpi=300, bbox_inches='tight')
+plt.savefig('11_distribusi_produktivitas_gunca_kabupaten_per_periode.png', dpi=300, bbox_inches='tight')
+print("\nVisualisasi 5 (Per Periode) selesai!")
+print(f"Total periode yang divisualisasikan: {total_count}")
 
-print("\nVisualisasi 5 selesai!")
+# Visualisasi 6: Distribusi Range Pengeluaran berdasarkan Kabupaten (Per Periode)
+print("\n" + "="*80)
+print("VISUALISASI 6: DISTRIBUSI PENGELUARAN BERDASARKAN KABUPATEN (PER PERIODE)")
+print("="*80)
 
-# Visualisasi 6: Distribusi Pengeluaran berdasarkan Kabupaten
 plt.figure(figsize=(12, 6))
 
-# Debug: Cek data pengeluaran
-print("\nStatistik pengeluaran (Rp):")
-print(df_periode['pengeluaran_rp'].describe())
-print("\nSample pengeluaran:")
-print(df_periode['pengeluaran_rp'].head(10))
-
-# Bersihkan dan konversi data pengeluaran ke numeric
-def clean_pengeluaran_data(value):
-    if pd.isna(value):
-        return None
-    try:
-        # Konversi ke string dulu, hapus whitespace
-        cleaned = str(value).strip()
-        if cleaned == '' or cleaned.lower() == 'nan':
-            return None
-        
-        # Hapus titik sebagai pemisah ribuan dan konversi ke float
-        cleaned = cleaned.replace('.', '')
-        return float(cleaned)
-    except (ValueError, TypeError):
-        return None
-
-# Bersihkan data pengeluaran
 df_periode['pengeluaran_clean'] = df_periode['pengeluaran_rp'].apply(clean_pengeluaran_data)
 
-print("\nData pengeluaran setelah dibersihkan:")
-print(df_periode['pengeluaran_clean'].describe())
-
-# Fungsi untuk kategorisasi pengeluaran berdasarkan range biaya
 def kategorisasi_pengeluaran(pengeluaran):
     if pd.isna(pengeluaran) or pengeluaran is None:
         return 'Tidak Diketahui'
-    elif pengeluaran < 1000000:  # < 1 juta
+    elif pengeluaran < 1000000:
         return '< 1 juta'
-    elif pengeluaran < 3000000:  # 1-3 juta
+    elif pengeluaran < 3000000:
         return '1-3 juta'
-    elif pengeluaran < 5000000:  # 3-5 juta
+    elif pengeluaran < 5000000:
         return '3-5 juta'
-    elif pengeluaran < 8000000:  # 5-8 juta
+    elif pengeluaran < 8000000:
         return '5-8 juta'
-    else:  # >= 8 juta
+    else:
         return '> 8 juta'
 
-# Membuat kolom kategori pengeluaran menggunakan data yang sudah dibersihkan
 df_periode['kategori_pengeluaran'] = df_periode['pengeluaran_clean'].apply(kategorisasi_pengeluaran)
 
-# Debug: Cek distribusi kategori pengeluaran
-print("\nDistribusi kategori pengeluaran:")
+print("\nDistribusi kategori pengeluaran (per periode):")
 print(df_periode['kategori_pengeluaran'].value_counts())
+print(f"Jumlah total periode: {len(df_periode)}")
 
-# Penting: Kita perlu mengambil nilai unik per petani, bukan per periode
-# Ambil data petani unik dan kategori pengeluaran mereka
-petani_pengeluaran = df_periode[['id_petani', 'kabupaten', 'kategori_pengeluaran']].drop_duplicates(subset=['id_petani'])
+pengeluaran_by_kabupaten = pd.crosstab(df_periode['kabupaten'], df_periode['kategori_pengeluaran'])
 
-# Debug: Cek jumlah petani unik
-print(f"\nJumlah total petani unik: {len(petani_pengeluaran)}")
-print(f"Distribusi kategori pengeluaran per petani unik:")
-print(petani_pengeluaran['kategori_pengeluaran'].value_counts())
-
-# Membuat crosstab untuk pengeluaran berdasarkan kabupaten (data petani unik)
-pengeluaran_by_kabupaten = pd.crosstab(petani_pengeluaran['kabupaten'], petani_pengeluaran['kategori_pengeluaran'])
-
-# Urutkan kolom berdasarkan urutan pengeluaran
 pengeluaran_order = ['< 1 juta', '1-3 juta', '3-5 juta', '5-8 juta', '> 8 juta', 'Tidak Diketahui']
 available_pengeluaran = [p for p in pengeluaran_order if p in pengeluaran_by_kabupaten.columns]
 pengeluaran_by_kabupaten = pengeluaran_by_kabupaten[available_pengeluaran]
 
-# Gunakan warna gradasi dari hijau (rendah) ke merah (tinggi)
-colors = ['#32CD32', '#FFD700', '#FF8C00', '#DC143C', '#8B0000', '#808080']
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['yellow'], COLOR_PALETTE['orange'], 
+          COLOR_PALETTE['red'], '#8B0000', COLOR_PALETTE['gray']]
 
-# Membuat plot
-ax = pengeluaran_by_kabupaten.plot(
-    kind='bar', 
-    width=0.6,
-    color=colors[:len(available_pengeluaran)]
-)
+ax = pengeluaran_by_kabupaten.plot(kind='bar', width=0.6, color=colors[:len(available_pengeluaran)])
 
-total_count = sum([rect.get_height() for container in ax.containers for rect in container])
+total_count = df_periode['kategori_pengeluaran'].count()
 
-# Tambahkan label jumlah pada setiap bar
-# Tambahkan label jumlah pada setiap bar
 for container in ax.containers:
-    ax.bar_label(container, labels=[''] * len(container), padding=5)
-
-# Add labels with count and percentage in frames
-for container in ax.containers:
-    for i, rect in enumerate(container):
+    for rect in container:
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
-            
-            # Position for the annotation
-            x = rect.get_x() + rect.get_width()/2
-            y = height + 0.5  # Adjust this value based on your data scale
-            
-            # Create text with frame
-            ax.annotate(
-                label_text, 
-                xy=(x, y),
-                xytext=(0, 0),
-                textcoords='offset points',
-                ha='center', va='bottom',
-                bbox=dict(
-                    boxstyle="round,pad=0.3",
-                    fc='white',
-                    ec='gray',
-                    lw=1,
-                    alpha=0.9
-                ),
-                fontsize=9,
-                fontweight='bold'
-            )
+            label_text = f'{int(height)}'
+            x = rect.get_x() + rect.get_width() / 2
+            y = height + 0.5
+            ax.annotate(label_text, xy=(x, y), xytext=(0, 0), textcoords='offset points',
+                        ha='center', va='bottom',
+                        bbox=dict(boxstyle="round,pad=0.3", fc='white', ec='gray', lw=1, alpha=0.9),
+                        fontsize=9, fontweight='bold')
 
-# Percantik plot
-plt.title('Distribusi Range Pengeluaran berdasarkan Kabupaten', fontsize=14)
+plt.title('Distribusi Range Pengeluaran berdasarkan Kabupaten (Per Periode)', fontsize=14)
 plt.xlabel('Kabupaten', fontsize=12)
-plt.ylabel('Jumlah Petani', fontsize=12)  # Changed from 'Jumlah Periode Tanam'
+plt.ylabel('Jumlah Periode Panen', fontsize=12)
 plt.xticks(rotation=45)
-plt.legend(title='Range Pengeluaran', loc='upper right')
+plt.legend(
+    title='Range Pengeluaran',
+    bbox_to_anchor=(1.02, 1),
+    loc='upper left',
+    framealpha=0.9,
+    fontsize=10
+)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
-# Set y-axis
-y_max = pengeluaran_by_kabupaten.values.max()
-y_ticks = np.arange(0, min(y_max + 10, 50), 5)
-plt.yticks(y_ticks)
-plt.ylim(0, min(y_max + 5, 45))
+y_max = pengeluaran_by_kabupaten.values.max() if not pengeluaran_by_kabupaten.empty else 10
+interval = 10 if y_max > 50 else 5 if y_max > 25 else 2
+y_limit = y_max + 10
+plt.yticks(np.arange(0, y_limit + interval, interval))
+plt.ylim(0, y_limit)
 
 plt.tight_layout()
-plt.savefig('12_distribusi_pengeluaran_kabupaten_petani_unik.png', dpi=300, bbox_inches='tight')
+plt.savefig('12_distribusi_pengeluaran_kabupaten_per_periode.png', dpi=300, bbox_inches='tight')
+print("\nVisualisasi 6 (Per Periode) selesai!")
+print(f"Total periode yang divisualisasikan: {total_count}")
 
-print("\nVisualisasi 6 selesai!")
+print("SEMUA VISUALISASI SELESAI!")
+
 
 # Visualisasi 7: Distribusi Harga Jual Gabah per Kg berdasarkan Kabupaten
 plt.figure(figsize=(14, 6))
@@ -878,17 +843,13 @@ ax = harga_by_kabupaten.plot(
 # Calculate total count for percentage calculation
 total_count = sum([rect.get_height() for container in ax.containers for rect in container])
 
-# Clear existing labels
-for container in ax.containers:
-    ax.bar_label(container, labels=[''] * len(container), padding=5)
-
 # Add labels with count and percentage in frames
 for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
             percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'  # Only show count
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -945,7 +906,6 @@ plt.ylim(0, y_limit)
 plt.tight_layout()
 plt.savefig('13_distribusi_harga_jual_gabah_kabupaten_petani_unik.png', dpi=300, bbox_inches='tight')
 
-print("\nVisualisasi 7 (Fixed - No Categorization) selesai!")
 
 # Visualisasi 8: Distribusi Status Pengelolaan berdasarkan Kabupaten
 plt.figure(figsize=(12, 6))
@@ -998,7 +958,7 @@ print(f"\nStatus pengelolaan yang akan ditampilkan: {available_status}")
 
 # Gunakan warna yang meaningful untuk status pengelolaan
 # Hijau untuk milik sendiri (positif), orange untuk bagi hasil, abu-abu untuk tidak diketahui
-colors = ['#32CD32', '#FF8C00', '#808080']
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['orange'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = status_by_kabupaten.plot(
@@ -1016,8 +976,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1138,7 +1097,7 @@ print(f"\nHasil panen dijual yang akan ditampilkan: {available_hasil}")
 
 # Gunakan warna yang meaningful untuk hasil panen dijual
 # Hijau tua untuk ya seluruhnya, hijau muda untuk ya sebagian, merah untuk tidak, abu-abu untuk tidak diketahui
-colors = ['#228B22', '#32CD32', '#DC143C', '#808080']
+colors = ['#1B5E20', COLOR_PALETTE['blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = hasil_by_kabupaten.plot(
@@ -1154,8 +1113,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1279,8 +1237,8 @@ print(f"\nFrekuensi tanam yang akan ditampilkan: {available_tanam}")
 
 # Gunakan warna yang bervariasi untuk jumlah tanam
 # Gradasi dari kuning (1x) ke hijau tua (5x)
-colors = ['#FFC107', '#8BC34A', '#4CAF50', '#388E3C', '#1B5E20', '#808080']
-
+colors = [COLOR_PALETTE['yellow'], COLOR_PALETTE['lime'], COLOR_PALETTE['green'], 
+          '#2E7D32', '#1B5E20', COLOR_PALETTE['gray']]
 # Membuat plot
 ax = jml_tanam_by_kabupaten.plot(
     kind='bar', 
@@ -1299,8 +1257,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1377,48 +1334,29 @@ print(df_periode['jenis_lahan'].describe())
 print("\nUnique values jenis lahan:")
 print(df_periode['jenis_lahan'].value_counts())
 
-# Bersihkan dan standardisasi data jenis lahan
+# Bersihkan dan validasi data jenis lahan
 def clean_jenis_lahan(value):
     if pd.isna(value):
         return 'Tidak Diketahui'
     
-    # Convert to string and strip whitespace
     cleaned = str(value).strip()
     
-    # Handle empty string or dash
     if cleaned == '' or cleaned == '-':
         return 'Tidak Diketahui'
     
-    # Standardize common terms
-    if cleaned.lower() in ['sawah irigasi', 'irigasi']:
-        return 'Sawah Irigasi'
-    elif cleaned.lower() in ['sawah tadah hujan', 'tadah hujan']:
-        return 'Sawah Tadah Hujan'
-    elif cleaned.lower() in ['tegalan', 'ladang', 'tegalan/ladang']:
-        return 'Tegalan/Ladang'
+    # Validasi hanya 5 value yang diizinkan (petani hanya bisa pilih 1)
+    valid_values = [
+        'Sawah irigasi',
+        'Sawah tadah hujan', 
+        'Tegalan/ladang',
+        'Kombinasi irigasi dan tadah hujan',
+        'Kombinasi irigasi dan tegalan/ladang'
+    ]
     
-    # Split by comma and clean each component
-    if ',' in cleaned:
-        # Split and strip each component
-        components = [item.strip() for item in cleaned.split(',')]
-        
-        # Sort components to ensure consistent ordering regardless of input order
-        components.sort()
-        
-        # Check for specific combinations
-        if set(components) == set(['Sawah irigasi', 'Sawah tadah hujan']) or \
-           set(components) == set(['Irigasi', 'Tadah hujan']):
-            return 'Kombinasi Irigasi dan Tadah Hujan'
-        elif set(components) == set(['Sawah irigasi', 'Tegalan/ladang']) or \
-             set(components) == set(['Irigasi', 'Tegalan/ladang']):
-            return 'Kombinasi Irigasi dan Tegalan'
-        elif set(components) == set(['Sawah tadah hujan', 'Tegalan/ladang']) or \
-             set(components) == set(['Tadah hujan', 'Tegalan/ladang']):
-            return 'Kombinasi Tadah Hujan dan Tegalan'
-        else:
-            return 'Kombinasi Lahan Lainnya'
-    
-    return cleaned
+    if cleaned in valid_values:
+        return cleaned
+    else:
+        return 'Tidak Diketahui'
 
 # Bersihkan data jenis lahan
 df_periode['jenis_lahan_clean'] = df_periode['jenis_lahan'].apply(clean_jenis_lahan)
@@ -1439,33 +1377,39 @@ print(petani_jenis_lahan['jenis_lahan_clean'].value_counts())
 # Membuat crosstab untuk jenis lahan berdasarkan kabupaten
 lahan_by_kabupaten = pd.crosstab(petani_jenis_lahan['kabupaten'], petani_jenis_lahan['jenis_lahan_clean'])
 
-# Urutkan kolom berdasarkan preferensi
+# Urutkan kolom berdasarkan 5 value valid + tidak diketahui (HURUF KECIL!)
 lahan_order = [
-    'Sawah Irigasi', 
-    'Sawah Tadah Hujan', 
-    'Tegalan/Ladang', 
-    'Kombinasi Irigasi dan Tadah Hujan', 
-    'Kombinasi Irigasi dan Tegalan', 
-    'Kombinasi Tadah Hujan dan Tegalan',
-    'Kombinasi Lahan Lainnya',
+    'Sawah irigasi', 
+    'Sawah tadah hujan', 
+    'Tegalan/ladang', 
+    'Kombinasi irigasi dan tadah hujan',
+    'Kombinasi irigasi dan tegalan/ladang',
     'Tidak Diketahui'
 ]
 available_lahan = [l for l in lahan_order if l in lahan_by_kabupaten.columns]
-lahan_by_kabupaten = lahan_by_kabupaten[available_lahan]
 
 print(f"\nJenis lahan yang akan ditampilkan: {available_lahan}")
+print(f"Jumlah kolom yang tersedia: {len(available_lahan)}")
 
-colors = ['#FF1744',  # Bright Red
-          '#00E676',  # Bright Green
-          '#FF6D00',  # Bright Orange  
-          '#AA00FF',  # Bright Purple
-          '#00B0FF',  # Bright Blue
-          '#FFEA00',  # Bright Yellow
-          '#795548',  # Brown
-          '#424242',  # Dark Grey
-          '#E91E63']  # Hot Pink
+# Filter hanya kolom yang tersedia
+if available_lahan:
+    lahan_by_kabupaten = lahan_by_kabupaten[available_lahan]
+else:
+    print("\n⚠️ WARNING: Tidak ada kolom yang match!")
+    print(f"Kolom yang ada: {lahan_by_kabupaten.columns.tolist()}")
 
-# Membuat plot
+colors = [COLOR_PALETTE['blue'], COLOR_PALETTE['green'], COLOR_PALETTE['orange'], 
+          COLOR_PALETTE['purple'], COLOR_PALETTE['cyan'], COLOR_PALETTE['gray']]
+
+# DEBUG: Print sebelum plot
+print(f"\n=== DEBUG INFO ===")
+print(f"lahan_by_kabupaten shape: {lahan_by_kabupaten.shape}")
+print(f"lahan_by_kabupaten empty? {lahan_by_kabupaten.empty}")
+print(f"available_lahan: {available_lahan}")
+print(f"DataFrame:\n{lahan_by_kabupaten}")
+print("="*50)
+
+# LANGSUNG PLOT - JANGAN PAKAI IF
 ax = lahan_by_kabupaten.plot(
     kind='bar', 
     width=0.6,
@@ -1473,20 +1417,21 @@ ax = lahan_by_kabupaten.plot(
 )
 
 total_count = petani_jenis_lahan['jenis_lahan_clean'].count()
+
+# Clear existing labels
 for container in ax.containers:
     ax.bar_label(container, labels=[''] * len(container), padding=5)
 
-# Add labels with count and percentage in frames
+# Add labels with count in frames
 for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
-            y = height + 0.5  # Adjust this value based on your data scale
+            y = height + 0.5
             
             # Create text with frame
             ax.annotate(
@@ -1509,15 +1454,17 @@ for container in ax.containers:
 # Percantik plot
 plt.title('Distribusi Jenis Lahan berdasarkan Kabupaten', fontsize=14)
 plt.xlabel('Kabupaten', fontsize=12)
-plt.ylabel('Jumlah Petani', fontsize=12)  # Note: Jumlah Petani, bukan Periode
+plt.ylabel('Jumlah Petani', fontsize=12)
 plt.xticks(rotation=45)
 
 # Place legend outside the plot to the right to avoid covering bars
-plt.legend(loc='upper right',
-           bbox_to_anchor=(0.98, 0.98),  # Slight offset from the corner
-           framealpha=0.9,
-           ncol=1,
-           fontsize=9)
+plt.legend(
+    title='Jenis Lahan',
+    loc='upper left',
+    bbox_to_anchor=(1.02, 1),
+    framealpha=0.9,
+    fontsize=9
+)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
 # Dynamic Y-axis scaling
@@ -1601,8 +1548,7 @@ print(f"\nStatus kecukupan air yang akan ditampilkan: {available_air}")
 
 # Gunakan warna yang meaningful untuk kecukupan air
 # Biru untuk mencukupi, merah untuk tidak mencukupi, abu-abu untuk tidak diketahui
-colors = ['#1E88E5', '#E53935', '#808080']
-
+colors = [COLOR_PALETTE['blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 # Membuat plot
 ax = air_by_kabupaten.plot(
     kind='bar', 
@@ -1621,9 +1567,8 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
-            
+            label_text = f'{int(height)}'
+
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
             y = height + 0.5  # Adjust this value based on your data scale
@@ -1745,7 +1690,7 @@ print(f"\nStatus penggunaan pupuk yang akan ditampilkan: {available_pemupukan}")
 
 # Gunakan warna yang meaningful untuk penggunaan pupuk
 # Hijau untuk ada pemupukan, merah untuk tidak ada pemupukan, abu-abu untuk tidak diketahui
-colors = ['#4CAF50', '#E53935', '#808080']
+colors = [COLOR_PALETTE['blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = pemupukan_by_kabupaten.plot(
@@ -1765,8 +1710,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1908,8 +1852,9 @@ print(f"\nCara pengendalian gulma yang akan ditampilkan: {available_gulma}")
 
 # Gunakan warna yang bervariasi untuk cara pengendalian gulma
 # Palette yang membedakan antar metode dengan jelas
-colors = ['#4CAF50', '#E91E63', '#9C27B0', '#2196F3', '#FF9800', '#795548', '#F44336', '#808080']
-
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['pink'], COLOR_PALETTE['purple'], 
+          COLOR_PALETTE['blue'], COLOR_PALETTE['amber'], COLOR_PALETTE['brown'], 
+          COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 # Membuat plot
 ax = gulma_by_kabupaten.plot(
     kind='bar', 
@@ -1928,8 +1873,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2

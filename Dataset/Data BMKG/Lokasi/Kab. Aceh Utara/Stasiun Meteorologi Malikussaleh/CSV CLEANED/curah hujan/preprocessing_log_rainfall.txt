@@ -1,0 +1,568 @@
+📂 Loading data dari: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV/BMKG_Data_All.csv
+✅ Data berhasil dimuat: 7915 records
+📋 Kolom tersedia: ['Date', 'Year', 'month', 'day', 'TN', 'TX', 'TAVG', 'RH_AVG', 'RR', 'SS', 'FF_X', 'DDD_X', 'FF_AVG', 'DDD_CAR']
+
+🔄 FASE 1: Loading dan Persiapan Data
+Data loaded: 7915 records from 2005-01-01 00:00:00 to 2025-09-30 00:00:00
+
+🔄 FASE 2: Analisis Missing Values
+=== ANALISIS MISSING VALUES DAN NILAI KHUSUS ===
+Total records: 7915
+Nilai 8888 (tidak terukur): 841 (10.6%)
+Missing/NaN values: 917 (11.6%)
+Zero values (tidak hujan): 3461 (43.7%)
+
+=== MISSING VALUES PER TAHUN ===
+      Missing_8888  Missing_NaN  Zero_Values  Total_Records  Missing_Percentage
+Year                                                                           
+2005            40            0          214            365           10.958904
+2006            34            0          215            365            9.315068
+2007            52            0          187            365           14.246575
+2008            47            0          219            366           12.841530
+2009            34            0          217            365            9.315068
+2010            53            0          190            365           14.520548
+2011            57            0          186            365           15.616438
+2012             0          335           13             31         1080.645161
+2013            76          160            0            205          115.121951
+2014            59          199            2            166          155.421687
+2015            45           45          149            319           28.213166
+2016            38            8          195            358           12.849162
+2017            40            3          159            362           11.878453
+2018            40           32          165            332           21.686747
+2019            27           54          158            308           26.298701
+2020            33           55          140            351           25.071225
+2021            52            4          322            619            9.046850
+2022            26            4          175            361            8.310249
+2023            33           13          204            396           11.616162
+2024            32            5          195            361           10.249307
+2025            23            0          156            273            8.424908
+
+🔄 FASE 3: Data Cleaning
+
+=== CLEANING DATA CURAH HUJAN ===
+Estimasi 841 data tidak terukur (8888) di LOG DOMAIN...
+  → 841 nilai berhasil diestimasi di log domain
+  → Range (log): -4.600 - 3.024
+Outlier ekstrem (>150mm): 5 data
+  Dates dengan outlier:
+    2015-11-25 00:00:00: 181.7mm
+    2021-06-05 00:00:00: 165.2mm
+    2022-10-05 00:00:00: 170.1mm
+    2023-12-25 00:00:00: 164.7mm
+    2025-03-09 00:00:00: 252.0mm
+
+Ringkasan data setelah cleaning:
+  Total data valid: 6157
+  Mean: 5.10mm
+  Median: 0.00mm
+  Min: 0.00mm
+  Max: 252.00mm
+
+Distribusi kategori hujan:
+  Berawan (0–0.4 mm): 3703 (60.1%)
+  Hujan ringan (0.5–19.9 mm): 1970 (32.0%)
+  Hujan sedang (20–49.9 mm): 357 (5.8%)
+  Hujan lebat (50–99.9 mm): 110 (1.8%)
+  Hujan sangat lebat (100–150 mm): 12 (0.2%)
+  Hujan ekstrem (>150 mm): 5 (0.1%)
+✅ Data cleaning selesai
+
+
+🔄 FASE 4: Transformasi ke Log Domain
+
+=== TRANSFORMASI KE LOG DOMAIN ===
+Statistik SEBELUM transformasi (domain mm):
+  Mean: 5.10 mm
+  Median: 0.00 mm
+  Std: 13.59 mm
+  Skewness: 5.60
+  Min: 0.00 mm
+  Max: 252.00 mm
+  ✅ Used pre-estimated log values for 841 data (8888)
+
+Statistik SETELAH transformasi (domain log):
+  Mean: -1.631
+  Median: -3.188
+  Std: 3.150
+  Skewness: 0.303
+  Min: -4.605
+  Max: 5.529
+
+✅ Skewness reduction: 5.057
+   (5.602 → 0.545)
+
+📊 Zero-inflation analysis:
+  Zero values: 3461 (43.7%)
+  log(0 + 0.01) = -4.605
+  Range preserved: -4.605 to 5.529
+
+✅ Transformasi selesai. Imputasi akan dilakukan di log-space.
+
+🔄 FASE 5: Imputasi di Log Domain
+
+=== IMPUTASI DI LOG DOMAIN ===
+Memproses 917 missing values di log domain...
+  → Gap length 328: 328 values imputed using lowess_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 11: 11 values imputed using monthly_smooth_log
+  → Gap length 7: 7 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 6: 6 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 7: 7 values imputed using monthly_smooth_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 8: 8 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 7: 7 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 10: 10 values imputed using monthly_smooth_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 22: 22 values imputed using lowess_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 15: 15 values imputed using lowess_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 10: 10 values imputed using monthly_smooth_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 14: 14 values imputed using monthly_smooth_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 7: 7 values imputed using monthly_smooth_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 13: 13 values imputed using monthly_smooth_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 8: 8 values imputed using monthly_smooth_log
+  → Gap length 9: 9 values imputed using monthly_smooth_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 5: 5 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 4: 4 values imputed using monthly_smooth_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 3: 3 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 2: 2 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+  → Gap length 1: 1 values imputed using cubic_spline_log
+
+✅ 917 values berhasil diimputasi di log domain
+🔧 Dynamic cap calculated: 200.0mm (P99.9 of original data)
+
+📊 Metode imputasi yang digunakan:
+  • cubic_spline_log: 368 values
+  • lowess_log: 365 values
+  • monthly_smooth_log: 184 values
+
+📉 Statistik final (LOG domain):
+  • Total data: 7915
+  • Mean: -1.551
+  • Median: -1.561
+  • Std: 3.088
+  • Missing: 0
+
+📉 Statistik final (MM domain):
+  • Total data: 7915
+  • Mean: 4.92 mm
+  • Median: 0.20 mm
+  • Std: 13.84 mm
+  • Deviasi dari original: 0.18 mm
+
+🔄 FASE 6: Deteksi Outlier di Log Domain
+
+=== DETEKSI OUTLIER DI LOG DOMAIN ===
+📊 Threshold P95 (log domain): 3.219
+📊 Threshold P95 (mm domain): 25.00 mm
+✅ Total outliers flagged: 395 dari 7915 data (4.99%)
+
+📊 FINAL MM STATISTICS (after safety fixes):
+   • Mean: 4.92 mm
+   • Median: 0.20 mm
+   • Max: 200.00 mm
+   • Skewness: 6.73
+   ✅ Skewness significantly improved!
+
+📋 Contoh outliers terdeteksi:
+  • 2005-01-18 00:00:00: log=3.402, mm=30.00
+  • 2005-01-30 00:00:00: log=4.419, mm=83.00
+  • 2005-03-02 00:00:00: log=3.497, mm=33.00
+  • 2005-03-16 00:00:00: log=3.556, mm=35.00
+  • 2005-04-06 00:00:00: log=3.258, mm=26.00
+
+💡 Outlier detection di log domain dengan safety bounds applied
+
+🔄 FASE 7: Visualisasi Komprehensif
+📁 Direktori /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV CLEANED/curah hujan/rainfall_plots dibuat
+
+=== MEMBUAT PLOTS INDIVIDUAL ===
+🔄 Plot #1: Time Series Before & After Preprocessing
+✅ 01_time_series_before_after.png saved
+🔄 Plot #2: Boxplot Bulanan Before & After Outlier Treatment
+🔄 Plot #2: Boxplot Bulanan Original vs Log-Transformed Data
+✅ 02_boxplot_original_vs_log_processed.png saved
+🔄 Plot #3: Pergeseran Pola Curah Hujan Bulanan (Des–Nov)
+✅ 03_pergeseran_curah_hujan.png saved
+
+🔄 FASE 8: Laporan Ringkasan
+
+============================================================
+LAPORAN RINGKASAN PREPROCESSING CURAH HUJAN
+============================================================
+📊 DATASET OVERVIEW:
+   • Total records: 7,915
+   • Periode: 2005-01-01 00:00:00 s/d 2025-09-30 00:00:00
+   • Rentang tahun: 21 tahun
+
+🔍 DATA QUALITY:
+   • Missing values (8888): 841 (10.6%)
+   • Missing values (NaN): 917
+   • Zero values: 3,461
+   • Valid data: 6,157
+
+📉 STATISTIK RR_original (sebelum imputasi):
+   • Count: 6,157
+   • Mean: 5.10 mm
+   • Std Dev: 13.59 mm
+   • Min: 0.00 mm
+   • Q1 (25%): 0.00 mm
+   • Median (Q2): 0.00 mm
+   • Q3 (75%): 3.20 mm
+   • Max: 252.00 mm
+   • Skewness: 5.60
+
+📉 STATISTIK RR_imputed (setelah imputasi):
+   • Count: 7,915
+   • Mean: 4.92 mm
+   • Std Dev: 13.84 mm
+   • Min: 0.00 mm
+   • Q1 (25%): 0.00 mm
+   • Median (Q2): 0.20 mm
+   • Q3 (75%): 3.60 mm
+   • Max: 200.00 mm
+   • Skewness: 6.73
+
+📊 PERBANDINGAN FAIR (Same Data Points):
+   • Sample size: 6,157 (identical data points)
+   • Mean: 5.10 → 5.09 mm (Δ: 0.01)
+   • Std Dev: 13.59 → 13.45 mm
+   • Skewness: 5.60 → 5.27
+   • ✅ Skewness improved by 6.0%
+   • ✅ Mean well preserved (change: 0.2%)
+
+📈 IMPACT ANALISIS IMPUTASI:
+   • Data 8888 yang diestimasi: 841
+   • Missing values yang diimputasi: 917
+   • Total data coverage improvement: 22.2%
+   • Final data completeness: 100.0%
+
+⚠️  OUTLIER DETECTION:
+   • Log domain P95 method: 0 outliers
+   • Threshold (mm): 0.00 mm
+   • Outlier percentage: 0.00%
+
+✅ PREPROCESSING STEPS COMPLETED:
+   • ✓ Data cleaning & special values handling
+   • ✓ Log+0.01 transformation for skewness reduction
+   • ✓ Advanced imputation in log domain
+   • ✓ Outlier detection with safety bounds
+   • ✓ Visualisasi komprehensif
+
+📋 REKOMENDASI UNTUK FORECASTING:
+   • ⚠️  Missing values sedang (22.2%) - gunakan imputasi hati-hati
+   • ✅ Skewness acceptable (6.73) - cocok untuk rainfall data
+
+🎯 SIAP UNTUK HOLT-WINTERS FORECASTING!
+============================================================
+
+📊 KOLOM HASIL PREPROCESSING:
+   • Date: 7,915 non-null values
+   • Year: 7,915 non-null values
+   • month: 7,915 non-null values
+   • day: 7,915 non-null values
+   • RR_original: 6,998 non-null values
+   • RR_imputed: 7,915 non-null values
+   • is_outlier: 7,915 non-null values
+
+🎯 REKOMENDASI UNTUK HOLT-WINTERS:
+   • Data tersedia untuk forecasting: 7,915 records
+   • Seasonal strength: 13.26
+
+🎉 PREPROCESSING SELESAI!
+📁 File output: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV CLEANED/curah hujan/preprocessed_rainfall_data.csv

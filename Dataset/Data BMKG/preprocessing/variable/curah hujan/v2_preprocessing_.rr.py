@@ -561,7 +561,7 @@ def main():
     sys.stdout = open("v2_preprocessing_log_rainfall.txt", "w")
 
     try:
-        data_path = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"  # atau "data_bmkg.xlsx"
+        data_path = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"  # atau "data_bmkg.xlsx"
         
         # Load data
         print(f"📂 Loading data dari: {data_path}")

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import seaborn as sns
+import os
 from scipy import stats
 from scipy.interpolate import interp1d
 import warnings
@@ -13,11 +14,17 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 
 class Temperature_Analyzer:
-    def __init__(self, data_path):
+    def __init__(self, data_path, output_dir=None):
         self.data_path = data_path
+        self.output_dir = output_dir or os.path.dirname(data_path)
         self.data = None
         self.tn_stats = {}
         self.tx_stats = {}
+        
+        # Create output directory if it doesn't exist
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+            print(f"📁 Created output directory: {self.output_dir}")
 
     def load_data(self):
         print("🌡️  TEMPERATURE STATISTICS ANALYZER - DATASET BMKG")
@@ -190,6 +197,204 @@ class Temperature_Analyzer:
             print(f"   • {category}: {count:,} ({percentage:.1f}%)")
 
         return stats_dict
+    
+    def calculate_tavg_statistics_after_imputation(self):
+        """
+        Menghitung statistik deskriptif lengkap untuk TAVG setelah proses imputasi dan outlier treatment
+        """
+        print(f"\n=== STATISTIK DESKRIPTIF TAVG SETELAH IMPUTASI ===")
+        
+        if 'TAVG' not in self.data.columns:
+            print("❌ Kolom TAVG tidak ditemukan! Jalankan calculate_and_validate_tavg() terlebih dahulu")
+            return None
+        
+        # 1. ANALISIS DATA KOSONG/MISSING
+        total_records = len(self.data)
+        
+        # Identifikasi missing values (NaN dan kode error BMKG)
+        missing_mask = (
+            self.data['TAVG'].isna() |
+            (self.data['TAVG'] == 9999) |
+            (self.data['TAVG'] == 8888) |
+            (self.data['TAVG'] == -999) |
+            (self.data['TAVG'] == -9999)
+        )
+        
+        missing_count = missing_mask.sum()
+        valid_count = total_records - missing_count
+        
+        # 2. FILTER DATA VALID UNTUK STATISTIK
+        valid_tavg = self.data[~missing_mask]['TAVG']
+        
+        if len(valid_tavg) == 0:
+            print("❌ Tidak ada data TAVG valid untuk analisis statistik")
+            return None
+        
+        # 3. HITUNG STATISTIK DESKRIPTIF
+        stats_dict = {
+            'Jumlah Data': valid_count,
+            'Jumlah Data Kosong': missing_count,
+            'Minimum': valid_tavg.min(),
+            'Q1': valid_tavg.quantile(0.25),
+            'Median': valid_tavg.median(),
+            'Mean': valid_tavg.mean(), 
+            'Q3': valid_tavg.quantile(0.75),
+            'Maksimum': valid_tavg.max(),
+            'Standar Deviasi': valid_tavg.std()
+        }
+        
+        # 4. TAMPILKAN HASIL DALAM TABEL RAPI
+        print(f"\n📈 TABEL STATISTIK DESKRIPTIF TAVG (SETELAH IMPUTASI):")
+        print("-" * 45)
+        print(f"{'Statistik':<20} {'Nilai':<20}")
+        print("-" * 45)
+        
+        for stat_name, value in stats_dict.items():
+            if stat_name in ['Jumlah Data', 'Jumlah Data Kosong']:
+                percentage = (value / total_records * 100) if total_records > 0 else 0
+                print(f"{stat_name:<20} {int(value):,} ({percentage:.1f}%)")
+            else:
+                print(f"{stat_name:<20} {value:.2f}°C")
+        
+        print("-" * 45)
+        
+        # 5. INFORMASI TAMBAHAN DAN VALIDASI KUALITAS
+        print(f"\n📊 INFORMASI TAMBAHAN TAVG:")
+        
+        # Range dan variabilitas
+        range_val = stats_dict['Maksimum'] - stats_dict['Minimum']
+        iqr = stats_dict['Q3'] - stats_dict['Q1']
+        cv = (stats_dict['Standar Deviasi'] / stats_dict['Mean']) * 100 if stats_dict['Mean'] != 0 else 0
+        
+        print(f"   • Range: {range_val:.2f}°C ({stats_dict['Minimum']:.1f}°C - {stats_dict['Maksimum']:.1f}°C)")
+        print(f"   • IQR (Interquartile Range): {iqr:.2f}°C")
+        print(f"   • Coefficient of Variation: {cv:.2f}%")
+        
+        # Deteksi outliers potensial setelah treatment
+        lower_bound = stats_dict['Q1'] - 1.5 * iqr
+        upper_bound = stats_dict['Q3'] + 1.5 * iqr
+        potential_outliers = valid_tavg[(valid_tavg < lower_bound) | (valid_tavg > upper_bound)]
+        
+        print(f"   • Batas outlier (IQR): {lower_bound:.2f}°C - {upper_bound:.2f}°C")
+        print(f"   • Outliers potensial tersisa: {len(potential_outliers)} ({len(potential_outliers)/len(valid_tavg)*100:.2f}%)")
+        
+        # 6. KLASIFIKASI TEMPERATURE UNTUK KONTEKS IKLIM INDONESIA
+        print(f"\n🌡️  DISTRIBUSI KATEGORI TAVG (KONTEKS IKLIM TROPIS):")
+        
+        temp_categories = {
+            'Sejuk (<24°C)': valid_tavg < 24,
+            'Normal (24-27°C)': (valid_tavg >= 24) & (valid_tavg < 27),
+            'Hangat (27-30°C)': (valid_tavg >= 27) & (valid_tavg < 30), 
+            'Panas (30-33°C)': (valid_tavg >= 30) & (valid_tavg < 33),
+            'Sangat Panas (≥33°C)': valid_tavg >= 33
+        }
+        
+        for category, mask in temp_categories.items():
+            count = mask.sum()
+            percentage = count / len(valid_tavg) * 100
+            print(f"   • {category}: {count:,} ({percentage:.1f}%)")
+        
+        # 7. VALIDASI KUALITAS DATA SETELAH PREPROCESSING
+        print(f"\n✅ VALIDASI KUALITAS DATA TAVG:")
+        
+        # Data completeness
+        completeness = (valid_count / total_records) * 100
+        if completeness >= 95:
+            completeness_status = "Excellent"
+        elif completeness >= 90:
+            completeness_status = "Good" 
+        elif completeness >= 80:
+            completeness_status = "Acceptable"
+        else:
+            completeness_status = "Poor"
+        
+        print(f"   • Data Completeness: {completeness:.1f}% ({completeness_status})")
+        
+        # Temperature range validation
+        if 22 <= stats_dict['Mean'] <= 32 and 20 <= stats_dict['Minimum'] <= 36 and stats_dict['Maksimum'] <= 38:
+            range_status = "Valid (dalam range iklim tropis)"
+        else:
+            range_status = "Perlu review (di luar range normal)"
+        
+        print(f"   • Temperature Range: {range_status}")
+        
+        # Variability check
+        if 1 <= stats_dict['Standar Deviasi'] <= 3:
+            variability_status = "Normal (variabilitas wajar)"
+        elif stats_dict['Standar Deviasi'] < 1:
+            variability_status = "Rendah (mungkin terlalu uniform)"
+        else:
+            variability_status = "Tinggi (variabilitas besar)"
+        
+        print(f"   • Variabilitas: {variability_status}")
+        
+        # 8. PERBANDINGAN DENGAN TN DAN TX (JIKA TERSEDIA)
+        if 'TN' in self.data.columns and 'TX' in self.data.columns:
+            print(f"\n🔄 VALIDASI HUBUNGAN TN-TAVG-TX:")
+            
+            # Filter data yang valid untuk semua kolom
+            valid_all_mask = (
+                self.data['TN'].notna() & self.data['TX'].notna() & (~missing_mask) &
+                (self.data['TN'] != 9999) & (self.data['TX'] != 9999) &
+                (self.data['TN'] != 8888) & (self.data['TX'] != 8888)
+            )
+            
+            if valid_all_mask.sum() > 0:
+                valid_all_data = self.data[valid_all_mask]
+                
+                # Check logical relationship: TN < TAVG < TX
+                tn_tavg_violations = (valid_all_data['TN'] >= valid_all_data['TAVG']).sum()
+                tavg_tx_violations = (valid_all_data['TAVG'] >= valid_all_data['TX']).sum()
+                
+                print(f"   • Records dengan TN ≥ TAVG: {tn_tavg_violations} ({tn_tavg_violations/len(valid_all_data)*100:.2f}%)")
+                print(f"   • Records dengan TAVG ≥ TX: {tavg_tx_violations} ({tavg_tx_violations/len(valid_all_data)*100:.2f}%)")
+                
+                # Check if TAVG is approximately (TN+TX)/2
+                calculated_tavg = (valid_all_data['TN'] + valid_all_data['TX']) / 2
+                tavg_diff = (valid_all_data['TAVG'] - calculated_tavg).abs()
+                avg_diff = tavg_diff.mean()
+                
+                print(f"   • Rata-rata deviasi dari (TN+TX)/2: {avg_diff:.3f}°C")
+                
+                if avg_diff < 0.5:
+                    calc_status = "Excellent consistency"
+                elif avg_diff < 1.0:
+                    calc_status = "Good consistency"
+                else:
+                    calc_status = "Needs review"
+                    
+                print(f"   • Status konsistensi: {calc_status}")
+        
+        # 9. SUMMARY AKHIR
+        print(f"\n🎯 RINGKASAN STATISTIK TAVG:")
+        print(f"   • Dataset: {total_records:,} records total")
+        print(f"   • Valid data: {valid_count:,} ({completeness:.1f}%)")
+        print(f"   • Temperature range: {stats_dict['Minimum']:.1f}°C - {stats_dict['Maksimum']:.1f}°C")
+        print(f"   • Central tendency: Mean={stats_dict['Mean']:.1f}°C, Median={stats_dict['Median']:.1f}°C")
+        print(f"   • Variability: SD={stats_dict['Standar Deviasi']:.2f}°C, CV={cv:.1f}%")
+        
+        if len(potential_outliers) == 0:
+            print(f"   • Quality: Excellent (no outliers remaining)")
+        elif len(potential_outliers) < 10:
+            print(f"   • Quality: Good (minimal outliers: {len(potential_outliers)})")
+        else:
+            print(f"   • Quality: Acceptable ({len(potential_outliers)} outliers remain)")
+        
+        print(f"\n✅ Analisis statistik TAVG setelah imputasi selesai!")
+        
+        return {
+            'statistics': stats_dict,
+            'quality_metrics': {
+                'completeness': completeness,
+                'completeness_status': completeness_status,
+                'range_status': range_status,
+                'variability_status': variability_status,
+                'outliers_remaining': len(potential_outliers),
+                'total_records': total_records,
+                'valid_records': valid_count
+            },
+            'temperature_distribution': {cat: mask.sum() for cat, mask in temp_categories.items()}
+        }
 
     def compare_tn_tx(self):
         """
@@ -451,7 +656,7 @@ class Temperature_Analyzer:
             return
         
         # Hitung statistik bulanan untuk semua kolom temperature
-        monthly_stats = valid_data.groupby('Month')[available_columns].agg([
+        monthly_stats = valid_data.groupby('month')[available_columns].agg([
             'count', 'mean', 'median', 'std', 'min', 'max'
         ]).round(2)
         
@@ -602,7 +807,7 @@ class Temperature_Analyzer:
         valid_data = self.data[~missing_mask].copy()
         
         # Monthly statistics untuk seasonal awareness
-        monthly_stats = valid_data.groupby('Month')[column_name].agg([
+        monthly_stats = valid_data.groupby('month')[column_name].agg([
             'mean', 'std', 'min', 'max', 'count'
         ]).to_dict('index')
         
@@ -626,7 +831,7 @@ class Temperature_Analyzer:
         
         for idx in missing_indices:
             date = self.data.loc[idx, 'Date']
-            month = self.data.loc[idx, 'Month']
+            month = self.data.loc[idx, 'month']
             
             print(f"\n📅 Imputasi {column_name} untuk: {date.strftime('%Y-%m-%d')} (Bulan {month})")
             
@@ -824,11 +1029,747 @@ class Temperature_Analyzer:
         print(f"   • Batas atas : {upper_bound:.2f}°C")
         
         return outliers
+    
+    def detect_outliers_domain_aware(self, column_name):
+        """
+        Deteksi outlier temperature dengan pendekatan domain-aware
+        Menggabungkan validasi fisik, IQR seasonal, dan cross-variable validation
+        """
+        print(f"\n=== DETEKSI OUTLIER {column_name.upper()} (DOMAIN-AWARE) ===")
+        
+        analysis = self.analyze_missing_values(column_name, show_details=False)
+        if analysis is None or len(analysis['valid_data']) == 0:
+            print("⚠️ Tidak ada data valid untuk deteksi outlier")
+            return None
+        
+        valid_data = analysis['valid_data']
+        
+        # Step 1: Domain Validation (Physical Bounds for Tropical Indonesia)
+        print("🔍 Step 1: Validasi Domain Fisik")
+        
+        if column_name.upper() == 'TN':
+            # Minimum temperature bounds for tropical coastal Indonesia
+            physical_lower = 15.0  # Extremely rare below this
+            physical_upper = 30.0  # Very unusual above this for minimum temp
+            normal_range = "18-28°C"
+        elif column_name.upper() == 'TX':
+            # Maximum temperature bounds for tropical coastal Indonesia  
+            physical_lower = 25.0  # Extremely rare below this
+            physical_upper = 42.0  # Very unusual above this for maximum temp
+            normal_range = "28-38°C"
+        else:  # TAVG
+            physical_lower = 20.0
+            physical_upper = 36.0
+            normal_range = "22-34°C"
+        
+        # Get full dataset for this column
+        full_data = self.data[column_name].copy()
+        
+        physical_outliers = (
+            (full_data < physical_lower) | 
+            (full_data > physical_upper) |
+            (full_data == 999) |
+            (full_data == 9999) |
+            (full_data == -999) |
+            (full_data == -9999)
+        ) & full_data.notna()
+        
+        physical_count = physical_outliers.sum()
+        print(f"   • Physical outliers (di luar {normal_range} atau kode error): {physical_count}")
+        
+        if physical_count > 0:
+            outlier_values = full_data[physical_outliers].unique()
+            print(f"   • Nilai physical outliers: {outlier_values}")
+        
+        # Step 2: Seasonal IQR Detection
+        print("\n🔍 Step 2: Deteksi IQR dengan Seasonal Adjustment")
+        
+        # Add season column if not exists
+        if 'season' not in self.data.columns:
+            self.data['season'] = self.data['month'].map({
+                12: 'DJF', 1: 'DJF', 2: 'DJF',  # Wet season
+                3: 'MAM', 4: 'MAM', 5: 'MAM',   # Transition 1
+                6: 'JJA', 7: 'JJA', 8: 'JJA',   # Dry season
+                9: 'SON', 10: 'SON', 11: 'SON'  # Transition 2
+            })
+        
+        seasonal_outliers = pd.Series(False, index=self.data.index)
+        seasonal_stats = {}
+        
+        for season in ['DJF', 'MAM', 'JJA', 'SON']:
+            season_mask = (self.data['season'] == season) & (full_data.notna()) & (~physical_outliers)
+            season_data = full_data[season_mask]
+            
+            if len(season_data) < 10:  # Skip if insufficient data
+                continue
+                
+            q1 = season_data.quantile(0.25)
+            q3 = season_data.quantile(0.75)
+            iqr = q3 - q1
+            
+            # IQR bounds with 1.5 factor (standard for temperature)
+            lower_bound = q1 - 1.5 * iqr
+            upper_bound = q3 + 1.5 * iqr
+            
+            # But respect physical bounds
+            lower_bound = max(lower_bound, physical_lower + 1)
+            upper_bound = min(upper_bound, physical_upper - 1)
+            
+            season_outliers_mask = (
+                (full_data < lower_bound) |
+                (full_data > upper_bound)
+            ) & season_mask
+            
+            seasonal_outliers = seasonal_outliers | season_outliers_mask
+            
+            seasonal_stats[season] = {
+                'count': len(season_data),
+                'q1': q1,
+                'q3': q3,
+                'iqr': iqr,
+                'lower_bound': lower_bound,
+                'upper_bound': upper_bound,
+                'outliers': season_outliers_mask.sum()
+            }
+            
+            print(f"   • {season}: Q1={q1:.1f}°C, Q3={q3:.1f}°C, IQR={iqr:.1f}°C")
+            print(f"     Bounds: {lower_bound:.1f}°C - {upper_bound:.1f}°C, Outliers: {season_outliers_mask.sum()}")
+        
+        # Step 3: Cross-Variable Validation (TN vs TX relationship)
+        print("\n🔍 Step 3: Cross-Variable Validation")
+        
+        cross_variable_outliers = pd.Series(False, index=self.data.index)
+        
+        if column_name.upper() in ['TN', 'TX'] and 'TN' in self.data.columns and 'TX' in self.data.columns:
+            # Check TN < TX relationship and diurnal range
+            valid_both_mask = (
+                self.data['TN'].notna() & self.data['TX'].notna() &
+                (~physical_outliers) & 
+                (self.data['TN'] != 9999) & (self.data['TX'] != 9999) &
+                (self.data['TN'] != 8888) & (self.data['TX'] != 8888)
+            )
+            
+            if valid_both_mask.sum() > 0:
+                valid_both = self.data[valid_both_mask]
+                
+                # Rule 1: TN must be less than TX
+                tn_greater_tx = (valid_both['TN'] >= valid_both['TX'])
+                
+                # Rule 2: Diurnal range should be between 3-12°C for tropical regions
+                diurnal_range = valid_both['TX'] - valid_both['TN']
+                abnormal_diurnal = (diurnal_range < 3) | (diurnal_range > 15)
+                
+                # Rule 3: Extreme temperature combinations
+                if column_name.upper() == 'TN':
+                    # Very high TN with normal TX (unusual combination)
+                    high_tn_normal_tx = (valid_both['TN'] > 27) & (valid_both['TX'] < 31)
+                    cross_var_mask = tn_greater_tx | abnormal_diurnal | high_tn_normal_tx
+                else:  # TX
+                    # Very low TX with normal TN (unusual combination)
+                    low_tx_normal_tn = (valid_both['TX'] < 29) & (valid_both['TN'] > 24)
+                    cross_var_mask = tn_greater_tx | abnormal_diurnal | low_tx_normal_tn
+                
+                # Map back to full dataset
+                cross_variable_outliers.loc[valid_both_mask] = cross_var_mask
+                
+                cross_count = cross_variable_outliers.sum()
+                print(f"   • Cross-variable outliers: {cross_count}")
+                if cross_count > 0:
+                    print(f"     - TN ≥ TX violations: {tn_greater_tx.sum()}")
+                    print(f"     - Abnormal diurnal range: {abnormal_diurnal.sum()}")
+        else:
+            print("   • Cross-variable validation tidak tersedia (missing TN/TX data)")
+        
+        # Step 4: Combine all detections
+        print("\n📊 Step 4: Ringkasan Deteksi Outlier")
+        
+        # Flag outliers in dataset
+        self.data[f'is_physical_outlier_{column_name}'] = physical_outliers
+        self.data[f'is_statistical_outlier_{column_name}'] = seasonal_outliers
+        self.data[f'is_cross_variable_outlier_{column_name}'] = cross_variable_outliers
+        
+        # Combined outliers (any type)
+        combined_outliers = physical_outliers | seasonal_outliers | cross_variable_outliers
+        self.data[f'is_outlier_{column_name}'] = combined_outliers
+        
+        total_outliers = combined_outliers.sum()
+        outlier_percentage = total_outliers / len(self.data) * 100
+        
+        print(f"   • Total outliers terdeteksi: {total_outliers} ({outlier_percentage:.2f}%)")
+        print(f"     - Physical: {physical_count}")
+        print(f"     - Statistical (IQR): {seasonal_outliers.sum()}")
+        print(f"     - Cross-variable: {cross_variable_outliers.sum()}")
+        
+        # Store outlier statistics
+        outlier_stats = {
+            'seasonal_stats': seasonal_stats,
+            'total_outliers': total_outliers,
+            'physical_outliers': physical_count,
+            'statistical_outliers': seasonal_outliers.sum(),
+            'cross_variable_outliers': cross_variable_outliers.sum(),
+            'physical_bounds': (physical_lower, physical_upper)
+        }
+        
+        # Show sample outliers
+        if total_outliers > 0:
+            print(f"\n📋 Sample outlier terdeteksi (5 teratas):")
+            outlier_samples = self.data[combined_outliers][
+                ['Date', column_name, f'is_physical_outlier_{column_name}', 
+                f'is_statistical_outlier_{column_name}', f'is_cross_variable_outlier_{column_name}']
+            ].head()
+            print(outlier_samples.to_string(index=False))
+        
+        print(f"\n✅ Deteksi outlier {column_name} selesai.")
+        
+        return outlier_stats
 
-    def save_results(self, output_path="preprocessing_log_temp.txt"):
+    def treat_outliers_gentle_capping(self, column_name):
         """
-        Simpan hasil analisis ke file
+        Treatment outlier temperature dengan pendekatan gentle capping
+        Mempertahankan pola musiman dan relationship antar variabel temperature
         """
+        print(f"\n=== TREATMENT OUTLIER {column_name.upper()} (GENTLE CAPPING) ===")
+        
+        # Check if outlier detection has been run
+        if f'is_outlier_{column_name}' not in self.data.columns:
+            print("⚠️ Jalankan detect_outliers_domain_aware() terlebih dahulu")
+            return False
+        
+        outlier_mask = self.data[f'is_outlier_{column_name}'] == True
+        total_outliers = outlier_mask.sum()
+        
+        if total_outliers == 0:
+            print("✅ Tidak ada outlier yang perlu di-treatment")
+            return True
+        
+        # Backup original data
+        self.data[f'{column_name}_original'] = self.data[column_name].copy()
+        treated_count = 0
+        
+        print(f"🔧 Memproses {total_outliers} outlier...")
+        
+        # Get seasonal stats if available from detection
+        seasonal_stats = {}
+        if hasattr(self, 'seasonal_stats'):
+            seasonal_stats = self.seasonal_stats
+        else:
+            # Recalculate if needed
+            for season in ['DJF', 'MAM', 'JJA', 'SON']:
+                season_mask = (self.data['season'] == season) & self.data[column_name].notna()
+                if season_mask.sum() > 10:
+                    season_data = self.data.loc[season_mask, column_name]
+                    seasonal_stats[season] = {
+                        'mean': season_data.mean(),
+                        'std': season_data.std(),
+                        'q10': season_data.quantile(0.10),
+                        'q90': season_data.quantile(0.90)
+                    }
+        
+        # Step 1: Handle Physical Outliers (highest priority)
+        physical_mask = self.data[f'is_physical_outlier_{column_name}'] == True
+        if physical_mask.sum() > 0:
+            print(f"\n📌 Step 1: Treatment Physical Outliers ({physical_mask.sum()})")
+            
+            for idx in self.data[physical_mask].index:
+                original_val = self.data.loc[idx, column_name]
+                
+                # Replace extreme values with NaN for re-imputation
+                if (pd.isna(original_val) or original_val in [999, 9999, -999, -9999] or
+                    original_val < 10 or original_val > 45):
+                    self.data.loc[idx, column_name] = np.nan
+                    self.data.loc[idx, f'treatment_method_{column_name}'] = 'physical_outlier_to_nan'
+                    treated_count += 1
+                    print(f"   📅 {self.data.loc[idx, 'Date'].strftime('%Y-%m-%d')}: {original_val} → NaN (physical outlier)")
+        
+        # Step 2: Handle Statistical Outliers with Seasonal Capping
+        statistical_mask = (
+            (self.data[f'is_statistical_outlier_{column_name}'] == True) & 
+            (self.data[column_name].notna())
+        )
+        if statistical_mask.sum() > 0:
+            print(f"\n📌 Step 2: Treatment Statistical Outliers ({statistical_mask.sum()})")
+            
+            for season, stats in seasonal_stats.items():
+                season_mask = (self.data['season'] == season) & statistical_mask
+                
+                if season_mask.sum() == 0:
+                    continue
+                    
+                print(f"   🌤️  Musim {season}: {season_mask.sum()} outlier")
+                
+                for idx in self.data[season_mask].index:
+                    original_val = self.data.loc[idx, column_name]
+                    
+                    # Gentle capping to seasonal P10/P90 (preserve 80% of seasonal data)
+                    if original_val < stats['q10']:
+                        new_val = stats['q10']
+                    elif original_val > stats['q90']:
+                        new_val = stats['q90']
+                    else:
+                        continue
+                    
+                    self.data.loc[idx, column_name] = new_val
+                    self.data.loc[idx, f'treatment_method_{column_name}'] = f'seasonal_capping_{season}'
+                    treated_count += 1
+                    
+                    print(f"     📅 {self.data.loc[idx, 'Date'].strftime('%Y-%m-%d')}: {original_val:.1f}°C → {new_val:.1f}°C")
+        
+        # Step 3: Handle Cross-Variable Outliers (most gentle)
+        cross_var_mask = (
+            (self.data[f'is_cross_variable_outlier_{column_name}'] == True) & 
+            (self.data[column_name].notna())
+        )
+        if cross_var_mask.sum() > 0:
+            print(f"\n📌 Step 3: Review Cross-Variable Outliers ({cross_var_mask.sum()})")
+            
+            cross_extreme = 0
+            
+            for idx in self.data[cross_var_mask].index:
+                original_val = self.data.loc[idx, column_name]
+                
+                # Only treat if it's an extreme relationship violation
+                if column_name.upper() == 'TN':
+                    # TN should not be higher than TX
+                    if ('TX' in self.data.columns and 
+                        self.data.loc[idx, 'TX'] is not np.nan and
+                        original_val >= self.data.loc[idx, 'TX']):
+                        # Set TN to TX - 2°C (minimum reasonable diurnal range)
+                        new_val = self.data.loc[idx, 'TX'] - 2.0
+                        self.data.loc[idx, column_name] = new_val
+                        self.data.loc[idx, f'treatment_method_{column_name}'] = 'cross_variable_tn_correction'
+                        treated_count += 1
+                        cross_extreme += 1
+                        print(f"     📅 {self.data.loc[idx, 'Date'].strftime('%Y-%m-%d')}: {original_val:.1f}°C → {new_val:.1f}°C (TN ≥ TX correction)")
+                    else:
+                        # Mark as reviewed but kept
+                        self.data.loc[idx, f'treatment_method_{column_name}'] = 'cross_variable_reviewed_kept'
+                
+                elif column_name.upper() == 'TX':
+                    # TX should not be lower than TN
+                    if ('TN' in self.data.columns and 
+                        self.data.loc[idx, 'TN'] is not np.nan and
+                        original_val <= self.data.loc[idx, 'TN']):
+                        # Set TX to TN + 3°C (minimum reasonable diurnal range)
+                        new_val = self.data.loc[idx, 'TN'] + 3.0
+                        self.data.loc[idx, column_name] = new_val
+                        self.data.loc[idx, f'treatment_method_{column_name}'] = 'cross_variable_tx_correction'
+                        treated_count += 1
+                        cross_extreme += 1
+                        print(f"     📅 {self.data.loc[idx, 'Date'].strftime('%Y-%m-%d')}: {original_val:.1f}°C → {new_val:.1f}°C (TX ≤ TN correction)")
+                    else:
+                        self.data.loc[idx, f'treatment_method_{column_name}'] = 'cross_variable_reviewed_kept'
+            
+            print(f"     💡 {cross_extreme} nilai dikoreksi, {cross_var_mask.sum() - cross_extreme} dipertahankan")
+        
+        # Step 4: Re-impute any new NaN values
+        new_nan_count = self.data[column_name].isna().sum()
+        if new_nan_count > 0:
+            print(f"\n📌 Step 4: Re-imputasi {new_nan_count} nilai NaN hasil treatment")
+            self.impute_temperature_seasonal_interpolation(column_name)
+        
+        # Step 5: Treatment Summary
+        print(f"\n📊 RINGKASAN TREATMENT {column_name.upper()}:")
+        
+        treated_data = self.data[self.data.get(f'treatment_method_{column_name}', '').str.len() > 0]
+        if len(treated_data) > 0:
+            treatment_summary = treated_data[f'treatment_method_{column_name}'].value_counts()
+            print("   📋 Methods used:")
+            for method, count in treatment_summary.items():
+                print(f"     • {method}: {count}")
+        
+        # Statistical comparison
+        valid_original = self.data[f'{column_name}_original'].dropna()
+        valid_treated = self.data[column_name].dropna()
+        
+        if len(valid_original) > 0 and len(valid_treated) > 0:
+            print(f"\n📈 Perbandingan Before vs After:")
+            print(f"   • Mean: {valid_original.mean():.2f}°C → {valid_treated.mean():.2f}°C")
+            print(f"   • Median: {valid_original.median():.2f}°C → {valid_treated.median():.2f}°C")
+            print(f"   • Std: {valid_original.std():.2f}°C → {valid_treated.std():.2f}°C")
+            print(f"   • Range: {valid_original.min():.1f}-{valid_original.max():.1f}°C → {valid_treated.min():.1f}-{valid_treated.max():.1f}°C")
+            
+            # Check if treatment was gentle
+            mean_change = abs(valid_treated.mean() - valid_original.mean())
+            if mean_change < 0.5:
+                print("   ✅ Treatment gentle: perubahan mean < 0.5°C")
+            elif mean_change < 1.0:
+                print(f"   ⚠️ Treatment moderate: perubahan mean {mean_change:.2f}°C")
+            else:
+                print(f"   🚨 Treatment signifikan: perubahan mean {mean_change:.2f}°C")
+        
+        print(f"\n✅ Treatment {column_name} selesai: {treated_count} nilai dimodifikasi")
+        print("💡 Data siap untuk analisis dengan outlier yang sudah ditangani secara gentle")
+        
+        return True
+
+    def process_all_temperature_outliers(self):
+        """
+        Process outlier detection and treatment for all temperature columns (TN, TX, TAVG)
+        """
+        print("\n" + "🌡️"*25 + " OUTLIER PROCESSING FOR ALL TEMPERATURE " + "🌡️"*25)
+        
+        temp_columns = ['TN', 'TX', 'TAVG']
+        available_columns = [col for col in temp_columns if col in self.data.columns and self.data[col].notna().sum() > 0]
+        
+        if not available_columns:
+            print("⚠️ Tidak ada kolom temperature yang valid untuk diproses")
+            return False
+        
+        print(f"🎯 Processing outliers untuk: {available_columns}")
+        
+        # Process each temperature column
+        all_results = {}
+        
+        for col in available_columns:
+            print(f"\n{'='*20} PROCESSING {col.upper()} {'='*20}")
+            
+            # Step 1: Detect outliers
+            outlier_stats = self.detect_outliers_domain_aware(col)
+            
+            if outlier_stats:
+                # Step 2: Treat outliers
+                treatment_success = self.treat_outliers_gentle_capping(col)
+                
+                all_results[col] = {
+                    'detection_stats': outlier_stats,
+                    'treatment_success': treatment_success
+                }
+            else:
+                print(f"❌ Gagal memproses outlier untuk {col}")
+                all_results[col] = {
+                    'detection_stats': None,
+                    'treatment_success': False
+                }
+        
+        # Summary for all columns
+        print(f"\n{'='*20} SUMMARY SEMUA KOLOM TEMPERATURE {'='*20}")
+        
+        total_outliers_detected = 0
+        total_outliers_treated = 0
+        
+        for col, results in all_results.items():
+            if results['detection_stats']:
+                detected = results['detection_stats']['total_outliers']
+                total_outliers_detected += detected
+                
+                if results['treatment_success']:
+                    # Count treated outliers
+                    treatment_col = f'treatment_method_{col}'
+                    if treatment_col in self.data.columns:
+                        treated = self.data[treatment_col].notna().sum()
+                        total_outliers_treated += treated
+                        print(f"✅ {col}: {detected} outliers detected, {treated} treated")
+                    else:
+                        print(f"⚠️ {col}: {detected} outliers detected, treatment status unknown")
+                else:
+                    print(f"❌ {col}: {detected} outliers detected, treatment failed")
+            else:
+                print(f"❌ {col}: detection failed")
+        
+        print(f"\n🎯 TOTAL SUMMARY:")
+        print(f"   • Total outliers detected: {total_outliers_detected}")
+        print(f"   • Total outliers treated: {total_outliers_treated}")
+        print(f"   • Success rate: {(total_outliers_treated/total_outliers_detected*100) if total_outliers_detected > 0 else 0:.1f}%")
+        
+        return all_results
+    
+    def create_individual_plots(self, output_dir="temperature_plots", save_plots=True):
+        """
+        Membuat 3 plot individual untuk analisis TAVG preprocessing (SIMPLIFIED)
+        """
+        print("\n=== MEMBUAT VISUALISASI TAVG PREPROCESSING ===")
+        
+        if save_plots:
+            os.makedirs(output_dir, exist_ok=True)
+            print(f"📁 Plots akan disimpan di: {output_dir}")
+        
+        # Check if TAVG exists
+        if 'TAVG' not in self.data.columns:
+            print("❌ Kolom TAVG tidak ditemukan! Jalankan calculate_and_validate_tavg() terlebih dahulu")
+            return False
+        
+        # Pastikan data outlier sudah dideteksi untuk TAVG
+        if 'is_outlier_TAVG' not in self.data.columns:
+            print("⚠️ Menjalankan deteksi outlier TAVG terlebih dahulu...")
+            self.detect_outliers_domain_aware('TAVG')
+        
+        valid_data = self.data['TAVG'].dropna()
+        if len(valid_data) == 0:
+            print("❌ Tidak ada data TAVG valid untuk plotting")
+            return False
+        
+        # Set style dan color palette untuk temperature
+        plt.style.use('default')
+        plt.rcParams['figure.facecolor'] = 'white'
+        plt.rcParams['axes.facecolor'] = 'white'
+        
+        # Updated color scheme - Blue for Before, Green for After
+        colors = {
+            'temp_before': '#2196F3',       # Blue untuk before treatment
+            'temp_after': '#4CAF50',        # Green untuk after treatment  
+            'outlier_stat': '#FF1744',      # Bright red untuk statistical outliers
+            'outlier_cross': '#FF9800',     # Orange untuk cross-variable outliers
+            'outlier_physical': '#9C27B0',  # Purple untuk physical outliers
+            'season_djf': '#2196F3',        # Blue - Cool/wet season
+            'season_mam': '#4CAF50',        # Green - Warming transition
+            'season_jja': '#FF9800',        # Orange - Hot/dry season
+            'season_son': '#9C27B0'         # Purple - Cooling transition
+        }
+        
+        # ============================================================================
+        # PLOT 1: TIME SERIES BEFORE-AFTER TREATMENT (SIMPLIFIED)
+        # ============================================================================
+        print("\n📊 Plot 1: Time Series Before-After Treatment")
+        
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(16, 10), sharex=True)
+        
+        # Prepare data
+        dates = self.data['Date']
+        tavg_original = self.data.get('TAVG_original', self.data['TAVG'])
+        tavg_treated = self.data['TAVG']
+        
+        # ========================
+        # Subplot 1: Before (Original with outliers marked) - BLUE
+        # ========================
+        ax1.plot(dates, tavg_original, color=colors['temp_before'], alpha=0.7, linewidth=0.8, label='Data Original')
+        
+        # Mark outliers if available
+        outlier_columns = ['is_physical_outlier_TAVG', 'is_statistical_outlier_TAVG', 'is_cross_variable_outlier_TAVG']
+        outlier_found = False
+        
+        # Physical outliers (purple squares)
+        if 'is_physical_outlier_TAVG' in self.data.columns:
+            physical_mask = self.data['is_physical_outlier_TAVG'] == True
+            if physical_mask.sum() > 0:
+                ax1.scatter(dates[physical_mask], tavg_original[physical_mask], 
+                        color=colors['outlier_physical'], s=25, alpha=0.8, 
+                        label=f'Physical Outliers ({physical_mask.sum()})', marker='s')
+                outlier_found = True
+        
+        # Statistical outliers (red circles)
+        if 'is_statistical_outlier_TAVG' in self.data.columns:
+            stat_mask = self.data['is_statistical_outlier_TAVG'] == True
+            if stat_mask.sum() > 0:
+                ax1.scatter(dates[stat_mask], tavg_original[stat_mask], 
+                        color=colors['outlier_stat'], s=20, alpha=0.8, 
+                        label=f'Statistical Outliers ({stat_mask.sum()})', marker='o')
+                outlier_found = True
+        
+        # Cross-variable outliers (orange triangles)
+        if 'is_cross_variable_outlier_TAVG' in self.data.columns:
+            cross_mask = self.data['is_cross_variable_outlier_TAVG'] == True
+            if cross_mask.sum() > 0:
+                ax1.scatter(dates[cross_mask], tavg_original[cross_mask], 
+                        color=colors['outlier_cross'], s=15, alpha=0.6,
+                        label=f'Cross-Variable Outliers ({cross_mask.sum()})', marker='^')
+                outlier_found = True
+        
+        if not outlier_found:
+            print("   📝 No outliers detected or outlier columns not available")
+        
+        ax1.set_ylabel('Temperature (°C)', fontsize=12)
+        ax1.set_title('Before Treatment', fontsize=14, fontweight='bold', pad=15)
+        ax1.grid(True, alpha=0.3, linestyle='-', linewidth=0.4)
+        ax1.legend(loc='upper right', fontsize=10)
+        # ax1.set_yliax1.legem(20, 36)  # Appropriate for tropical temperature
+        ax1.set_ylim(20, 36)
+        ax1.set_facecolor('white')
+        
+        # ========================
+        # Subplot 2: After (Treated data) - GREEN
+        # ========================
+        ax2.plot(dates, tavg_treated, color=colors['temp_after'], alpha=0.8, linewidth=0.8, label='Data After Treatment')
+        
+        # Highlight treated values (darker green)
+        if 'treatment_method_TAVG' in self.data.columns:
+            treated_mask = (
+                self.data['treatment_method_TAVG'].notna() & 
+                (self.data['treatment_method_TAVG'] != 'cross_variable_reviewed_kept') &
+                (self.data['treatment_method_TAVG'] != '')
+            )
+            if treated_mask.sum() > 0:
+                ax2.scatter(dates[treated_mask], tavg_treated[treated_mask], 
+                        color='#2E7D32', s=25, alpha=0.9,  # Darker green for treated values
+                        label=f'Treated Values ({treated_mask.sum()})', marker='s')
+        
+        ax2.set_xlabel('Tahun', fontsize=12)
+        ax2.set_ylabel('Temperature (°C)', fontsize=12)
+        ax2.set_title('After Treatment', fontsize=14, fontweight='bold', pad=15)
+        ax2.grid(True, alpha=0.3, linestyle='-', linewidth=0.4)
+        ax2.legend(loc='upper right', fontsize=10)
+        ax2.set_ylim(20, 36)
+        ax2.set_facecolor('white')
+        
+        # Set x-axis ticks
+        start_date = dates.min()
+        end_date = dates.max()
+        date_ticks = pd.date_range(start=start_date, end=end_date, freq='YS')
+        ax2.set_xticks(date_ticks)
+        ax2.set_xticklabels([d.year for d in date_ticks], rotation=0, ha='center', fontsize=12)
+        
+        plt.tight_layout()
+        
+        if save_plots:
+            plot1_path = os.path.join(output_dir, "preprocessing_tavg_plot_01_timeseries_treatment.png")
+            plt.savefig(plot1_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+            print(f"✅ Plot 1 saved: {plot1_path}")
+        
+        plt.show()
+        
+        # ============================================================================
+        # PLOT 2: SEASONAL BOXPLOT (SIMPLIFIED)
+        # ============================================================================
+        print("\n📊 Plot 2: Seasonal Boxplot Analysis")
+        
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+        
+        # Prepare monthly data (climatological year: Dec-Jan-Feb-...-Nov)
+        month_order = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        month_labels = ['Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei',
+                        'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov']
+        
+        # Season color mapping for boxes (climatological seasons)
+        season_month_map = {0:0, 1:0, 2:0, 3:1, 4:1, 5:1, 6:2, 7:2, 8:2, 9:3, 10:3, 11:0}  # Dec=0(DJF), etc.
+        season_colors = [colors['season_djf'], colors['season_mam'], colors['season_jja'], colors['season_son']]
+        
+        # ========================
+        # Subplot 1: Original Monthly Boxplot
+        # ========================
+        monthly_data_orig = []
+        for month in month_order:
+            month_mask = (self.data['month'] == month) & (tavg_original.notna())
+            if month_mask.sum() > 0:
+                monthly_data_orig.append(tavg_original[month_mask])
+            else:
+                monthly_data_orig.append(pd.Series(dtype=float))
+        
+        bp1 = ax1.boxplot(monthly_data_orig, labels=month_labels, patch_artist=True, showfliers=True)
+        
+        # Color by season
+        for i, patch in enumerate(bp1['boxes']):
+            if i < len(season_month_map):
+                patch.set_facecolor(season_colors[season_month_map[i]])
+                patch.set_alpha(0.7)
+        
+        ax1.set_ylabel('Temperature (°C)', fontsize=12)
+        ax1.set_xlabel('Bulan', fontsize=12)
+        ax1.set_title('Before Treatment', fontsize=14, fontweight='bold', pad=15)
+        ax1.grid(True, axis='y', alpha=0.3, linestyle='-', linewidth=0.4)
+        ax1.set_ylim(20, 36)
+        ax1.set_facecolor('white')
+        
+        # ========================
+        # Subplot 2: Treated Monthly Boxplot
+        # ========================
+        monthly_data_treated = []
+        for month in month_order:
+            month_mask = (self.data['month'] == month) & (tavg_treated.notna())
+            if month_mask.sum() > 0:
+                monthly_data_treated.append(tavg_treated[month_mask])
+            else:
+                monthly_data_treated.append(pd.Series(dtype=float))
+        
+        bp2 = ax2.boxplot(monthly_data_treated, labels=month_labels, patch_artist=True, showfliers=True)
+        
+        # Color by season
+        for i, patch in enumerate(bp2['boxes']):
+            if i < len(season_month_map):
+                patch.set_facecolor(season_colors[season_month_map[i]])
+                patch.set_alpha(0.7)
+        
+        ax2.set_ylabel('Temperature (°C)', fontsize=12)
+        ax2.set_xlabel('Bulan', fontsize=12)
+        ax2.set_title('After Treatment', fontsize=14, fontweight='bold', pad=15)
+        ax2.grid(True, axis='y', alpha=0.3, linestyle='-', linewidth=0.4)
+        ax2.set_ylim(20, 36)
+        ax2.set_facecolor('white')
+        
+        plt.tight_layout()
+        
+        if save_plots:
+            plot2_path = os.path.join(output_dir, "preprocessing_tavg_plot_02_seasonal_patterns.png")
+            plt.savefig(plot2_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+            print(f"✅ Plot 2 saved: {plot2_path}")
+        
+        plt.show()
+        
+        # ============================================================================
+        # PLOT 3: DISTRIBUTION COMPARISON (SIMPLIFIED)
+        # ============================================================================
+        print("\n📊 Plot 3: Distribution Analysis")
+
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+
+        # ========================
+        # Subplot 1: Original Distribution - BLUE
+        # ========================
+        ax1.hist(tavg_original.dropna(), bins=30, density=True, alpha=0.7, 
+                color=colors['temp_before'], edgecolor='black', linewidth=0.5)
+
+        # Add KDE
+        from scipy.stats import gaussian_kde
+        orig_kde = gaussian_kde(tavg_original.dropna())
+        x_range = np.linspace(20, 36, 100)
+        ax1.plot(x_range, orig_kde(x_range), color='#1565C0', linewidth=2.5)
+
+        # Add mean and median lines
+        ax1.axvline(tavg_original.mean(), color='red', linestyle='--', linewidth=2)
+        ax1.axvline(tavg_original.median(), color='darkred', linestyle='--', linewidth=2)
+
+        ax1.set_xlabel('Temperature (°C)', fontsize=12)
+        ax1.set_ylabel('Density', fontsize=12)
+        ax1.set_title('Before Treatment', fontsize=14, fontweight='bold', pad=15)
+        ax1.grid(True, alpha=0.3, linestyle='-', linewidth=0.4)
+        ax1.set_xlim(20, 36)
+        ax1.set_ylim(0, ax1.get_ylim()[1])  # Auto adjust y-axis
+        ax1.set_facecolor('white')
+
+        # ========================
+        # Subplot 2: Treated Distribution - GREEN
+        # ========================
+        ax2.hist(tavg_treated.dropna(), bins=30, density=True, alpha=0.7,
+                color=colors['temp_after'], edgecolor='black', linewidth=0.5)
+
+        # Add KDE for treated
+        treated_kde = gaussian_kde(tavg_treated.dropna())
+        ax2.plot(x_range, treated_kde(x_range), color='#2E7D32', linewidth=2.5)
+
+        # Add mean and median lines
+        ax2.axvline(tavg_treated.mean(), color='red', linestyle='--', linewidth=2)
+        ax2.axvline(tavg_treated.median(), color='darkred', linestyle='--', linewidth=2)
+
+        ax2.set_xlabel('Temperature (°C)', fontsize=12)
+        ax2.set_ylabel('Density', fontsize=12)
+        ax2.set_title('After Treatment', fontsize=14, fontweight='bold', pad=15)
+        ax2.grid(True, alpha=0.3, linestyle='-', linewidth=0.4)
+        ax2.set_xlim(20, 36)
+        ax2.set_ylim(0, ax2.get_ylim()[1])  # Auto adjust y-axis
+        ax2.set_facecolor('white')
+
+        plt.tight_layout()
+
+        if save_plots:
+            plot3_path = os.path.join(output_dir, "preprocessing_tavg_plot_03_distribution_outliers.png")
+            plt.savefig(plot3_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+            print(f"✅ Plot 3 saved: {plot3_path}")
+
+        plt.show()
+        
+        print("\n🎉 Semua plot TAVG berhasil dibuat!")
+        print(f"📈 Plot 1: Time Series Before-After Treatment (Blue → Green)")
+        print(f"📊 Plot 2: Seasonal Boxplot Analysis (Simplified)") 
+        print(f"📋 Plot 3: Distribution Comparison (Blue → Green)")
+        
+        if save_plots:
+            print(f"\n📁 Semua plot disimpan di: {output_dir}")
+            
+        return True
+
+    def save_results(self, output_filename="preprocessing_log_temp.txt"):
+        """
+        Simpan hasil analisis ke file di output directory
+        """
+        output_path = os.path.join(self.output_dir, output_filename)
         print(f"\n💾 Menyimpan hasil ke: {output_path}")
         
         # Redirect output ke file
@@ -850,14 +1791,13 @@ class Temperature_Analyzer:
         sys.stdout = original_stdout
         print(f"✅ Hasil berhasil disimpan ke: {output_path}")
 
-# MODIFIKASI 5: Update main function untuk include TAVG workflow
 def main():
-    # Path ke dataset BMKG  
-    data_path = "/run/media/cryptedlm/localdisk/Kuliah/Tugas Akhir/Dataset/Data BMKG/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"
+    # Updated paths
+    data_path = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv"
+    output_dir = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV CLEANED/suhu"
     
-    # Inisialisasi analyzer
-    analyzer = Temperature_Analyzer(data_path)
-    
+    # Inisialisasi analyzer dengan output directory
+    analyzer = Temperature_Analyzer(data_path, output_dir)    
     try:
         # Load data
         if not analyzer.load_data():
@@ -871,6 +1811,10 @@ def main():
         # 🌡️ TAHAP 2: Kalkulasi dan validasi TAVG
         print("\n" + "🌡️"*20 + " TAHAP 2: KALKULASI TAVG " + "🌡️"*20)
         tavg_results = analyzer.calculate_and_validate_tavg()
+
+        # 🚨 TAHAP 2.5: OUTLIER DETECTION & TREATMENT
+        print("\n" + "🚨"*20 + " TAHAP 2.5: OUTLIER TREATMENT " + "🚨"*20)
+        outlier_results = analyzer.process_all_temperature_outliers()
 
         # 📊 TAHAP 3: Analisis statistik deskriptif lengkap
         print("\n" + "📊"*20 + " TAHAP 3: ANALISIS STATISTIK " + "📊"*20)
@@ -889,22 +1833,90 @@ def main():
 
         # Generate tabel ringkasan yang include TAVG
         analyzer.generate_summary_table()
+
+        # 📈 TAHAP 3.5: STATISTIK TAVG SETELAH IMPUTASI (PERBAIKAN DI SINI)
+        print("\n" + "📈"*20 + " TAHAP 3.5: STATISTIK TAVG FINAL " + "📈"*20)
+        
+        # ✅ PERBAIKAN: Tambahkan validasi dan error handling yang lebih jelas
+        tavg_stats_final = None
+        
+        # Cek apakah TAVG tersedia di dataframe
+        if 'TAVG' not in analyzer.data.columns:
+            print("❌ Kolom TAVG tidak ditemukan di dataset!")
+            print("   💡 Pastikan calculate_and_validate_tavg() telah dijalankan dengan sukses")
+        
+        # Cek apakah ada data TAVG yang valid
+        elif analyzer.data['TAVG'].notna().sum() == 0:
+            print("❌ Tidak ada data TAVG yang valid!")
+            print("   💡 Semua nilai TAVG adalah NaN atau missing")
+        
+        # Jika semua kondisi OK, jalankan method
+        else:
+            print("🔍 Memulai perhitungan statistik TAVG final...")
+            try:
+                # ✅ INI YANG DIPERBAIKI: Pastikan method benar-benar dipanggil
+                tavg_stats_final = analyzer.calculate_tavg_statistics_after_imputation()
+                
+                if tavg_stats_final is not None:
+                    print("\n✅ Statistik TAVG final berhasil dihitung!")
+                    print(f"   📊 Total records: {tavg_stats_final.get('quality_metrics', {}).get('total_records', 'N/A')}")
+                    print(f"   📊 Valid records: {tavg_stats_final.get('quality_metrics', {}).get('valid_records', 'N/A')}")
+                    print(f"   📊 Data completeness: {tavg_stats_final.get('quality_metrics', {}).get('completeness', 0):.1f}%")
+                else:
+                    print("⚠️ Method berhasil dijalankan tapi return None")
+                    print("   💡 Cek implementasi calculate_tavg_statistics_after_imputation()")
+            
+            except Exception as e:
+                print(f"❌ Error saat menghitung statistik TAVG: {str(e)}")
+                print(f"   💡 Detail error: {type(e).__name__}")
+                import traceback
+                traceback.print_exc()
+        
+        # 🎨 TAHAP 4: VISUALISASI PREPROCESSING
+        print("\n" + "🎨"*20 + " TAHAP 4: VISUALISASI PREPROCESSING " + "🎨"*20)
+        
+        if tavg_results and tavg_results.get('tavg_calculated'):
+            plot_success = analyzer.create_individual_plots(
+                output_dir=os.path.join(output_dir, "plots"), 
+                save_plots=True
+            )
+            
+            if plot_success:
+                print("✅ Visualisasi TAVG preprocessing berhasil dibuat")
+            else:
+                print("❌ Gagal membuat visualisasi TAVG preprocessing")
+        else:
+            print("⚠️ TAVG tidak tersedia - skip visualisasi")
         
         # ✅ Simpan data final dengan TAVG
-        output_cols = ['Date', 'Year', 'Month', 'Day', 'TN', 'TX']
+        output_cols = ['Date', 'Year', 'month', 'day', 'TN', 'TX']
         if 'TAVG' in analyzer.data.columns:
             output_cols.append('TAVG')
         
         if all(col in analyzer.data.columns for col in output_cols):
-            analyzer.data[output_cols].to_csv("preprocessed_temp_data.csv", index=False)
-            print("💾 Data temperature final (TN, TX, TAVG) disimpan ke: preprocessed_temperature_final.csv")
+            output_csv_path = os.path.join(output_dir, "preprocessed_temperature_final.csv")
+            analyzer.data[output_cols].to_csv(output_csv_path, index=False)
+            print(f"💾 Data temperature final (TN, TX, TAVG) disimpan ke: {output_csv_path}")
+            
+        print(f"\n🎉 ANALISIS TEMPERATURE + TAVG + OUTLIER TREATMENT SELESAI!")
         
-        print(f"\n🎉 ANALISIS TEMPERATURE + TAVG SELESAI!")
+        # ✅ TAMBAHAN: Print summary TAVG stats jika tersedia
+        if tavg_stats_final is not None:
+            print("\n📋 RINGKASAN STATISTIK TAVG FINAL:")
+            if 'statistics' in tavg_stats_final:
+                stats = tavg_stats_final['statistics']
+                print(f"   • Mean: {stats.get('Mean', 'N/A'):.2f}°C")
+                print(f"   • Median: {stats.get('Median', 'N/A'):.2f}°C")
+                print(f"   • Std Dev: {stats.get('Standar Deviasi', 'N/A'):.2f}°C")
+                print(f"   • Range: {stats.get('Minimum', 'N/A'):.1f} - {stats.get('Maksimum', 'N/A'):.1f}°C")
+        
         analyzer.save_results()
         return analyzer
         
     except Exception as e:
         print(f"❌ Error dalam analisis: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return None
 
 if __name__ == "__main__":

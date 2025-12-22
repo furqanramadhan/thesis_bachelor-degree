@@ -1,0 +1,314 @@
+🌡️  RH_AVG STATISTICS ANALYZER - DATASET BMKG
+==================================================
+📂 Loading data dari: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV/BMKG_Data_All.csv
+✅ Data berhasil dimuat: 7876 records
+📅 Periode: 2005-01-01 00:00:00 s/d 2025-09-30 00:00:00
+📋 Kolom tersedia: ['Date', 'Year', 'month', 'day', 'TN', 'TX', 'TAVG', 'RH_AVG', 'RR', 'SS', 'FF_X', 'DDD_X', 'FF_AVG', 'DDD_CAR']
+
+=== TANGGAL DENGAN NILAI RH_AVG HILANG ===
+🔍 Total tanggal dengan nilai hilang: 2
+      Date  RH_AVG
+2008-08-31     NaN
+2024-07-08     NaN
+
+=== IMPUTASI MISSING VALUES RH_AVG ===
+🔍 Ditemukan 2 missing values untuk diimputasi
+
+📅 Imputasi untuk tanggal: 2008-08-31
+   ✅ nan → 84.5% | Method: Linear Interpolation (08-30 to 09-01)
+
+📅 Imputasi untuk tanggal: 2024-07-08
+   ✅ nan → 82.5% | Method: Linear Interpolation (07-07 to 07-09)
+
+📊 RINGKASAN IMPUTASI:
+   • Total diimputasi: 2 values
+   • Range imputasi: 82.5% - 84.5%
+   • Rata-rata imputasi: 83.5%
+🚀 Imputasi selesai! Data siap untuk analisis lanjutan.
+
+=== TANGGAL DENGAN NILAI RH_AVG HILANG ===
+✅ Tidak ada data hilang pada kolom RH_AVG.
+
+=== STATISTIK DESKRIPTIF RH_AVG (POST-IMPUTASI) ===
+✅ Menggunakan data yang telah diimputasi untuk analisis statistik
+
+📈 STATISTIK DASAR:
+   • Count: 7,876
+   • Mean: 79.68
+   • Median: 81.00
+   • Mode: 86.0
+   • Std Dev: 9.42
+   • Variance: 88.72
+   • Range: 56.00
+
+📊 KUARTIL & PERCENTILES:
+   • Min: 44.00
+   • Q1 (25%): 74.00
+   • Q2/Median (50%): 81.00
+   • Q3 (75%): 87.00
+   • Max: 100.00
+   • IQR: 13.00
+
+🌡️  KATEGORI KELEMBABAN:
+   • Terlalu Kering (<45): 2 (0.0%)
+   • Ideal (45-65): 666 (8.5%)
+   • Terlalu Lembab (>65): 7,208 (91.5%)
+
+=== ANALISIS MUSIMAN RH_AVG ===
+📅 STATISTIK BULANAN:
+Bulan | Count | Mean  | Median| Std   | Min   | Max
+-------------------------------------------------------
+Jan   |   671 |  82.2 |  83.0 |   7.8 |  48.0 |  98.0
+Feb   |   610 |  80.3 |  81.0 |   7.8 |  61.0 |  96.0
+Mar   |   678 |  81.2 |  82.0 |   8.2 |  60.0 |  98.0
+Apr   |   659 |  82.2 |  84.0 |   7.9 |  54.0 |  98.0
+Mei   |   690 |  80.7 |  82.5 |   8.6 |  53.0 |  98.0
+Jun   |   657 |  75.1 |  76.0 |  10.4 |  50.0 |  96.0
+Jul   |   672 |  73.4 |  74.0 |  10.4 |  49.0 |  96.0
+Ags   |   678 |  74.7 |  76.0 |   9.9 |  44.0 |  98.0
+Sep   |   655 |  76.5 |  76.0 |   9.3 |  48.0 |  98.0
+Okt   |   644 |  80.8 |  82.0 |   9.4 |  48.0 |  98.0
+Nov   |   622 |  85.4 |  86.0 |   6.0 |  66.0 | 100.0
+Des   |   640 |  84.2 |  85.0 |   6.6 |  62.0 |  99.0
+
+🌧️  Bulan terlembab: Nov (85.4%)
+☀️  Bulan terkering: Jul (73.4%)
+
+=== DETEKSI OUTLIER RH_AVG (DOMAIN-AWARE) ===
+🔍 Step 1: Validasi Domain Fisik
+   • Outlier fisik (di luar 0-100% atau kode error): 0
+
+🔍 Step 2: Deteksi IQR dengan Seasonal Adjustment
+   • DJF: Q1=77.0%, Q3=89.0%, IQR=12.0%
+     Bounds: 59.0% - 95.0%, Outliers: 18
+   • MAM: Q1=75.0%, Q3=88.0%, IQR=13.0%
+     Bounds: 55.5% - 95.0%, Outliers: 24
+   • JJA: Q1=66.5%, Q3=82.0%, IQR=15.5%
+     Bounds: 43.2% - 95.0%, Outliers: 7
+   • SON: Q1=75.0%, Q3=88.0%, IQR=13.0%
+     Bounds: 55.5% - 95.0%, Outliers: 48
+
+🔍 Step 3: Review Kontekstual
+   • Outlier kontekstual (RH vs Suhu): 1331
+     - RH tinggi + Suhu tinggi: 1331
+     - RH rendah + Suhu rendah: 0
+
+📊 Step 4: Ringkasan Deteksi Outlier
+   • Total outlier terdeteksi: 1414 (17.95%)
+     - Fisik: 0
+     - Statistik (IQR): 97
+     - Kontekstual: 1331
+
+📋 Sample outlier yang terdeteksi (5 teratas):
+      Date  RH_AVG  is_physical_outlier  is_statistical_outlier  is_contextual_outlier
+2005-01-01    90.0                False                   False                   True
+2005-01-02    90.0                False                   False                   True
+2005-01-03    90.0                False                   False                   True
+2005-01-04    89.0                False                   False                   True
+2005-01-05    88.0                False                   False                   True
+
+✅ Deteksi outlier selesai. Siap untuk treatment.
+
+=== TREATMENT OUTLIER RH_AVG (GENTLE CAPPING) ===
+🔧 Memproses 1414 outlier...
+
+📌 Step 2: Treatment Statistical Outliers (97)
+   🌤️  Musim DJF: 18 outlier
+     📅 2005-12-11: 98.0% → 92.0%
+     📅 2006-12-21: 96.0% → 92.0%
+     📅 2006-12-28: 96.0% → 92.0%
+     📅 2007-01-10: 98.0% → 92.0%
+     📅 2008-01-09: 98.0% → 92.0%
+     📅 2008-01-27: 96.0% → 92.0%
+     📅 2008-12-07: 96.0% → 92.0%
+     📅 2011-12-11: 97.0% → 92.0%
+     📅 2011-12-23: 96.0% → 92.0%
+     📅 2012-01-05: 97.0% → 92.0%
+     📅 2012-01-15: 97.0% → 92.0%
+     📅 2012-01-28: 48.0% → 72.0%
+     📅 2012-12-16: 96.0% → 92.0%
+     📅 2014-02-20: 96.0% → 92.0%
+     📅 2014-12-22: 97.0% → 92.0%
+     📅 2014-12-25: 98.0% → 92.0%
+     📅 2017-12-01: 99.0% → 92.0%
+     📅 2023-01-21: 96.0% → 92.0%
+   🌤️  Musim MAM: 24 outlier
+     📅 2005-03-22: 96.0% → 91.0%
+     📅 2005-03-31: 96.0% → 91.0%
+     📅 2005-05-15: 96.0% → 91.0%
+     📅 2005-05-16: 96.0% → 91.0%
+     📅 2006-03-24: 97.0% → 91.0%
+     📅 2006-04-15: 96.0% → 91.0%
+     📅 2006-04-26: 96.0% → 91.0%
+     📅 2007-03-15: 97.0% → 91.0%
+     📅 2008-04-23: 97.0% → 91.0%
+     📅 2009-03-18: 96.0% → 91.0%
+     📅 2010-04-08: 96.0% → 91.0%
+     📅 2011-03-26: 98.0% → 91.0%
+     📅 2011-04-26: 97.0% → 91.0%
+     📅 2011-05-19: 96.0% → 91.0%
+     📅 2012-03-06: 96.0% → 91.0%
+     📅 2012-04-10: 97.0% → 91.0%
+     📅 2012-05-12: 96.0% → 91.0%
+     📅 2013-04-02: 96.0% → 91.0%
+     📅 2013-04-10: 97.0% → 91.0%
+     📅 2013-04-14: 98.0% → 91.0%
+     📅 2013-05-10: 98.0% → 91.0%
+     📅 2020-05-08: 97.0% → 91.0%
+     📅 2023-04-05: 54.0% → 70.0%
+     📅 2023-05-28: 53.0% → 70.0%
+   🌤️  Musim JJA: 7 outlier
+     📅 2006-06-19: 96.0% → 87.0%
+     📅 2007-08-29: 97.0% → 87.0%
+     📅 2009-06-27: 96.0% → 87.0%
+     📅 2013-07-16: 96.0% → 87.0%
+     📅 2016-08-24: 98.0% → 87.0%
+     📅 2021-07-09: 96.0% → 87.0%
+     📅 2021-07-09: 96.0% → 87.0%
+   🌤️  Musim SON: 48 outlier
+     📅 2005-09-03: 96.0% → 91.0%
+     📅 2005-10-07: 96.0% → 91.0%
+     📅 2005-10-08: 98.0% → 91.0%
+     📅 2005-10-09: 96.0% → 91.0%
+     📅 2005-10-10: 97.0% → 91.0%
+     📅 2005-11-30: 98.0% → 91.0%
+     📅 2006-09-08: 98.0% → 91.0%
+     📅 2007-09-01: 96.0% → 91.0%
+     📅 2007-10-24: 96.0% → 91.0%
+     📅 2008-11-25: 98.0% → 91.0%
+     📅 2008-11-26: 96.0% → 91.0%
+     📅 2008-11-27: 96.0% → 91.0%
+     📅 2009-09-15: 96.0% → 91.0%
+     📅 2009-11-20: 96.0% → 91.0%
+     📅 2010-10-05: 96.0% → 91.0%
+     📅 2010-11-02: 96.0% → 91.0%
+     📅 2011-09-11: 96.0% → 91.0%
+     📅 2011-10-31: 96.0% → 91.0%
+     📅 2011-11-04: 96.0% → 91.0%
+     📅 2011-11-05: 98.0% → 91.0%
+     📅 2011-11-27: 96.0% → 91.0%
+     📅 2012-10-30: 96.0% → 91.0%
+     📅 2012-11-08: 96.0% → 91.0%
+     📅 2014-09-06: 54.0% → 68.0%
+     📅 2014-11-02: 96.0% → 91.0%
+     📅 2016-09-16: 55.0% → 68.0%
+     📅 2016-09-21: 55.0% → 68.0%
+     📅 2016-09-22: 52.0% → 68.0%
+     📅 2016-09-23: 53.0% → 68.0%
+     📅 2016-09-24: 52.0% → 68.0%
+     📅 2016-09-26: 54.0% → 68.0%
+     📅 2016-09-30: 48.0% → 68.0%
+     📅 2016-10-01: 51.0% → 68.0%
+     📅 2016-10-02: 54.0% → 68.0%
+     📅 2016-10-04: 55.0% → 68.0%
+     📅 2016-10-09: 54.0% → 68.0%
+     📅 2016-10-12: 53.0% → 68.0%
+     📅 2016-10-13: 55.0% → 68.0%
+     📅 2016-11-07: 100.0% → 91.0%
+     📅 2017-10-16: 54.0% → 68.0%
+     📅 2017-10-17: 48.0% → 68.0%
+     📅 2017-10-18: 48.0% → 68.0%
+     📅 2017-10-19: 54.0% → 68.0%
+     📅 2019-09-04: 55.0% → 68.0%
+     📅 2021-10-11: 53.0% → 68.0%
+     📅 2021-10-11: 53.0% → 68.0%
+     📅 2021-11-30: 98.0% → 91.0%
+     📅 2024-09-17: 96.0% → 91.0%
+
+📌 Step 3: Review Contextual Outliers (1331)
+     💡 0 nilai di-cap, 1331 dipertahankan
+
+📊 RINGKASAN TREATMENT:
+   📋 Methods used:
+     • contextual_reviewed_kept: 1331
+     • seasonal_capping_SON: 46
+     • seasonal_capping_DJF: 17
+     • seasonal_capping_MAM: 14
+     • seasonal_capping_JJA: 6
+
+📈 Perbandingan Before vs After:
+   • Mean: 79.68% → 79.67%
+   • Median: 81.00% → 81.00%
+   • Std: 9.42% → 9.24%
+   • Range: 44.0-100.0% → 44.0-95.0%
+   ✅ Treatment gentle: perubahan mean < 2%
+
+✅ Treatment selesai: 97 nilai dimodifikasi
+💡 Data siap untuk analisis dengan outlier yang sudah ditangani secara gentle
+
+🔄 Analisis ulang setelah outlier treatment...
+
+=== STATISTIK DESKRIPTIF RH_AVG (POST-IMPUTASI) ===
+✅ Menggunakan data yang telah diimputasi untuk analisis statistik
+
+📈 STATISTIK DASAR:
+   • Count: 7,876
+   • Mean: 79.67
+   • Median: 81.00
+   • Mode: 86.0
+   • Std Dev: 9.24
+   • Variance: 85.38
+   • Range: 51.00
+
+📊 KUARTIL & PERCENTILES:
+   • Min: 44.00
+   • Q1 (25%): 74.00
+   • Q2/Median (50%): 81.00
+   • Q3 (75%): 87.00
+   • Max: 95.00
+   • IQR: 13.00
+
+🌡️  KATEGORI KELEMBABAN:
+   • Terlalu Kering (<45): 2 (0.0%)
+   • Ideal (45-65): 642 (8.2%)
+   • Terlalu Lembab (>65): 7,232 (91.8%)
+
+🎨 Membuat visualisasi preprocessing...
+
+=== MEMBUAT VISUALISASI RH_AVG PREPROCESSING ===
+📁 Plots akan disimpan di: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV CLEANED/kelembaban/plots
+
+📊 Plot 1: Time Series Before-After Treatment
+✅ Plot 1 saved: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV CLEANED/kelembaban/plots/preprocessing_rh_plot_01_timeseries_treatment.png
+
+📊 Plot 2: Seasonal Boxplot Analysis
+✅ Plot 2 saved: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV CLEANED/kelembaban/plots/preprocessing_rh_plot_02_seasonal_patterns.png
+
+📊 Plot 3: Distribution Analysis
+✅ Plot 3 saved: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV CLEANED/kelembaban/plots/preprocessing_rh_plot_03_distribution_outliers.png
+
+🎉 Semua plot berhasil dibuat!
+📈 Plot 1: Time Series Before-After Treatment (Simplified)
+📊 Plot 2: Seasonal Boxplot Analysis (Simplified)
+📋 Plot 3: Distribution Comparison (Simplified)
+
+📁 Semua plot disimpan di: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV CLEANED/kelembaban/plots
+✅ Visualisasi berhasil dibuat
+
+============================================================
+LAPORAN RINGKASAN ANALISIS RH_AVG
+============================================================
+📊 RINGKASAN STATISTIK:
+   • Data valid: 7,876 records
+   • Rata-rata: 79.67
+   • Median: 81.00
+   • Standar Deviasi: 9.24
+   • Rentang: 44.0 - 95.0
+
+🎯 KARAKTERISTIK DISTRIBUSI:
+   • Batas outlier IQR: 54.5 - 106.5
+
+💡 REKOMENDASI PREPROCESSING:
+   • ✅ Missing data rendah: 0.0%
+   • 📈 Variabilitas data: stabil
+
+🚀 SIAP UNTUK PENGEMBANGAN PREPROCESSING!
+============================================================
+
+🔄 Ringkasan imputasi yang dilakukan...
+==================================================
+DETAIL IMPUTASI YANG TELAH DILAKUKAN
+==================================================
+📅 2008-08-31: nan → 84.5% (Linear Interpolation (08-30 to 09-01))
+📅 2024-07-08: nan → 82.5% (Linear Interpolation (07-07 to 07-09))
+✅ Semua imputasi berhasil diterapkan!

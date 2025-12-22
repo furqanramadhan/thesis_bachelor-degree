@@ -9,6 +9,23 @@ import seaborn as sns
 import numpy as np
 import re
 
+COLOR_PALETTE = {
+    'blue': '#1E88E5',
+    'orange': '#FF6F00',
+    'green': '#388E3C',
+    'red': '#D32F2F',
+    'purple': '#7B1FA2',
+    'cyan': '#00ACC1',
+    'yellow': '#FBC02D',
+    'pink': '#C2185B',
+    'teal': '#00897B',
+    'indigo': '#3949AB',
+    'lime': '#689F38',
+    'amber': '#FFA000',
+    'brown': '#5D4037',
+    'gray': '#757575'
+}
+
 df = pd.read_csv("kuisioner_tanam_padi - Petani.csv")
 
 # Debug: Periksa nama kolom yang tersedia
@@ -36,21 +53,17 @@ else:
     gender_by_kabupaten = pd.crosstab(df[kabupaten_col], df[gender_col])
     
     plt.figure(figsize=(12, 6))
-    ax = gender_by_kabupaten.plot(kind='bar', color=['skyblue', 'lightcoral'])
+    ax = gender_by_kabupaten.plot(kind='bar', color=[COLOR_PALETTE['blue'], COLOR_PALETTE['red']])
 
 
     total_count = df['jenis_kelamin'].count()
-
-    for container in ax.containers:
-        ax.bar_label(container, label=[''] * len(container), padding=5)
 
         # Then add custom framed annotations
     for container in ax.containers:
         for i, rect in enumerate(container):
             height = rect.get_height()
             if height > 0:
-                percentage = (height / total_count) * 100
-                label_text = f'{int(height)}\n{percentage:.1f}%'
+                label_text = f'{int(height)}'
                 
                 # Position for the annotation
                 x = rect.get_x() + rect.get_width()/2
@@ -119,24 +132,18 @@ else:
     lahan_by_kabupaten = pd.crosstab(df[kabupaten_col], df['kepemilikan_lahan'])
 
     plt.figure(figsize=(12, 6))
-    ax = lahan_by_kabupaten.plot(kind='bar', color=['#66c2a5', '#fc8d62'])
-
+    ax = lahan_by_kabupaten.plot(kind='bar',color=[COLOR_PALETTE['blue'], COLOR_PALETTE['orange']])
     total_count = df['kepemilikan_lahan'].count()
 
     # Find the maximum value for dynamic y-axis scaling
     y_max = lahan_by_kabupaten.values.max()
 
-    # Create the plot wihtout labels
-    for container in ax.containers:
-        ax.bar_label(container, labels=[''] * len(container), padding=5)
-
     for container in ax.containers:
         for i, rect in enumerate(container):
             height = rect.get_height()
             if height > 0:
-                percentage = (height / total_count) * 100
-                label_text = f'{int(height)}\n{percentage:.1f}%'
-                
+                label_text = f'{int(height)}'
+
                 # Position for the annotation
                 x = rect.get_x() + rect.get_width()/2
                 y = height + 0.5  # Adjust this value based on your data scale
@@ -205,8 +212,15 @@ else:
     plt.figure(figsize=(12, 10))
 
     # Define your custom color palette
-    custom_colors = ['#637AB9', '#FCB53B', '#556B2F', '#ED775A', '#660B05', '#BA487F', '#999999']
-    # Make sure we have enough colors for all education categories
+    custom_colors = [
+        COLOR_PALETTE['blue'],
+        COLOR_PALETTE['orange'],
+        COLOR_PALETTE['green'],
+        COLOR_PALETTE['brown'],
+        COLOR_PALETTE['purple'],
+        COLOR_PALETTE['pink'],
+        COLOR_PALETTE['gray']
+    ]
     colors_to_use = custom_colors[:len(available_pendidikan)]
 
     ax = pendidikan_by_kabupaten.plot(
@@ -214,21 +228,15 @@ else:
         width=0.7,
         color=colors_to_use
     )
-    
-    total_count = df['pendidikan_terakhir'].count()
 
-
-    for container in ax.containers:
-        ax.bar_label(container, labels=[''] * len(container), padding=5)
-
-    # Tambahkan label jumlah dan persentase dengan posisi yang lebih baik
+    # Tambahkan label jumlah dengan posisi yang lebih baik
     for container in ax.containers:
         for i, rect in enumerate(container):
             width = rect.get_width()
             if width > 0:
-                percentage = (width / total_count) * 100
-                label_text = f'{int(width)}\n{percentage:.1f}%'
-                
+                # PERBAIKAN: Gunakan width bukan height
+                label_text = f'{int(width)}'
+
                 # Position for the annotation - adjusted with more offset
                 y = rect.get_y() + rect.get_height()/2
                 x = width + 1.0  # Increased offset from 0.5 to 1.0
@@ -320,7 +328,14 @@ else:
     umur_by_kabupaten = umur_by_kabupaten[umur_order]
 
     # Membuat plot dengan warna yang menarik
-    colors = ['#52357B', '#F97A00', '#16610E', '#4300FF', '#FAA533', '#8C1007']
+    colors = [
+        COLOR_PALETTE['blue'],
+        COLOR_PALETTE['orange'],
+        COLOR_PALETTE['green'],
+        COLOR_PALETTE['amber'],
+        COLOR_PALETTE['purple'],
+        COLOR_PALETTE['gray']
+    ]
     ax = umur_by_kabupaten.plot(
         kind='bar', 
         width=0.6,
@@ -329,17 +344,12 @@ else:
 
     total_count = df['kategori_umur'].count()
 
-    # Clear any existing bar labels first
-    for container in ax.containers:
-        ax.bar_label(container, labels=[''] * len(container), padding=5)
-
     # Add labels with frames to each bar - FIXED FOR VERTICAL BARS
     for container in ax.containers:
         for i, rect in enumerate(container):
             height = rect.get_height()  # Untuk vertical bar, gunakan get_height()
             if height > 0:
-                percentage = (height / total_count) * 100
-                label_text = f'{int(height)}\n{percentage:.1f}%'
+                label_text = f'{int(height)}'
                 
                 # Position for the annotation - FIXED positioning
                 x = rect.get_x() + rect.get_width()/2  # Center horizontally
@@ -429,7 +439,14 @@ else:
     tahun_by_kabupaten = tahun_by_kabupaten[available_tahun]
 
     # Membuat plot dengan warna yang menarik (gradasi dari lama ke baru)
-    colors = ['#8B4513', '#FFD93D', '#DAA520', '#4682B4', '#2E8B57', '#A9A9A9']  # Coklat tua ke hijau, abu untuk tidak diketahui
+    colors = [
+        COLOR_PALETTE['brown'],   # lama
+        COLOR_PALETTE['red'],
+        COLOR_PALETTE['amber'],
+        COLOR_PALETTE['blue'],
+        COLOR_PALETTE['green'],   # baru
+        COLOR_PALETTE['gray']     # tidak diketahui
+    ]
     ax = tahun_by_kabupaten.plot(
         kind='bar', 
         width=0.6,
@@ -440,15 +457,10 @@ else:
     total_count = df['kategori_tahun_bertani'].count()
 
     for container in ax.containers:
-            ax.bar_label(container, labels=[''] * len(container), padding=5)
-
-    for container in ax.containers:
         for i, rect in enumerate(container):
             height = rect.get_height()
             if height > 0:
-                percentage = (height / total_count) * 100
-                label_text = f'{int(height)}\n{percentage:.1f}%'
-                
+                label_text = f'{int(height)}'
                 # Position for the annotation
                 x = rect.get_x() + rect.get_width()/2
                 y = height + 0.5  # Adjust this value based on your data scale
@@ -588,10 +600,22 @@ else:
         varietas_by_kabupaten = varietas_by_kabupaten[all_varieties]
 
     # Warna-warna menarik untuk varietas padi
-    colors = ['#4682B4', '#8FBC8F', '#DAA520', '#B22222', '#9370DB', 
-            '#3CB371', '#FF8C00', '#4169E1', '#CD5C5C', '#2E8B57', 
-            '#A9A9A9', '#6A5ACD', '#808000', '#FF4500', '#20B2AA',
-            '#FF69B4', '#32CD32', '#8A2BE2', '#FF6347', '#00CED1']
+    colors = [
+        COLOR_PALETTE['blue'],
+        COLOR_PALETTE['green'],
+        COLOR_PALETTE['orange'],
+        COLOR_PALETTE['red'],
+        COLOR_PALETTE['purple'],
+        COLOR_PALETTE['cyan'],
+        COLOR_PALETTE['yellow'],
+        COLOR_PALETTE['brown'],
+        COLOR_PALETTE['pink'],
+        COLOR_PALETTE['indigo'],
+        COLOR_PALETTE['gray'],
+        COLOR_PALETTE['teal'],
+        COLOR_PALETTE['lime'],
+        COLOR_PALETTE['amber']
+    ]
 
     # Plot horizontal bar chart
     ax = varietas_by_kabupaten.plot(
@@ -604,18 +628,13 @@ else:
     # Calculate total count for percentages
     total_count = df_expanded['varietas_padi_clean'].count()
 
-    # Create the plot without labels
-    for container in ax.containers:
-        ax.bar_label(container, labels=[''] * len(container), padding=5)
 
     # Then add custom framed annotations - FIXED FOR HORIZONTAL BARS
     for container in ax.containers:
         for i, rect in enumerate(container):
             width = rect.get_width()
             if width > 0:
-                percentage = (width / total_count) * 100
-                label_text = f'{int(width)}\n{percentage:.1f}%'
-                
+                label_text = f'{int(width)}'
                 # Position for the annotation - adjusted with more offset
                 y = rect.get_y() + rect.get_height()/2
                 x = width + 1.0  # Increased offset from 0.5 to 1.0

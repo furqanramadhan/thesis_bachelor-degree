@@ -19,127 +19,179 @@ PTN017,Aceh Besar,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman 
 PTN018,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani",Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
 PTN019,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
 PTN020,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
-PTN021,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN022,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN023,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN024,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Mandiri,Tidak,Banjir,Ya,
-PTN025,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Mandiri,Tidak,Banjir,Tidak,
-PTN026,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN027,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ya,Ya,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN028,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN029,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,,Tidak,Banjir,Tidak,
-PTN030,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN031,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN032,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN033,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,
-PTN034,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,Banjir,Tidak,
-PTN035,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut kelompok tani,Tidak,Banjir,Tidak,
-PTN130,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,,Tidak,
-PTN131,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,,Tidak,
-PTN132,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,,Tidak,
-PTN133,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,,Tidak,
-PTN134,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut pengumuman desa,Ya,Kemarau,Tidak,
-PTN200,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,
-PTN201,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,
-PTN202,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,
-PTN203,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,
-PTN204,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,
-PTN205,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,
-PTN206,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Tidak,
-PTN207,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,
-PTN208,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,
-PTN209,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,
-PTN036,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN037,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN038,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN039,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN040,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,"Banjir, Hujan deras",Tidak,
-PTN041,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN042,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN043,Aceh Jaya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan deras",Tidak,
-PTN044,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,
-PTN045,Aceh Jaya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,"Banjir, Hujan deras",Tidak,
-PTN046,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN047,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN048,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN049,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN050,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN051,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN052,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN053,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN054,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN055,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN056,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN057,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN058,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,
-PTN059,Aceh Jaya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,"Banjir, Hujan deras",Tidak,
-PTN060,Aceh Jaya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,"Banjir, Hujan deras",Tidak,
-PTN061,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN062,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN063,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN064,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN065,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN066,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN067,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN068,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN069,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN070,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN071,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN072,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
-PTN073,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN074,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
-PTN075,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
-PTN076,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
-PTN077,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
-PTN078,Pidie,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN079,Pidie,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
-PTN080,Pidie,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,Semoga lahan untuk bertani lebih luas
-PTN081,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN082,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN083,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN084,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN085,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN086,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN087,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN088,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,"Kemarau, Hujan tidak menentu",Tidak,Sistem pengairan lebih baik
-PTN089,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,Petani memerlukan bantuan sumur bor
-PTN090,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,"Ikut pengumuman desa, Ikut kelompok tani, Mandiri, Ikut keujrun blang",Ya,"Banjir, Kemarau",Tidak,Ingin pengendalian harga gabah lebih baik
-PTN091,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,,Tidak,-
-PTN092,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
-PTN093,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,,Tidak,-
-PTN094,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
-PTN095,Pidie,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,Bantuan sumur bor untuk petani
-PTN096,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
-PTN097,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
-PTN098,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
-PTN099,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
-PTN100,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
-PTN101,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
-PTN102,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Pembangunan irigasi desa
-PTN103,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Irigasi yang layak
-PTN104,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Irigasi  
-PTN105,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Selesaikan masalah lahan irigasi
-PTN106,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Irigasi tolong
-PTN107,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Ikut pengumuman desa,Ya,Kemarau,Tidak,Perluasan irigasi
-PTN108,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Bantuan irigasi
-PTN109,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Banjir",Tidak,-
-PTN110,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN111,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN112,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,Semoga jalur irigasi dibangun
-PTN113,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN114,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN115,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,Irigasi  
-PTN116,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,Pembangunan irigasi 
-PTN117,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN118,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN119,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN120,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN121,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN122,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN123,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,
-PTN124,Aceh Utara,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,"Kemarau, Hujan tidak menentu",Tidak,
-PTN125,Aceh Utara,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,
-PTN126,Aceh Utara,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
-PTN127,Aceh Utara,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
-PTN128,Aceh Utara,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
-PTN129,Aceh Utara,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN021,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN022,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN023,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN024,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Mandiri,Tidak,Banjir,Ya,edukasi cuaca untuk musim tanam
+PTN025,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Mandiri,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN026,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN027,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ya,Ya,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN028,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN029,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,,Tidak,Banjir,Tidak,- 
+PTN030,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,- 
+PTN031,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,Banjir,Tidak,- 
+PTN032,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,- 
+PTN033,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,- 
+PTN034,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,Banjir,Tidak,- 
+PTN035,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut kelompok tani,Tidak,Banjir,Tidak,- 
+PTN036,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,,Tidak,- 
+PTN037,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,,Tidak,- 
+PTN038,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,,Tidak,- 
+PTN039,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,,Tidak,Ada kalender tanam digital
+PTN040,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN041,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN042,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN043,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN044,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN045,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN046,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Ada kalender tanam digital
+PTN047,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Tidak,Kalender Musim Tanam Digital
+PTN048,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Ada kalender tanam digital
+PTN049,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Ada kalender tanam digital
+PTN050,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Kalender Musim Tanam Digital
+PTN051,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN052,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN053,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN054,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN055,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,"Banjir, Hujan deras",Tidak,-
+PTN056,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN057,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN058,Aceh Jaya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN059,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Banjir,Tidak,-
+PTN060,Aceh Jaya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,"Banjir, Hujan deras",Tidak,-
+PTN061,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN062,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN063,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN064,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN065,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN066,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN067,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN068,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN069,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN070,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN071,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN072,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN073,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Tidak,"Banjir, Hujan deras",Tidak,-
+PTN074,Aceh Jaya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,"Banjir, Hujan deras",Tidak,-
+PTN075,Aceh Jaya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,"Banjir, Hujan deras",Tidak,-
+PTN076,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN077,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN078,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN079,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN080,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN081,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN082,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN083,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN084,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN085,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN086,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN087,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN088,Aceh Jaya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN089,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN090,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN091,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN092,Aceh Jaya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN093,Pidie,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN094,Pidie,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
+PTN095,Pidie,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,Semoga lahan untuk bertani lebih luas
+PTN096,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN097,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN098,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN099,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN100,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN101,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN102,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN103,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,"Kemarau, Hujan tidak menentu",Tidak,Sistem pengairan lebih baik
+PTN104,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,Petani memerlukan bantuan sumur bor
+PTN105,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,"Ikut pengumuman desa, Ikut kelompok tani, Mandiri, Ikut keujrun blang",Ya,"Banjir, Kemarau",Tidak,Ingin pengendalian harga gabah lebih baik
+PTN106,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,,Tidak,-
+PTN107,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN108,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Tidak,,Tidak,-
+PTN109,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN110,Pidie,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,Bantuan sumur bor untuk petani
+PTN111,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN112,Pidie,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN113,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
+PTN114,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
+PTN115,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
+PTN116,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,-
+PTN117,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Pembangunan irigasi desa
+PTN118,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Irigasi yang layak
+PTN119,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Irigasi  
+PTN120,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Selesaikan masalah lahan irigasi
+PTN121,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Irigasi tolong
+PTN122,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Ya,Ikut pengumuman desa,Ya,Kemarau,Tidak,Perluasan irigasi
+PTN123,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Bantuan irigasi
+PTN124,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Banjir",Tidak,-
+PTN125,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Ya,-
+PTN126,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Ya,-
+PTN127,Pidie,Ya,Tidak,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Ya,-
+PTN128,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN129,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN130,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN131,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN132,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN133,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN134,Pidie,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,"Banjir, Kemarau, Hujan deras",Tidak,-
+PTN135,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ikut keujrun blang,Ya,Kemarau,Tidak,Ingin pupuk subsidi
+PTN136,Pidie,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Ya,Ya,Tidak,Tidak,Ikut keujrun blang,Ya,Kemarau,Ya,-
+PTN137,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN138,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN139,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,Semoga jalur irigasi dibangun
+PTN140,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN141,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN142,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,Irigasi  
+PTN143,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,Pembangunan irigasi 
+PTN144,Aceh Utara,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN145,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN146,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN147,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN148,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN149,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN150,Aceh Utara,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN151,Aceh Utara,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,"Kemarau, Hujan tidak menentu",Tidak,-
+PTN152,Aceh Utara,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN153,Aceh Utara,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,-
+PTN154,Aceh Utara,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,-
+PTN155,Aceh Utara,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN156,Aceh Utara,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Banjir, Kemarau, Hujan tidak menentu",Tidak,-
+PTN157,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Mandiri,Tidak,Hama,Ya,-
+PTN158,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Tidak,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,Adanya informasi tentang pengendalian hama dari penyuluh biar tidak ada gagal panen lagi
+PTN159,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh",Ya,Hama,Tidak,Penyediaan bibit unggul
+PTN160,Bireun,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Ya,Menyediakan alat pertanian untuk petani
+PTN161,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Tidak,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,Menyediakan bibit berkualitas
+PTN162,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Tidak,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,Banyak memberikan edukasi kepada petani
+PTN163,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,Memberikan penyuluhan untuk membuat padi tidak gagal panen
+PTN164,Bireun,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,-
+PTN165,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,Harga jual di stabilkan
+PTN166,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Ya,Hama,Tidak,Menyediakan alat pertanian gratis
+PTN167,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Hama,Ya,Memberikan solusi terkait hama
+PTN168,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,,Tidak,Memberikan informasi tentang musim tanam
+PTN169,Bireun,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut penyuluh",Tidak,,Ya,-
+PTN170,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Tidak,,Tidak,Menyediakan alat pertanian lebih
+PTN171,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Tidak,,Tidak,Memberikan edukasi dan solusi terhadap petani
+PTN172,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,"Ikut pengumuman desa, Ikut penyuluh",Ya,,Tidak,-
+PTN173,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut penyuluh",Tidak,,Tidak,-
+PTN174,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Ya,,Ya,Penyuluh lebih sering mengontrol petani di sawah
+PTN175,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,,Tidak,-
+PTN176,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,,Ya,-
+PTN177,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN178,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN179,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN180,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN181,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN182,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN183,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN184,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN185,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN186,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Tidak,,Ya,-
+PTN187,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut penyuluh",Tidak,,Ya,Memberikan edukasi tentang teknologi yang lebih modern
+PTN188,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Tidak,,Tidak,Memberikan bibit unggul agar hasil panen lebih bagus
+PTN189,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh",Tidak,,Tidak,Memberikan edukasi tentang teknologi terbaru
+PTN190,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut penyuluh",Tidak,,Tidak,Menghasilkan harga jual agar para petani tidak mengalami kerugian
+PTN191,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,,Tidak,"Memberikan informasi terkini tentang cuaca, hama, penyakit, dll"
+PTN192,Bireun,Ya,Tidak,Tidak,Ya,Tidak,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh",Tidak,,Tidak,Para kelompok tani lebih dikasi edukasi lagi dari pihak terkait agar lebih paham masalah pertanian
+PTN193,Bireun,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Tidak,,Tidak,Pelatihan tentang pertanian
+PTN194,Bireun,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut penyuluh, Ikut keujrun blang",Tidak,,Ya,Bantuan melalui dinas pertanian seperti bibit unggul/obat
+PTN195,Bireun,Ya,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Tidak,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut siaran radio/tv, Ikut keujrun blang",Tidak,,Tidak,"Dinas pertanian dapat turun langsung ke lapangan untuk memberikan arahan langsung ke petani dengan edukasi masalah tanah, ptt, dll"
+PTN196,Bireun,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Tidak,,Ya,Pemerintah menjaga harga pasar agar tetap stabil

@@ -7,6 +7,24 @@ import seaborn as sns
 import numpy as np
 import re
 
+COLOR_PALETTE = {
+    'primary_blue': '#1E88E5',      # Biru utama
+    'secondary_blue': '#42A5F5',    # Biru sekunder
+    'green': '#388E3C',             # Hijau
+    'red': '#D32F2F',               # Merah
+    'orange': '#FF6F00',            # Orange
+    'purple': '#7B1FA2',            # Ungu
+    'teal': '#00897B',              # Teal
+    'amber': '#FFA000',             # Amber
+    'brown': '#5D4037',             # Coklat
+    'cyan': '#00ACC1',              # Cyan
+    'indigo': '#3949AB',            # Indigo
+    'pink': '#C2185B',              # Pink
+    'lime': '#689F38',              # Lime
+    'deep_orange': '#E64A19',       # Deep Orange
+    'gray': '#757575'               # Abu-abu
+}
+
 # Load data manajemen usaha
 df_manajemen = pd.read_csv("kuisioner_tanam_padi - ManajemenUsaha.csv")
 
@@ -19,29 +37,39 @@ print(df_manajemen.head())
 
 # Fungsi untuk mapping kabupaten berdasarkan ID petani
 def get_kabupaten(id_petani):
-    # Extract nomor dari ID (PTN001 -> 1)
-    try:
-        # Handle special cases first
-        if id_petani in ['PTN130', 'PTN131', 'PTN132', 'PTN133', 'PTN134', 
-                         'PTN200', 'PTN201', 'PTN202', 'PTN203', 'PTN204', 
-                         'PTN205', 'PTN206', 'PTN207', 'PTN208', 'PTN209']:
-            return 'Aceh Besar'
-        
-        # Process regular pattern IDs
-        nomor = int(id_petani.replace('PTN', ''))
-        if 1 <= nomor <= 35:
-            return 'Aceh Besar'
-        elif 36 <= nomor <= 77:
-            return 'Aceh Jaya'
-        elif 78 <= nomor <= 109:
-            return 'Pidie'
-        elif 110 <= nomor <= 129:
-            return 'Aceh Utara'
-        else:
+    if pd.isna(id_petani):
+        return np.nan
+    
+    # Convert to string and extract numeric part
+    id_str = str(id_petani).strip()
+    
+    # Handle PTN prefix format (PTN001, PTN002, etc.)
+    if id_str.startswith('PTN'):
+        try:
+            # Extract numeric part after PTN
+            id_num = int(id_str[3:])
+        except (ValueError, IndexError):
             return 'Tidak Diketahui'
-    except:
+    else:
+        # Try direct numeric conversion
+        try:
+            id_num = int(id_petani)
+        except:
+            return 'Tidak Diketahui'
+    
+    # Map to kabupaten based on numeric ID
+    if 1 <= id_num <= 50:
+        return 'Aceh Besar'
+    elif 51 <= id_num <= 92:
+        return 'Aceh Jaya'
+    elif 93 <= id_num <= 136:
+        return 'Pidie'
+    elif 137 <= id_num <= 156:
+        return 'Aceh Utara'
+    elif 157 <= id_num <= 196:
+        return 'Bireuen'
+    else:
         return 'Tidak Diketahui'
-# Tambahkan kolom kabupaten ke dataframe
 df_manajemen['kabupaten'] = df_manajemen['id_petani'].apply(get_kabupaten)
 
 # Visualisasi 1 : Distribusi Penggunaan Pembajakan Lahan Modern berdasarkan Kabupaten
@@ -85,7 +113,7 @@ print(f"\nStatus pembajakan lahan modern yang akan ditampilkan: {available_pemba
 
 # Gunakan warna yang meaningful untuk pembajakan lahan modern
 # Hijau untuk Ya (positif), merah untuk Tidak (negatif), abu-abu untuk tidak diketahui
-colors = ['#4CAF50', '#E53935', '#808080']
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Visualisasi: Distribusi Penggunaan Pembajakan Lahan Modern berdasarkan Kabupaten
 plt.figure(figsize=(12, 6))
@@ -108,8 +136,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -223,7 +250,7 @@ print(f"\nStatus pengairan sumur bor yang akan ditampilkan: {available_sumur_bor
 
 # Gunakan warna yang meaningful untuk pengairan sumur bor
 # Biru untuk Ya (positif - berhubungan dengan air), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#2196F3', '#E53935', '#808080']
+colors = [COLOR_PALETTE['primary_blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -245,8 +272,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -361,7 +387,8 @@ print(f"\nStatus pengairan pompa air yang akan ditampilkan: {available_pompa_air
 
 # Gunakan warna yang meaningful untuk pengairan pompa air
 # Biru lebih muda untuk Ya (positif - berhubungan dengan air), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#03A9F4', '#E53935', '#808080']  # Lighter blue to differentiate from sumur bor
+colors = [COLOR_PALETTE['secondary_blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+  # Lighter blue to differentiate from sumur bor
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -382,8 +409,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -496,7 +522,8 @@ print(f"\nStatus penyemprotan pompa tangan yang akan ditampilkan: {available_pom
 
 # Gunakan warna yang meaningful untuk penyemprotan pompa tangan
 # Hijau untuk Ya (positif - berhubungan dengan aktivitas pertanian), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#8BC34A', '#E53935', '#808080']  # Light green for hand pump spraying
+colors = [COLOR_PALETTE['lime'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+ # Light green for hand pump spraying
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -518,8 +545,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -632,7 +658,7 @@ print(f"\nStatus penyemprotan pompa elektrik yang akan ditampilkan: {available_p
 
 # Gunakan warna yang meaningful untuk penyemprotan pompa elektrik
 # Hijau tua untuk Ya (positif - teknologi lebih maju), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#4CAF50', '#E53935', '#808080']  # Darker green for electric pump (more advanced)
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -654,8 +680,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -768,7 +793,7 @@ print(f"\nStatus panen mesin potong yang akan ditampilkan: {available_mesin_poto
 
 # Gunakan warna yang meaningful untuk panen mesin potong
 # Kuning keemasan untuk Ya (positif - berhubungan dengan panen/gandum), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#FFC107', '#E53935', '#808080']  # Golden yellow for harvesting machines
+colors = [COLOR_PALETTE['amber'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -789,8 +814,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -904,7 +928,7 @@ print(f"\nStatus penggunaan internet yang akan ditampilkan: {available_internet}
 
 # Gunakan warna yang meaningful untuk penggunaan internet
 # Biru terang untuk Ya (positif - berhubungan dengan teknologi/internet), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#1976D2', '#E53935', '#808080']  # Bright blue for internet technology
+colors = [COLOR_PALETTE['primary_blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -923,8 +947,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1039,7 +1062,8 @@ print(f"\nStatus info dari penyuluh yang akan ditampilkan: {available_penyuluh}"
 
 # Gunakan warna yang meaningful untuk info dari penyuluh
 # Hijau kebiruan untuk Ya (positif - berhubungan dengan pengetahuan/pembelajaran), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#009688', '#E53935', '#808080']  # Teal color for knowledge/information
+colors = [COLOR_PALETTE['teal'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+ # Teal color for knowledge/information
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1060,8 +1084,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1175,7 +1198,7 @@ print(f"\nStatus info dari keuchik yang akan ditampilkan: {available_keuchik}")
 
 # Gunakan warna yang meaningful untuk info dari keuchik
 # Ungu untuk Ya (positif - berhubungan dengan kepemimpinan lokal), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#673AB7', '#E53935', '#808080']  # Purple color for village leadership
+colors = [COLOR_PALETTE['purple'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1192,8 +1215,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1306,7 +1328,7 @@ print(f"\nStatus info dari keujrun blang yang akan ditampilkan: {available_keujr
 
 # Gunakan warna yang meaningful untuk info dari keujrun blang
 # Biru kehijauan untuk Ya (positif - berhubungan dengan pengetahuan lokal), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#00796B', '#E53935', '#808080']  # Teal green for traditional knowledge
+colors = [COLOR_PALETTE['teal'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1323,8 +1345,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1438,7 +1459,7 @@ print(f"\nStatus keanggotaan kelompok tani yang akan ditampilkan: {available_kel
 
 # Gunakan warna yang meaningful untuk keanggotaan kelompok tani
 # Oranye untuk Ya (positif - berhubungan dengan komunitas/kelompok), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#FF9800', '#E53935', '#808080']  # Orange for community/group membership
+colors = [COLOR_PALETTE['orange'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1459,8 +1480,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1574,7 +1594,7 @@ print(f"\nStatus pengetahuan tentang kalender tanam yang akan ditampilkan: {avai
 
 # Gunakan warna yang meaningful untuk pengetahuan tentang kalender tanam
 # Kuning untuk Ya (positif - berhubungan dengan pengetahuan jadwal), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#FFC107', '#E53935', '#808080']  # Yellow for schedule/calendar knowledge
+colors = [COLOR_PALETTE['amber'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1595,8 +1615,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1710,7 +1729,8 @@ print(f"\nStatus pengetahuan tentang pergeseran musim yang akan ditampilkan: {av
 
 # Gunakan warna yang meaningful untuk pengetahuan tentang pergeseran musim
 # Biru muda untuk Ya (positif - berhubungan dengan perubahan iklim/cuaca), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#03A9F4', '#E53935', '#808080']  # Light blue for climate/weather awareness
+colors = [COLOR_PALETTE['secondary_blue'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+ # Light blue for climate/weather awareness
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1731,8 +1751,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -1873,14 +1892,14 @@ print(f"\nJenis respon yang akan ditampilkan: {available_respon}")
 # Gunakan warna yang meaningful untuk respon pergeseran musim
 # Palet warna yang berbeda untuk setiap jenis respon
 color_map = {
-    'Ikut Pengumuman Desa': '#4CAF50',  # Green
-    'Ikut Kelompok Tani': '#FF9800',    # Orange
-    'Ikut Penyuluh': '#2196F3',         # Blue
-    'Mandiri': '#9C27B0',               # Purple
-    'Ikut Keujrun Blang': '#660B05',    # Brown
-    'Ikut Siaran Radio/TV': '#FFC107',  # Yellow
-    'Respon Lainnya': '#607D8B',        # Gray-blue
-    'Tidak Ada Respon': '#DC143C'       # Red
+    'Ikut Pengumuman Desa': COLOR_PALETTE['green'],
+    'Ikut Kelompok Tani': COLOR_PALETTE['orange'],
+    'Ikut Penyuluh': COLOR_PALETTE['primary_blue'],
+    'Mandiri': COLOR_PALETTE['purple'],
+    'Ikut Keujrun Blang': COLOR_PALETTE['brown'],
+    'Ikut Siaran Radio/TV': COLOR_PALETTE['amber'],
+    'Respon Lainnya': COLOR_PALETTE['cyan'],
+    'Tidak Ada Respon': COLOR_PALETTE['red']
 }
 # Pastikan jumlah warna sesuai dengan jumlah kategori
 colors = [color_map.get(resp, '#000000') for resp in available_respon]
@@ -1905,8 +1924,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -2021,7 +2039,7 @@ print(f"\nStatus pernah gagal tanam yang akan ditampilkan: {available_gagal}")
 
 # Gunakan warna yang meaningful untuk pernah gagal tanam
 # Merah untuk Ya (negatif - pernah gagal), hijau untuk Tidak (positif - tidak pernah gagal), abu-abu untuk tidak diketahui
-colors = ['#E53935', '#4CAF50', '#808080']
+colors = [COLOR_PALETTE['red'], COLOR_PALETTE['green'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -2042,8 +2060,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -2185,13 +2202,13 @@ print(f"\nPenyebab gagal tanam yang akan ditampilkan: {available_penyebab}")
 
 # Gunakan warna yang meaningful untuk penyebab gagal tanam
 # Warna berdasarkan jenis bencana/masalah
-colors = ['#FF5722',   # Deep Orange untuk Kemarau (panas/kering)
-          '#2196F3',   # Blue untuk Banjir (air berlebih)
-          '#9C27B0',   # Purple untuk Hujan Tidak Menentu (ketidakpastian)
-          '#3F51B5',   # Indigo untuk Hujan Deras (hujan intensif)
-          '#FF9800',   # Orange untuk Suhu Ekstrim (suhu)
-          '#795548',   # Brown untuk Angin Kencang (kerusakan fisik)
-          '#808080']   # Gray untuk Tidak Ada Data
+colors = [COLOR_PALETTE['deep_orange'],  # Kemarau
+          COLOR_PALETTE['primary_blue'],  # Banjir
+          COLOR_PALETTE['purple'],        # Hujan Tidak Menentu
+          COLOR_PALETTE['indigo'],        # Hujan Deras
+          COLOR_PALETTE['orange'],        # Suhu Ekstrim
+          COLOR_PALETTE['brown'],         # Angin Kencang
+          COLOR_PALETTE['gray']]          # Tidak Ada Data
 
 # Pastikan jumlah warna sesuai dengan jumlah kategori
 colors = colors[:len(available_penyebab)]
@@ -2215,8 +2232,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
@@ -2332,7 +2348,8 @@ print(f"\nStatus teknologi lain yang akan ditampilkan: {available_teknologi}")
 
 # Gunakan warna yang meaningful untuk teknologi lain
 # Hijau untuk Ya (positif - menggunakan teknologi tambahan), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = ['#4CAF50', '#E53935', '#808080']
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -2353,8 +2370,7 @@ for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}\n{percentage:.1f}%'
+            label_text = f'{int(height)}'
             
             # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
