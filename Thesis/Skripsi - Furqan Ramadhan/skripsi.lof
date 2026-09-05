@@ -1,0 +1,66 @@
+~\hfill \textit {Halaman}\par 
+\babel@toc {bahasa}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Alur RESTful API \citep {howie2023}}}{13}{figure.caption.15}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Diagram Alur Prosedur Penelitian}}{18}{figure.caption.16}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces \textit {Activity Diagram} Pembagian Tugas Anggota Tim}}{20}{figure.caption.18}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces \textit {Flowchart} Alur Kerja Anggota 1}}{21}{figure.caption.19}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Halaman Otomasi}}{22}{figure.caption.20}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Parameter Metadata}}{22}{figure.caption.21}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Varietas Padi di Kabupaten Aceh Besar}}{25}{figure.caption.23}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Jenis Lahan Pertanian Kabupaten Aceh Besar}}{26}{figure.caption.24}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Periode Tanam di Kabupaten Aceh Besar}}{26}{figure.caption.25}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Halaman \textit {Dashboard}}}{28}{figure.caption.26}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Tambah \textit {Dataset} melalui \textit {Upload}}}{28}{figure.caption.27}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Tambah \textit {Dataset} melalui \textit {Fetch}}}{29}{figure.caption.28}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Halaman Detail \textit {Dataset}}}{29}{figure.caption.29}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Visualisasi \textit {Time-Series}}}{30}{figure.caption.30}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Modal \textit {Preprocessing}}}{30}{figure.caption.31}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Halaman \textit {Reports}}}{31}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Halaman Detail \textit {Reports}}}{32}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces GCV \textit {Evaluation}}}{32}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces \textit {Model Coverage}}}{33}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Visualisasi Dekomposisi}}{34}{figure.caption.36}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Konfigurasi Otomasi}}{35}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Riwayat Eksekusi}}{35}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.17}{\ignorespaces \textit {NoSQL Database Design}}}{37}{figure.caption.39}%
+\contentsline {figure}{\numberline {4.18}{\ignorespaces \textit {Document Schema Diagram}}}{38}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.19}{\ignorespaces Potongan kode \textit {endpoint} \textit {Dataset} BMKG dan NASA POWER}}{40}{figure.caption.41}%
+\contentsline {figure}{\numberline {4.20}{\ignorespaces Potongan kode \textit {endpoint Preprocessing}}}{40}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.21}{\ignorespaces Potongan kode \textit {endpoint Report}}}{41}{figure.caption.43}%
+\contentsline {figure}{\numberline {4.22}{\ignorespaces Potongan kode \textit {endpoint} \textit {Decomposition}}}{42}{figure.caption.44}%
+\contentsline {figure}{\numberline {4.23}{\ignorespaces Potongan kode \textit {endpoint} Konfigurasi}}{42}{figure.caption.45}%
+\contentsline {figure}{\numberline {4.24}{\ignorespaces Potongan kode \textit {endpoint} \textit {Trigger}}}{43}{figure.caption.46}%
+\contentsline {figure}{\numberline {4.25}{\ignorespaces Visualisasi awal \textit {Time-Series} Suhu Rata-rata (TAVG)}}{45}{figure.caption.49}%
+\contentsline {figure}{\numberline {4.26}{\ignorespaces Visualisasi awal \textit {Time-Series} Kelembaban Relatif (RH\_AVG)}}{46}{figure.caption.50}%
+\contentsline {figure}{\numberline {4.27}{\ignorespaces Visualisasi awal \textit {Time-Series} Curah Hujan (RR)}}{46}{figure.caption.51}%
+\contentsline {figure}{\numberline {4.28}{\ignorespaces Perbandingan Suhu Sebelum dan Sesudah \textit {Smoothing}}}{48}{figure.caption.53}%
+\contentsline {figure}{\numberline {4.29}{\ignorespaces Perbandingan Kelembaban Sebelum dan Sesudah \textit {Smoothing}}}{48}{figure.caption.54}%
+\contentsline {figure}{\numberline {4.30}{\ignorespaces Perbandingan Curah Hujan Sebelum dan Sesudah \textit {Smoothing}}}{49}{figure.caption.55}%
+\contentsline {figure}{\numberline {4.31}{\ignorespaces Dekomposisi Suhu rata-rata}}{50}{figure.caption.56}%
+\contentsline {figure}{\numberline {4.32}{\ignorespaces Dekomposisi Kelembaban Relatif}}{50}{figure.caption.57}%
+\contentsline {figure}{\numberline {4.33}{\ignorespaces Dekomposisi Curah Hujan}}{50}{figure.caption.58}%
+\contentsline {figure}{\numberline {4.34}{\ignorespaces Visualisasi awal \textit {Time-Series} Suhu}}{51}{figure.caption.59}%
+\contentsline {figure}{\numberline {4.35}{\ignorespaces Visualisasi awal \textit {Time-Series} Kelembaban}}{51}{figure.caption.60}%
+\contentsline {figure}{\numberline {4.36}{\ignorespaces Visualisasi awal \textit {Time-Series} Curah Hujan}}{52}{figure.caption.61}%
+\contentsline {figure}{\numberline {4.37}{\ignorespaces Visualisasi awal \textit {Time-Series} Radiasi Matahari}}{52}{figure.caption.62}%
+\contentsline {figure}{\numberline {4.38}{\ignorespaces Perbandingan Kelembaban Sebelum dan Sesudah \textit {Smoothing}}}{53}{figure.caption.64}%
+\contentsline {figure}{\numberline {4.39}{\ignorespaces Perbandingan Suhu Sebelum dan Sesudah \textit {Smoothing}}}{54}{figure.caption.65}%
+\contentsline {figure}{\numberline {4.40}{\ignorespaces Dekomposisi \textit {Time-Series} Kelembaban}}{54}{figure.caption.66}%
+\contentsline {figure}{\numberline {4.41}{\ignorespaces Dekomposisi \textit {Time-Series} Suhu}}{55}{figure.caption.67}%
+\contentsline {figure}{\numberline {4.42}{\ignorespaces Dekomposisi \textit {Time-Series} Curah Hujan}}{55}{figure.caption.68}%
+\contentsline {figure}{\numberline {4.43}{\ignorespaces Dekomposisi \textit {Time-Series} Radiasi Matahari}}{55}{figure.caption.69}%
+\contentsline {figure}{\numberline {4.44}{\ignorespaces Implementasi Layanan Flask Menggunakan Gunicorn pada Ubuntu Server}}{56}{figure.caption.70}%
+\contentsline {figure}{\numberline {4.45}{\ignorespaces Alur \textit {Integration Testing}}}{57}{figure.caption.71}%
+\contentsline {figure}{\numberline {4.46}{\ignorespaces Kalender Prediksi Cuaca Holt-Winters Periode 1 Oktober 2025 -- 30 September 2026}}{63}{figure.caption.76}%
+\contentsline {figure}{\numberline {4.47}{\ignorespaces Kalender Prediksi Cuaca LSTM Periode 1 Oktober 2025 -- 30 September 2026}}{65}{figure.caption.79}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Kuesioner petani di Kabupaten Aceh Besar}}{75}{figure.caption.84}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Data penelitian BMKG}}{75}{figure.caption.85}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Data penelitian NASA POWER}}{76}{figure.caption.86}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Dokumentasi pengerjaan sprint pengembangan sistem}}{76}{figure.caption.87}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Implementasi skema database MongoDB}}{77}{figure.caption.88}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Pengujian endpoint REST API dengan Postman}}{77}{figure.caption.89}%

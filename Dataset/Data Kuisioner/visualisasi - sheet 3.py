@@ -1328,7 +1328,7 @@ print(f"\nStatus info dari keujrun blang yang akan ditampilkan: {available_keujr
 
 # Gunakan warna yang meaningful untuk info dari keujrun blang
 # Biru kehijauan untuk Ya (positif - berhubungan dengan pengetahuan lokal), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = [COLOR_PALETTE['teal'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))
@@ -1459,7 +1459,7 @@ print(f"\nStatus keanggotaan kelompok tani yang akan ditampilkan: {available_kel
 
 # Gunakan warna yang meaningful untuk keanggotaan kelompok tani
 # Oranye untuk Ya (positif - berhubungan dengan komunitas/kelompok), merah untuk Tidak, abu-abu untuk tidak diketahui
-colors = [COLOR_PALETTE['orange'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 plt.figure(figsize=(12, 6))

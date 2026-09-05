@@ -145,6 +145,21 @@ def process_year_directory(year_dir):
     # Gabungkan semua DataFrame
     combined_df = pd.concat(dfs, ignore_index=True, copy=False)
     
+    # Deteksi dan hapus duplikasi
+    initial_count = len(combined_df)
+    duplicates = combined_df[combined_df.duplicated(subset=['Date'], keep=False)]
+
+    if not duplicates.empty:
+        print(f"Duplikasi ditemukan: {len(duplicates)} baris")
+        dup_dates = duplicates['Date'].unique()
+        print(f"Tanggal duplikat: {sorted([d.strftime('%Y-%m-%d') for d in dup_dates])}")
+        
+    combined_df = combined_df.drop_duplicates(subset=['Date'], keep='first')
+    final_count = len(combined_df)
+
+    if initial_count != final_count:
+        print(f"{initial_count - final_count} berhasil hapus baris duplikat.")
+    
     # Urutkan berdasarkan tanggal
     combined_df = combined_df.sort_values(by='Date').reset_index(drop=True)
     

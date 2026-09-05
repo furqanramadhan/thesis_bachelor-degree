@@ -1,0 +1,25 @@
+~\hfill \textit {Halaman}\par 
+\babel@toc {bahasa}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {bahasa}{}\relax 
+\contentsline {table}{\numberline {2.1}{\ignorespaces Tahapan Pemrosesan Data Iklim}}{5}{table.caption.13}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Perbandingan SQL dan NoSQL berdasarkan karakteristik}}{12}{table.caption.14}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Penelitian Terkait}}{15}{table.2.3}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Pembagian \textit {Sprint} dalam Pengembangan Sistem}}{19}{table.caption.17}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Skenario Pengujian RESTful API Sistem}}{23}{table.caption.22}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Statistik Data BMKG}}{44}{table.caption.47}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Statistik Data NASA POWER}}{44}{table.caption.48}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Hasil Imputasi Data BMKG untuk Variabel Utama}}{47}{table.caption.52}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Ringkasan Preprocessing NASA POWER untuk Variabel Utama}}{53}{table.caption.63}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Hasil Pengujian \textit {Integration Testing}}}{58}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Hasil Pengujian Data BMKG}}{61}{table.caption.72}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Hasil Pengujian Data NASA POWER}}{61}{table.caption.73}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Tabel Kesetaraan Tanam \citep {djaenudin2011}}}{63}{table.caption.74}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Kalender Tanam Kabupaten Aceh Besar Metode Holt-Winters Periode Oktober 2025 -- September 2026}}{63}{table.caption.75}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces Prediksi Masa Tanam Varietas Padi Berdasarkan Hasil Peramalan Holt-Winters}}{64}{table.caption.77}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Kalender Tanam Kabupaten Aceh Besar Metode LSTM Periode Oktober 2025 -- September 2026}}{65}{table.caption.78}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Prediksi Masa Tanam Varietas Padi Berdasarkan Hasil Peramalan LSTM}}{66}{table.caption.80}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Perbandingan Evaluasi Metrik Holt-Winters dan LSTM}}{67}{table.caption.81}%

@@ -1,0 +1,51 @@
+id_petani,kab_kota,pembajakan_lahan_modern,pengairan_sumur_bor,pengairan_pompa_air,penyemprotan_pompa_tangan,penyemprotan_pompa_elektrik,panen_mesin_potong,pakai_internet,info_penyuluh,info_keuchik,info_keujrun_blang,anggota_kelompok_tani,tahu_katam,tahu_pergeseran_musim,respon_pergeseran_musim,pernah_gagal_tanam,penyebab_gagal,teknologi_lain,saran
+PTN001,Aceh Besar,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut keujrun blang,Ya,Kemarau,Tidak,Bibit dan pupuk lebih baik disediakan yang jenis varietas pro petani
+PTN002,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut keujrun blang,Ya,Kemarau,Tidak,Pihak dinas pertanian menyediakan bibit dan pupuk yang memadai untuk para petani
+PTN003,Aceh Besar,Ya,Tidak,Tidak,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut penyuluh, Ikut keujrun blang",Ya,Kemarau,Tidak,Adanya kalender tanam
+PTN004,Aceh Besar,Ya,Tidak,Tidak,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut keujrun blang,Ya,Kemarau,Tidak,Adanya kalender tanam
+PTN005,Aceh Besar,Ya,Tidak,Tidak,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut keujrun blang,Ya,Kemarau,Tidak,Informasi aktual tentang musim padi dapat diinformasikan secara disiplin
+PTN006,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,Adanya kalender tanam
+PTN007,Aceh Besar,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ikut pengumuman desa,Ya,Kemarau,Tidak,edukasi kalender tanam disitu
+PTN008,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Ya,"Banjir, Kemarau",Tidak,edukasi kalender tanam disitu
+PTN009,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Suhu ektrim,Tidak,edukasi cuaca untuk musim tanam
+PTN010,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,Kemarau,Tidak,edukasi kalender tanam yang anti gagal panen
+PTN011,Aceh Besar,Ya,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ikut penyuluh,Tidak,,Tidak,-
+PTN012,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut penyuluh, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN013,Aceh Besar,Ya,Ya,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,Kemarau,Tidak,"Harapannya semoga informasi cuaca dapat diinfokan secara baik, jadi tidak gagal panen"
+PTN014,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,"Ikut pengumuman desa, Ikut kelompok tani, Mandiri, Ikut keujrun blang",Ya,Kemarau,Tidak,edukasi cuaca ekstrim supaya tidak gagal panen
+PTN015,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,"Ikut pengumuman desa, Ikut keujrun blang",Ya,Kemarau,Tidak,-
+PTN016,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN017,Aceh Besar,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Mandiri, Ikut keujrun blang",Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN018,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani",Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN019,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN020,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Ya,Ya,Ya,"Ikut pengumuman desa, Ikut kelompok tani, Ikut keujrun blang",Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN021,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Ya,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN022,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN023,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN024,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Mandiri,Tidak,Banjir,Ya,edukasi cuaca untuk musim tanam
+PTN025,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Mandiri,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN026,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN027,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Tidak,Tidak,Ya,Ya,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN028,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,edukasi cuaca untuk musim tanam
+PTN029,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,,Tidak,Banjir,Tidak,-
+PTN030,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,-
+PTN031,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,Banjir,Tidak,-
+PTN032,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Ya,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,-
+PTN033,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ikut pengumuman desa,Tidak,Banjir,Tidak,-
+PTN034,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,Banjir,Tidak,-
+PTN035,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut kelompok tani,Tidak,Banjir,Tidak,-
+PTN036,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ikut pengumuman desa,Tidak,,Tidak,-
+PTN037,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,,Tidak,-
+PTN038,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Ya,Ya,Ikut kelompok tani,Tidak,,Tidak,-
+PTN039,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Ikut pengumuman desa,Tidak,,Tidak,Ada kalender tanam digital
+PTN040,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Ya,Ya,Tidak,Tidak,Ya,Tidak,Ya,Ya,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN041,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN042,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN043,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN044,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Kalender Musim Tanam Digital
+PTN045,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,Kemarau,Tidak,Ada kalender tanam digital
+PTN046,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Ya,Ya,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Ada kalender tanam digital
+PTN047,Aceh Besar,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Tidak,Kalender Musim Tanam Digital
+PTN048,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Ada kalender tanam digital
+PTN049,Aceh Besar,Ya,Tidak,Ya,Tidak,Ya,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Ada kalender tanam digital
+PTN050,Aceh Besar,Ya,Tidak,Tidak,Tidak,Ya,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Tidak,Ikut pengumuman desa,Ya,"Kemarau, Hujan tidak menentu",Ya,Kalender Musim Tanam Digital

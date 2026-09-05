@@ -1,0 +1,346 @@
+\begin{thebibliography}{}
+
+\bibitem[Adams and Asemota, 2023]{adams2023}
+Adams, S.~O. \& Asemota, O.~J. (2023).
+\newblock {The Efficiency of the Proposed Smoothing Method over the Classical
+  Cubic Smoothing Spline Regression Model with Autocorrelated Residual}.
+\newblock {\em {Journal of Mathematics Letters}}, 1(1): 19--37.
+\newblock \url{https://doi.org/10.31586/jml.2023.618}.
+
+\bibitem[Afrifa-Yamoah \textit{et al}., 2020]{afrifa2020}
+Afrifa-Yamoah, E., Mueller, U.~A., Taylor, S.~M., \& Fisher, A.~J. (2020).
+\newblock Missing data imputation of high-resolution temporal climate time
+  series data.
+\newblock {\em Meteorological Applications}, 27(1): e1873.
+\newblock \url{https://doi.org/10.1002/met.1873}.
+
+\bibitem[Akerkar and Sajja, 2016]{akerkar2016}
+Akerkar, R. \& Sajja, P.~S. (2016).
+\newblock {\em Intelligent techniques for data science}.
+\newblock Springer, Cham, Switzerland.
+\newblock \url{https://doi.org/10.1007/978-3-319-29206-9}.
+
+\bibitem[Alejo-Sanchez \textit{et al}., 2025]{alejo2025}
+Alejo-Sanchez, L.~E., M{\'a}rquez-Grajales, A., Salas-Mart{\'\i}nez, F.,
+  Franco-Arcega, A., L{\'o}pez-Morales, V., Acevedo-Sandoval, O.~A.,
+  Gonz{\'a}lez-Ram{\'\i}rez, C.~A., \& Villegas-Vega, R. (2025).
+\newblock Missing data imputation of climate time series: A review.
+\newblock {\em MethodsX}, 15: 103455.
+\newblock \url{https://doi.org/10.1016/j.mex.2025.103455}.
+
+\bibitem[AlSalehy and Bailey, 2025]{alsalehy2025}
+AlSalehy, A.~S. \& Bailey, M. (2025).
+\newblock Improving time series data quality: Identifying outliers and handling
+  missing values in a multilocation gas and weather dataset.
+\newblock {\em Smart Cities}, 8(3).
+\newblock \url{https://doi.org/10.3390/smartcities8030082}.
+
+\bibitem[Andrasto \textit{et al}., 2023]{andrasto2023}
+Andrasto, T., Ristanto, R.~D., Sukamta, S., Aufa, A., Hafidz, C.~M., Sandyawan,
+  B., \& Alfarisi, A.~F. (2023).
+\newblock Method ewma (exponentially weighted moving average) as a filter to
+  fine and remove noise on time series data.
+\newblock In {\em IOP Conference Series: Earth and Environmental Science} (pp.
+  012012), volume 1203. IOP Publishing.
+\newblock \url{https://doi.org/10.1088/1755-1315/1203/1/012012}.
+
+\bibitem[Andriani \textit{et al}., 2022]{andriani2022}
+Andriani, N., Wahyuningsih, S., \& Siringoringo, M. (2022).
+\newblock Application of double exponential smoothing holt and triple
+  exponential smoothing holt-winter with golden section optimization to
+  forecast export value of east borneo province.
+\newblock {\em Jurnal Matematika, Statistika dan Komputasi}, 18(3): 475--483.
+\newblock \url{https://doi.org/10.20956/j.v18i3.17492}.
+
+\bibitem[Azadi \textit{et al}., 2021]{azadi2021}
+Azadi, H., Taheri, F., Burkart, S., Mahmoudi, H., de~Maeyer, P., \& Witlox, F.
+  (2021).
+\newblock Impact of agricultural land conversion on climate change.
+\newblock {\em Environment, Development and Sustainability}, 23(3): 3187--3198.
+\newblock \url{https://doi.org/10.1007/s10668-020-00712-2}.
+
+\bibitem[Baniaș \textit{et al}., 2021]{banias2021}
+Baniaș, O., Florea, D., Gyalai, R., \& Curiac, D.-I. (2021).
+\newblock Automated specification-based testing of rest apis.
+\newblock {\em Sensors}, 21(16): 5375.
+\newblock \url{https://doi.org/10.3390/s21165375}.
+
+\bibitem[Berthold \textit{et al}., 2020]{berthold2020}
+Berthold, M.~R., Borgelt, C., H{\"o}ppner, F., Klawonn, F., \& Silipo, R.
+  (2020).
+\newblock {\em Guide to intelligent data science}.
+\newblock Springer, Cham, Switzerland.
+\newblock \url{https://doi.org/10.1007/978-3-030-45574-3}.
+
+\bibitem[BNPB, 2025]{bnpb2025}
+BNPB (2025).
+\newblock Indeks risiko bencana indonesia tahun 2024.
+\newblock Laporan~3, Badan Nasional Penanggulangan Bencana, Jakarta.
+\newblock
+  \url{http://bnpb.go.id/storage/app/media/Buku%20BNPB/BUKU%20IRBI%202024_BNPB_lowres.pdf}.
+
+\bibitem[Božić, 2022]{rade2022}
+Božić, R. (2022).
+\newblock Advantages and challenges of nosql compared to sql databases: A
+  systematic literature review.
+\newblock In {\em Proceedings of the Faculty of Economics Brčko} (pp. 11--25),
+  Brčko, Bosnia and Herzegovina. University of East Sarajevo.
+\newblock \url{https://doi.org/10.7251/ZREFB2216011B}.
+
+\bibitem[{BPS Aceh}, 2022]{bpsaceh2022-2018}
+{BPS Aceh} (2022).
+\newblock Produksi padi dan beras menurut kabupaten/kota di provinsi aceh,
+  2022.
+\newblock Retrieved 17 March 2022, from
+  \url{https://aceh.bps.go.id/id/statistics-table/3/ZDNaak0yODBUVTlGYW5sa2REUkVUVVY1YVZkbmR6MDkjMw==/produksi-padi-sup-1--sup--dan-beras-menurut-kabupaten-kota-di-provinsi-aceh.html?year=2018}.
+
+\bibitem[{BPS Indonesia}, 2024]{bpsindonesia2024}
+{BPS Indonesia} (2024).
+\newblock Luas panen, produksi, dan produktivitas padi menurut provinsi, 2024.
+\newblock Retrieved 12 February 2024, from
+  \url{https://www.bps.go.id/id/statistics-table/2/MTQ5OCMy/luas-panen--produksi--dan-produktivitas-padi-menurut-provinsi.html}.
+
+\bibitem[Cai \textit{et al}., 2017]{cai2017}
+Cai, Z., Jönsson, P., Jin, H., \& Eklundh, L. (2017).
+\newblock Performance of smoothing methods for reconstructing ndvi time-series
+  and estimating vegetation phenology from modis data.
+\newblock {\em Remote Sensing}, 9: 1271.
+\newblock \url{https://doi.org/10.3390/rs9121271}.
+
+\bibitem[Castillo and Mendoza, 2022]{castillo2022}
+Castillo, R. C.~J. \& Mendoza, R. (2022).
+\newblock On smoothing of data using sobolev polynomials.
+\newblock {\em AIMS Mathematics}, 7: 19202--19220.
+\newblock \url{https://doi.org/10.3934/math.20221054}.
+
+\bibitem[Cerlini \textit{et al}., 2020]{cerlini2020}
+Cerlini, P.~B., Silvestri, L., \& Saraceni, M. (2020).
+\newblock Quality control and gap-filling methods applied to hourly temperature
+  observations over central italy.
+\newblock {\em Meteorological Applications}, 27(3): e1913.
+\newblock \url{https://doi.org/10.1002/met.1913}.
+
+\bibitem[Chang \textit{et al}., 2024]{chang2024}
+Chang, M.-H., Huang, Y.-C., Cheng, Y.-H., Terng, C.-T., Chen, J., \& Jan, J.~C.
+  (2024).
+\newblock Revisiting regression methods for estimating long-term trends in sea
+  surface temperature.
+\newblock {\em Natural Hazards and Earth System Sciences}, 24(7): 2481--2494.
+\newblock \url{https://doi.org/10.5194/nhess-24-2481-2024}.
+
+\bibitem[Choi, 2021]{choi2021}
+Choi, B. (2021).
+\newblock {\em Python Network Automation Labs: Cron and SNMPv3}, pages
+  629--673.
+\newblock Apress, Berkeley, CA.
+\newblock \url{https://doi.org/10.1007/978-1-4842-6806-3_15}.
+
+\bibitem[De~Giosa \textit{et al}., 2024]{degiosa2024}
+De~Giosa, M., Falini, A., Iavernaro, F., Losito, S., Mazzia, F., \& Rubino, G.
+  (2024).
+\newblock A robust variant of cubic smoothing spline approximation.
+\newblock {\em Numerical Algorithms}, 101(1): 221--241.
+\newblock \url{https://doi.org/10.21203/rs.3.rs-4618095/v1}.
+
+\bibitem[Djaenudin \textit{et al}., 2011]{djaenudin2011}
+Djaenudin, D., Hidayat, A., \& Suhardjo, H. (2011).
+\newblock {\em Petunjuk teknis evaluasi lahan untuk komoditas pertanian}.
+\newblock Balai Besar Penelitian dan Pengembangan Sumberdaya Lahan Pertanian,
+  Bogor.
+\newblock
+  \url{https://www.scribd.com/document/548997656/Evaluasi-Lahan-Untuk-Komoditas-Pertanian-1}.
+
+\bibitem[Faybishenko \textit{et al}., 2022]{faybishenko2022}
+Faybishenko, B., Versteeg, R., Pastorello, G., Dwivedi, D., Varadharajan, C.,
+  \& Agarwal, D. (2022).
+\newblock Challenging problems of quality assurance and quality control (qa/qc)
+  of meteorological time series data.
+\newblock {\em Stochastic environmental research and risk assessment}, 36(4):
+  1049--1062.
+\newblock \url{https://doi.org/10.1007/s00477-021-02106-w}.
+
+\bibitem[Fitri, 2024]{fitri2022}
+Fitri (2024).
+\newblock Daftar http status code, arti, dan penyebabnya.
+\newblock Hostinger Glosarium.
+\newblock Retrieved 21 March 2024, from
+  \url{https://www.hostinger.com/id/tutorial/http-status-code}.
+
+\bibitem[Hoffman, 2001]{hoffman2001}
+Hoffman, J. (2001).
+\newblock {\em Introduction to Structured Query Language}.
+\newblock Self-published, Online, 4.66 edition.
+\newblock
+  \url{https://people.orie.cornell.edu/mru8/orie3120/read/01-HoffmanSQL.pdf}.
+
+\bibitem[{IPCC}, 2023]{ipcc2023}
+{IPCC} (2023).
+\newblock Summary for policymakers.
+\newblock In {Core Writing Team, H. Lee and J. Romero (eds.)}, editor, {\em
+  Climate Change 2023: Synthesis Report. Contribution of Working Groups I, II
+  and III to the Sixth Assessment Report of the Intergovernmental Panel on
+  Climate Change} (pp. 1--34), Geneva, Switzerland. IPCC.
+\newblock \url{https://doi.org/10.59327/IPCC/AR6-9789291691647.001}.
+
+\bibitem[Javed \textit{et al}., 2024]{javed2024}
+Javed, H., Ismail, M., \& Saeed, N. (2024).
+\newblock New extended exponentially weighted moving average control chart for
+  monitoring process mean.
+\newblock {\em Heliyon}, 10(14): e34424.
+\newblock \url{https://doi.org/10.1016/j.heliyon.2024.e34424}.
+
+\bibitem[Jovanovic \textit{et al}., 2020]{jovanovic2020}
+Jovanovic, M., Mesquida, A., Mas, A., \& Colomo-Palacios, R. (2020).
+\newblock Agile transition and adoption frameworks, issues and factors: A
+  systematic mapping.
+\newblock {\em IEEE Access}, PP: 1--1.
+\newblock \url{https://doi.org/10.1109/ACCESS.2020.2967839}.
+
+\bibitem[Khan \textit{et al}., 2022]{khan2022}
+Khan, W., Kumar, T., Cheng, Z., Raj, K., Roy, A.~M., \& Luo, B. (2022).
+\newblock Sql and nosql databases software architectures performance analysis
+  and assessments -- a systematic literature review.
+\newblock {\em Big Data and Cognitive Computing}.
+\newblock \url{https://doi.org/10.48550/arXiv.2209.06977}.
+
+\bibitem[Khoirunnisa, 2019]{Khoirunnisa2019}
+Khoirunnisa, L. (2019).
+\newblock Sistem informasi geografis pemetaan komoditas pertanian dan informasi
+  iklim berbasis slim framework.
+\newblock {\em Sains, Aplikasi, Komputasi dan Teknologi Informasi}, 1.
+\newblock \url{https://doi.org/10.30872/jsakti.v1i1.2260}.
+
+\bibitem[Kwok \textit{et al}., 2023]{kwok2023}
+Kwok, C.-F., Qian, G., \& Kuleshov, Y. (2023).
+\newblock Analyzing error bounds for seasonal-trend decomposition of antarctica
+  temperature time series involving missing data.
+\newblock {\em Atmosphere}, 14(2): 193.
+\newblock \url{https://doi.org/10.3390/atmos14020193}.
+
+\bibitem[Lem, 2024]{lem2024}
+Lem, K.~H. (2024).
+\newblock The stl-arima approach for seasonal time series forecast: A
+  preliminary study.
+\newblock In {\em ITM Web of Conferences} (pp. 01008), volume~67. EDP Sciences.
+\newblock \url{https://doi.org/10.1051/itmconf/20246701008}.
+
+\bibitem[Li \textit{et al}., 2023]{li2023}
+Li, C., Ren, X., \& Zhao, G. (2023).
+\newblock Machine-learning-based imputation method for filling missing values
+  in ground meteorological observation data.
+\newblock {\em Algorithms}, 16(9): 422.
+\newblock \url{https://doi.org/10.3390/a16090422}.
+
+\bibitem[Llorente, 2019]{cesar2019}
+Llorente, C. (2019).
+\newblock Implementation of a web based weather monitoring station and data
+  storage system.
+\newblock {\em International Journal of Advanced Trends in Computer Science and
+  Engineering}, 8: 527--530.
+\newblock \url{https://doi.org/10.30534/ijatcse/2019/29832019}.
+
+\bibitem[Maharani and Saputro, 2021]{maharani2021}
+Maharani, M. \& Saputro, D. (2021).
+\newblock Generalized cross validation ({GCV}) in smoothing spline
+  nonparametric regression models.
+\newblock {\em Journal of Physics: Conference Series}, 1808: 012053.
+\newblock \url{https://doi.org/10.1088/1742-6596/1808/1/012053}.
+
+\bibitem[Mann, 2023]{howie2023}
+Mann, H. (2023).
+\newblock {REST API} basics: 4 things you need to know.
+\newblock Retrieved 24 March 2023, from \url{https://mannhowie.com/rest-api}.
+
+\bibitem[Ostertagova and Ostertag, 2012]{ostertagova2012}
+Ostertagova, E. \& Ostertag, O. (2012).
+\newblock Forecasting using simple exponential smoothing method.
+\newblock {\em Acta Electrotechnica et Informatica}, 12(3): 62.
+
+\bibitem[{Pallets Projects}, 2025]{flaskdoc2025}
+{Pallets Projects} (2025).
+\newblock Welcome to {Flask} — {Flask} documentation (3.1.x).
+\newblock Retrieved 20 October 2025, from
+  \url{https://flask.palletsprojects.com/en/stable/}.
+
+\bibitem[Rahmayanti and Ilyasa, 2022]{rahmayanti2022}
+Rahmayanti, H. \& Ilyasa, F. (2022).
+\newblock Pemberdayaan pengetahuan masyarakat terkait perubahan iklim.
+\newblock {\em PERDULI: Jurnal Pengabdian kepada Masyarakat}, 3: 75--83.
+\newblock \url{https://doi.org/10.21009/perduli.v3i02.29884}.
+
+\bibitem[Rodrigues and Braga, 2021]{rodrigues2021}
+Rodrigues, G. \& Braga, R. (2021).
+\newblock Evaluation of nasa power reanalysis products to estimate daily
+  weather variables in a hot summer mediterranean climate.
+\newblock {\em Agronomy}, 11: 1207.
+\newblock \url{https://doi.org/10.3390/agronomy11061207}.
+
+\bibitem[Sabbrina \textit{et al}., 2023]{sabrina2023}
+Sabbrina, A., Sufa, A.~O., Ritonga, D.~P., Siregar, E. R.~S., \& Nurbaiti
+  (2023).
+\newblock Pengenalan konsep dasar dan penggunaan database manajemen sistem
+  {(DBMS)}.
+\newblock {\em Jurnal Sains dan Teknologi (JSIT)}, 3(2): 271--279.
+\newblock \url{https://doi.org/10.47233/jsit.v3i2.907}.
+
+\bibitem[Saragih \textit{et al}., 2024]{saragih2024}
+Saragih, D. A.~P., Tarigan, K., Humaidi, S., Abdulmajid, M.~W., \& Santoso, B.
+  (2024).
+\newblock Design of {IoT}-based temperature monitoring system for automated
+  inhomogeneity measurement.
+\newblock {\em Journal of Applied Geospatial Information}, 8(1): 52--62.
+\newblock \url{https://doi.org/10.52939/jagi.v8i1.363}.
+
+\bibitem[Singh \textit{et al}., 2019]{singh2019}
+Singh, M., Verma, A., Parasher, A., Chauhan, N., \& Budhiraja, G. (2019).
+\newblock Implementation of database using {Python Flask} framework.
+\newblock {\em International Journal of Engineering and Computer Science},
+  8(12): 24890--24893.
+\newblock \url{https://doi.org/10.18535/ijecs/v8i12.4421}.
+
+\bibitem[Sparks, 2018]{sparks2018}
+Sparks, A.~H. (2018).
+\newblock nasapower: A nasa power global meteorology, surface solar energy and
+  climatology data client for r.
+\newblock {\em Journal of Open Source Software}, 3(30): 1035.
+\newblock \url{https://doi.org/10.21105/joss.01035}.
+
+\bibitem[Steinacker, 2021]{steinacker2021}
+Steinacker, R. (2021).
+\newblock How to correctly apply gaussian statistics in a non-stationary
+  climate?
+\newblock {\em Theoretical and Applied Climatology}, 144(3): 1363--1374.
+\newblock \url{https://doi.org/10.1007/s00704-021-03601-4}.
+
+\bibitem[Sujalu \textit{et al}., 2020]{sujalu2020}
+Sujalu, A., Pulihasih, A., \& Biantary, M. (2020).
+\newblock {\em INSTRUMENTASI KLIMATOLOGI DAN METEOROLOGI}.
+\newblock Zahir Publishing.
+\newblock \url{https://books.google.co.id/books?id=7dd8EAAAQBAJ}.
+
+\bibitem[Susanto and Meiryani, 2019]{susanto2019}
+Susanto, A. \& Meiryani (2019).
+\newblock Database management system.
+\newblock {\em International Journal of Scientific \& Technology Research}, 8.
+\newblock \url{https://api.semanticscholar.org/CorpusID:264229011}.
+
+\bibitem[{Vercel}, 2025]{nextjsdoc2025}
+{Vercel} (2025).
+\newblock Next.js documentation.
+\newblock Retrieved 16 February 2025, from \url{https://nextjs.org/docs}.
+
+\bibitem[Wibowo \textit{et al}., 2025]{wibowo2025}
+Wibowo, A., Fathimah, A., Waskito, D., \& Aprilianto, R.~A. (2025).
+\newblock Cron job implementation for automated data processing and transfer in
+  cloud infrastructure.
+\newblock {\em Sainteknol: Jurnal Sains dan Teknologi}, 23(1): 11--20.
+\newblock \url{https://doi.org/10.15294/sainteknol.v23i1.22649}.
+
+\bibitem[Wüst \textit{et al}., 2017]{wust2017}
+Wüst, S., Wendt, V., Linz, R., \& Bittner, M. (2017).
+\newblock Smoothing data series by means of cubic splines: quality of
+  approximation and introduction of a repeating spline approach.
+\newblock {\em Atmospheric Measurement Techniques}, 10: 3453--3462.
+\newblock \url{https://doi.org/10.5194/amt-10-3453-2017}.
+
+\end{thebibliography}

@@ -1,0 +1,40 @@
+%-------------------------------------------------------------------------------
+%                            BAB V
+%               		KESIMPULAN DAN SARAN
+%-------------------------------------------------------------------------------
+% \fancyhf{} 
+% \fancyfoot[R]{\thepage}
+\chapter{KESIMPULAN DAN SARAN}
+%\thispagestyle{plain} % Halaman pertama bab menggunakan gaya plain
+\section{Kesimpulan}
+Berdasarkan hasil penelitian dan pembahasan, dapat disimpulkan sebagai berikut:
+\begin{enumerate}
+    \item Penerapan metode \textit{smoothing} pada data BMKG dan NASA POWER berhasil meningkatkan kualitas data. Pada BMKG, suhu dan kelembaban mencapai kualitas \textit{excellent} dengan \textit{trend preservation} di atas 99,9\%, sedangkan curah hujan mencapai 90,12\%. Pada NASA POWER, suhu memperoleh kategori \textit{good} (83,48\%) dan kelembaban mempertahankan pola tren sebesar 82,25\%.
+
+    \item Otomasi \textit{preprocessing} dan penjadwalan berhasil diimplementasikan melalui integrasi Next.js, Flask, MongoDB, dan \textit{cron scheduler}. Seluruh 25 \textit{endpoint} REST API berhasil diuji dan berfungsi sesuai spesifikasi sehingga sistem mampu melakukan pengambilan data, \textit{preprocessing}, penyimpanan, dan otomasi secara terpadu.
+
+    \item Pengujian integrasi menunjukkan bahwa seluruh komponen sistem beroperasi secara stabil. Data hasil \textit{preprocessing} berhasil disimpan ke MongoDB, ditampilkan melalui API, serta digunakan untuk menghasilkan laporan dan dekomposisi data. Hasil \textit{\textit{smoothing}} selanjutnya digunakan sebagai masukan untuk pemodelan \textit{forecasting} Holt-Winters dan LSTM dalam pengembangan kalender tanam digital.
+
+    \item Hasil peramalan menggunakan metode Holt-Winters dan LSTM berhasil diimplementasikan ke dalam kalender tanam digital berdasarkan parameter curah hujan, suhu udara, kelembaban relatif, dan radiasi matahari. Kalender tanam mampu mengidentifikasi periode tanam yang sesuai, waspada, dan tidak sesuai sebagai dasar rekomendasi waktu tanam padi sawah di Kabupaten Aceh Besar.
+
+    \item Berdasarkan perbandingan kedua metode, LSTM menghasilkan rekomendasi kalender tanam yang lebih rinci terhadap tingkat kesesuaian iklim serta memberikan margin keamanan yang lebih besar terhadap risiko kekeringan dibandingkan Holt-Winters. Varietas berumur pendek seperti Ciherang Beruang (87 hari) dan Ngawos (90 hari) memiliki sisa waktu panen yang lebih panjang pada metode LSTM (59–62 hari) dibandingkan Holt-Winters (4–12 hari). Dengan kategori kesesuaian yang lebih rinci—mulai dari "Sangat Sesuai" hingga "Tidak Sesuai"—LSTM lebih sesuai untuk sistem kalender tanam digital yang memerlukan akurasi tinggi dalam mendukung pengambilan keputusan petani.
+\end{enumerate}
+
+\section{Saran}
+Berdasarkan hasil penelitian yang telah dilakukan, terdapat beberapa saran untuk pengembangan sistem:
+\begin{enumerate}
+    \item Meningkatkan kualitas \textit{smoothing} dan imputasi pada data curah hujan (RR) dan kelembaban (RH2M) menggunakan metode alternatif seperti \textit{wavelet denoising}, \textit{ensemble \textit{smoothing}}, atau integrasi data satelit (GPM) serta stasiun klimatologi terdekat.
+
+    \item Memperluas pengujian sistem dengan \textit{load testing} dan \textit{stress testing} untuk mengevaluasi performa API, scheduler, dan database pada skenario akses simultan dan beban besar.
+
+    \item Meningkatkan infrastruktur \textit{deployment} ke server fisik di lingkungan kampus atau VPS berbiaya rendah agar sistem berjalan stabil tanpa perlu \textit{tunneling}.
+
+    \item Meningkatkan kualitas \textit{smoothing} dan imputasi pada data curah hujan (RR) dan kelembaban (RH2M) menggunakan pendekatan lain, baik berbasis parametrik, nonparametrik, maupun \textit{machine learning}. Beberapa metode yang dapat dieksplorasi meliputi \textit{Kernel Smoothing}, \textit{LOESS}, \textit{B-Spline}, \textit{Wavelet Denoising}, \textit{Ensemble Smoothing}, maupun pendekatan berbasis \textit{Neural Network}, serta integrasi data satelit seperti GPM dan data dari stasiun klimatologi terdekat untuk meningkatkan kualitas hasil \textit{preprocessing}.
+\end{enumerate} 
+%-----------------------------------------------------------------------------%
+
+% Baris ini digunakan untuk membantu dalam melakukan sitasi
+% Karena diapit dengan comment, maka baris ini akan diabaikan
+% oleh compiler LaTeX.
+\begin{comment}
+\end{comment}

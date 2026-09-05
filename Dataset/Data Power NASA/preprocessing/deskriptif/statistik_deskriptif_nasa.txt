@@ -1,0 +1,285 @@
+======================================================================
+STATISTIK DESKRIPTIF DATASET NASA POWER (20 TAHUN)
+======================================================================
+
+📊 DATASET OVERVIEW:
+   • Sumber Data       : NASA POWER MERRA-2
+   • Total Records     : 7,578
+   • Periode           : 01/01/2005 s/d 09/30/2025
+   • Koordinat         : 5.4219°N, 95.4463°E
+   • Elevasi           : 180.39 m
+   • Resolusi          : Harian (Daily)
+   • Jumlah Variabel   : 9
+
+🔍 KUALITAS DATA KESELURUHAN:
+   • Total Data Points : 68,202
+   • Data Valid        : 68,202 (100.00%)
+   • Data Invalid      : 0 (0.00%)
+
+======================================================================
+
+📊 T2M_MIN - Temperature at 2 Meters Minimum
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :      22.37 °C
+Q1 (25%)             :      24.92 °C
+Median (Q2)          :      25.36 °C
+Mean                 :      25.39 °C
+Q3 (75%)             :      25.83 °C
+Maksimum             :      28.43 °C
+Standar Deviasi      :       0.72 °C
+Range                :       6.06 °C
+IQR (Q3-Q1)          :       0.91 °C
+Skewness             :      0.237
+Kurtosis             :      0.581
+
+📋 INTERPRETASI:
+   • Distribusi: Simetris (mendekati normal)
+   • Kurtosis: Leptokurtic (lebih runcing dari normal)
+   • Coefficient of Variation: 2.82% (Variabilitas rendah)
+
+======================================================================
+
+📊 T2M_MAX - Temperature at 2 Meters Maximum
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :      25.23 °C
+Q1 (25%)             :      28.03 °C
+Median (Q2)          :      28.90 °C
+Mean                 :      28.93 °C
+Q3 (75%)             :      29.82 °C
+Maksimum             :      33.13 °C
+Standar Deviasi      :       1.26 °C
+Range                :       7.90 °C
+IQR (Q3-Q1)          :       1.79 °C
+Skewness             :      0.076
+Kurtosis             :     -0.432
+
+📋 INTERPRETASI:
+   • Distribusi: Simetris (mendekati normal)
+   • Kurtosis: Mesokurtic (mendekati normal)
+   • Coefficient of Variation: 4.34% (Variabilitas rendah)
+
+======================================================================
+
+📊 T2M - Temperature at 2 Meters (Average)
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :      24.34 °C
+Q1 (25%)             :      26.36 °C
+Median (Q2)          :      26.91 °C
+Mean                 :      26.93 °C
+Q3 (75%)             :      27.48 °C
+Maksimum             :      30.07 °C
+Standar Deviasi      :       0.82 °C
+Range                :       5.73 °C
+IQR (Q3-Q1)          :       1.12 °C
+Skewness             :      0.169
+Kurtosis             :     -0.063
+
+📋 INTERPRETASI:
+   • Distribusi: Simetris (mendekati normal)
+   • Kurtosis: Mesokurtic (mendekati normal)
+   • Coefficient of Variation: 3.03% (Variabilitas rendah)
+
+======================================================================
+
+📊 RH2M - Relative Humidity at 2 Meters
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :      63.34 %
+Q1 (25%)             :      76.26 %
+Median (Q2)          :      79.29 %
+Mean                 :      79.24 %
+Q3 (75%)             :      82.32 %
+Maksimum             :      92.04 %
+Standar Deviasi      :       4.44 %
+Range                :      28.70 %
+IQR (Q3-Q1)          :       6.06 %
+Skewness             :     -0.098
+Kurtosis             :     -0.184
+
+📋 INTERPRETASI:
+   • Distribusi: Simetris (mendekati normal)
+   • Kurtosis: Mesokurtic (mendekati normal)
+   • Coefficient of Variation: 5.60% (Variabilitas rendah)
+
+======================================================================
+
+📊 PRECTOTCORR - Precipitation Corrected
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :       0.00 mm/day
+Q1 (25%)             :       0.67 mm/day
+Median (Q2)          :       2.45 mm/day
+Mean                 :       5.67 mm/day
+Q3 (75%)             :       6.65 mm/day
+Maksimum             :     149.12 mm/day
+Standar Deviasi      :       9.24 mm/day
+Range                :     149.12 mm/day
+IQR (Q3-Q1)          :       5.98 mm/day
+Skewness             :      4.253
+Kurtosis             :     30.015
+
+📋 INTERPRETASI:
+   • Distribusi: Positively skewed (ekor kanan lebih panjang)
+   • Kurtosis: Leptokurtic (lebih runcing dari normal)
+   • Coefficient of Variation: 162.87% (Variabilitas tinggi)
+
+======================================================================
+
+📊 ALLSKY_SFC_SW_DWN - All Sky Surface Shortwave Downward Irradiance
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :       2.67 MJ/m²/day
+Q1 (25%)             :      15.19 MJ/m²/day
+Median (Q2)          :      18.34 MJ/m²/day
+Mean                 :      17.77 MJ/m²/day
+Q3 (75%)             :      20.94 MJ/m²/day
+Maksimum             :      26.30 MJ/m²/day
+Standar Deviasi      :       4.11 MJ/m²/day
+Range                :      23.63 MJ/m²/day
+IQR (Q3-Q1)          :       5.75 MJ/m²/day
+Skewness             :     -0.605
+Kurtosis             :     -0.075
+
+📋 INTERPRETASI:
+   • Distribusi: Negatively skewed (ekor kiri lebih panjang)
+   • Kurtosis: Mesokurtic (mendekati normal)
+   • Coefficient of Variation: 23.14% (Variabilitas sedang)
+
+======================================================================
+
+📊 WS10M - Wind Speed at 10 Meters
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :       0.67 m/s
+Q1 (25%)             :       2.54 m/s
+Median (Q2)          :       3.73 m/s
+Mean                 :       3.94 m/s
+Q3 (75%)             :       5.15 m/s
+Maksimum             :      11.15 m/s
+Standar Deviasi      :       1.70 m/s
+Range                :      10.48 m/s
+IQR (Q3-Q1)          :       2.61 m/s
+Skewness             :      0.505
+Kurtosis             :     -0.408
+
+📋 INTERPRETASI:
+   • Distribusi: Positively skewed (ekor kanan lebih panjang)
+   • Kurtosis: Mesokurtic (mendekati normal)
+   • Coefficient of Variation: 43.21% (Variabilitas tinggi)
+
+======================================================================
+
+📊 WS10M_MAX - Wind Speed at 10 Meters Maximum
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :       1.25 m/s
+Q1 (25%)             :       3.70 m/s
+Median (Q2)          :       5.01 m/s
+Mean                 :       5.25 m/s
+Q3 (75%)             :       6.55 m/s
+Maksimum             :      19.44 m/s
+Standar Deviasi      :       1.95 m/s
+Range                :      18.19 m/s
+IQR (Q3-Q1)          :       2.85 m/s
+Skewness             :      0.584
+Kurtosis             :      0.135
+
+📋 INTERPRETASI:
+   • Distribusi: Positively skewed (ekor kanan lebih panjang)
+   • Kurtosis: Mesokurtic (mendekati normal)
+   • Coefficient of Variation: 37.07% (Variabilitas tinggi)
+
+======================================================================
+
+📊 WD10M - Wind Direction at 10 Meters
+======================================================================
+Jumlah Data Total    :      7,578
+Data Invalid (-999)  :          0
+Data Valid           :      7,578
+Persentase Valid     :     100.00%
+Persentase Invalid   :       0.00%
+
+Minimum              :       0.00 degrees
+Q1 (25%)             :      72.10 degrees
+Median (Q2)          :     215.00 degrees
+Mean                 :     177.21 degrees
+Q3 (75%)             :     240.40 degrees
+Maksimum             :     359.70 degrees
+Standar Deviasi      :      94.47 degrees
+Range                :     359.70 degrees
+IQR (Q3-Q1)          :     168.30 degrees
+Skewness             :     -0.282
+Kurtosis             :     -1.183
+
+📋 INTERPRETASI:
+   • Distribusi: Simetris (mendekati normal)
+   • Kurtosis: Platykurtic (lebih datar dari normal)
+   • Coefficient of Variation: 53.31% (Variabilitas tinggi)
+
+======================================================================
+
+🎯 RINGKASAN & REKOMENDASI:
+======================================================================
+✅ Semua variabel memiliki missing data < 5%
+
+⚡ CURAH HUJAN EKSTREM (>50 mm/day):
+   • Jumlah kejadian: 56 hari
+   • Persentase: 0.74%
+   • Maksimum tercatat: 149.12 mm/day
+
+🌡️  RENTANG TEMPERATUR:
+   • Temperatur minimum absolut: 22.37°C
+   • Temperatur maksimum absolut: 33.13°C
+   • Range total: 10.76°C
+
+📋 STATUS PREPROCESSING:
+   • ✅ Data loading dan format detection
+   • ✅ Statistik deskriptif lengkap
+   • ✅ Identifikasi missing values (-999)
+   • ✅ Analisis distribusi data
+   • ⏳ Ready for advanced preprocessing
+
+======================================================================

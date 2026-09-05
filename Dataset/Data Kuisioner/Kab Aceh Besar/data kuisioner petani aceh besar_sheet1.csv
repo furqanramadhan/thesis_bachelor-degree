@@ -1,0 +1,51 @@
+id_petani,provinsi,kab_kota,kecamatan,desa_gampong,nama,jenis_kelamin,umur,alamat,pendidikan_terakhir,tahun_mulai_bertani,lahan_milik_sendiri,total_lahan_m2,varietas_padi,durasi_varietas_padi
+PTN001,Aceh,Aceh Besar,Montasik,Mata Ie,Ainal Mardhiah,Perempuan,62,"Mata ie, Montasik",S1,2005,Lahan milik sendiri,3000,Mustajab,120
+PTN002,Aceh,Aceh Besar,Montasik,Mata Ie,suteni,Perempuan,60,"Mata ie, Montasik",D3,1993,Lahan yang berasal dari pihak lain,5000,Ngawos,95
+PTN003,Aceh,Aceh Besar,Montasik,Mata Ie,Nurazinah,Perempuan,52,"Mata ie, Montasik",D3,1999,Lahan yang berasal dari pihak lain,5000,Inpari 32,120
+PTN004,Aceh,Aceh Besar,Montasik,Mata Ie,Faizah,Perempuan,48,"Mata ie, Montasik",SMP,2023,Lahan yang berasal dari pihak lain,3000,Ciherang,125
+PTN005,Aceh,Aceh Besar,Montasik,Mata Ie,Athani,Perempuan,49,"Mata ie, Montasik",SMP,2021,Lahan yang berasal dari pihak lain,2000,Ngawos,95
+PTN006,Aceh,Aceh Besar,Montasik,Mata Ie,Agustina,Perempuan,48,"Mata ie, Montasik",SMA/SMK,2020,Lahan milik sendiri,3000,Ciherang,125
+PTN007,Aceh,Aceh Besar,Montasik,Mata Ie,Erlina,Perempuan,48,"Mata ie, Montasik",SMP,2001,Lahan yang berasal dari pihak lain,6000,Ciherang beruang,87
+PTN008,Aceh,Aceh Besar,Montasik,Mata Ie,Muzaidar,Perempuan,45,"Mata ie, Montasik",SMA/SMK,2006,Lahan yang berasal dari pihak lain,6000,Ciherang,125
+PTN009,Aceh,Aceh Besar,Montasik,Mata Ie,Mariyawati,Perempuan,70,"Mata ie, Montasik",SMP,1997,Lahan yang berasal dari pihak lain,2000,Ciherang,125
+PTN010,Aceh,Aceh Besar,Montasik,Mata Ie,Ruwaida,Perempuan,40,"Mata ie, Montasik",SMP,1996,Lahan milik sendiri,4000,Ciherang beruang,87
+PTN011,Aceh,Aceh Besar,Montasik,Atong,Nur Aini,Perempuan,39,"Atong, Montasik",SD,2005,Lahan yang berasal dari pihak lain,1000,Ciherang beruang,87
+PTN012,Aceh,Aceh Besar,Montasik,Atong,Wanti Aminah,Perempuan,42,"Atong, Montasik",SMP,1992,Lahan milik sendiri,3000,Ciherang beruang,87
+PTN013,Aceh,Aceh Besar,Montasik,Atong,Nurhafiza,Perempuan,50,"Atong, Montasik",SD,1990,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",3000,Ciherang beruang,87
+PTN014,Aceh,Aceh Besar,Montasik,Atong,Aisatul Kubra,Perempuan,32,"Atong, Montasik",SMA/SMK,2015,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",1000,Mustajab,120
+PTN015,Aceh,Aceh Besar,Montasik,Atong,Yurisna,Perempuan,32,"Atong, Montasik",SMA/SMK,2015,Lahan milik sendiri,1000,Ciherang beruang,87
+PTN016,Aceh,Aceh Besar,Montasik,Atong,Safira Rumaisa,Perempuan,26,"Atong, Montasik",S1,2020,Lahan yang berasal dari pihak lain,2500,Mustajab,120
+PTN017,Aceh,Aceh Besar,Montasik,Atong,Raisatul Muna,Perempuan,21,"Atong, Montasik",SMA/SMK,2023,Lahan yang berasal dari pihak lain,350,Ciherang beruang,87
+PTN018,Aceh,Aceh Besar,Montasik,Atong,Syukriah,Perempuan,42,"Atong, Montasik",SMA/SMK,2000,Lahan yang berasal dari pihak lain,500,Inpari 32,120
+PTN019,Aceh,Aceh Besar,Montasik,Atong,Darliana,Perempuan,34,"Atong, Montasik",SMP,2004,Lahan milik sendiri,2000,Cibatu 05,95
+PTN020,Aceh,Aceh Besar,Montasik,Atong,Rahmiati,Perempuan,43,"Atong, Montasik",SMA/SMK,1997,Lahan milik sendiri,1000,Mekongga,125
+PTN021,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Jaliah,Perempuan,43,"Dusun Timur, Lam Ilie Mesjid",SMP,2002,Lahan milik sendiri,5000,Mekongga,125
+PTN022,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Nurjannah,Perempuan,53,"Dusun Timur, Lam Ilie Mesjid",SMA/SMK,2020,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",1500,Ngawos,95
+PTN023,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Nurmala,Perempuan,63,"Dusun Blang, Desa Reukih Keupula",SD,1980,Lahan yang berasal dari pihak lain,1500,Ngawos,95
+PTN024,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Kamisna,Perempuan,58,"Dusun Blang, Desa Reukih Keupula",S1,1991,Lahan yang berasal dari pihak lain,1300,Cibatu 05,95
+PTN025,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Yusnidar,Perempuan,54,"Dusun Lhok, Desa Reukih Keupula",SD,1988,Lahan yang berasal dari pihak lain,1000,Ngawos,95
+PTN026,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Misna,Perempuan,52,"Dusun Lhok, Desa Reukih Keupula",SMA/SMK,1998,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",2200,Ngawos,95
+PTN027,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Dewi Novita,Perempuan,27,"Dusun Lhok, Desa Reukih Keupula",SMA/SMK,2019,Lahan yang berasal dari pihak lain,2300,Ramos,110
+PTN028,Aceh,Aceh Besar,Indrapuri,Indrapuri,Suryana,Perempuan,51,"Dusun Lhok, Desa Reukih Keupula",SMP,2017,Lahan yang berasal dari pihak lain,2000,CBD 04,100
+PTN029,Aceh,Aceh Besar,Indrapuri,Indrapuri,Irwan,Laki-laki,51,"Dusun Lhok, Desa Reukih Keupula",SMA/SMK,1990,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",6000,Inpari 32,120
+PTN030,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Anisah,Perempuan,75,"Dusun Lhok, Desa Reukih Keupula",SD,1972,Lahan yang berasal dari pihak lain,1000,Ngawos,95
+PTN031,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Rusniah,Perempuan,52,"Dusun Lhok, Desa Reukih Keupula",SMP,1980,Lahan yang berasal dari pihak lain,4000,CBD 04,100
+PTN032,Aceh,Aceh Besar,Indrapuri,Reukih Keupula,Nadiatul Zikra,Perempuan,27,"Dusun Lhok, Desa Reukih Keupula",S1,2023,Lahan milik sendiri,800,CBD Murni,90
+PTN033,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Juita,Perempuan,56,"Dusun Timur, Lam Ilie Mesjid",SMA/SMK,2018,Lahan yang berasal dari pihak lain,1200,CBD 04,100
+PTN034,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Zuhra Wati,Perempuan,64,"Dusun Timur, Lam Ilie Mesjid",SD,1998,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",3000,Beulerang,150
+PTN035,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Salmiah,Perempuan,63,"Dusun Timur, Lam Ilie Mesjid",SMP,1980,"Lahan milik sendiri, Lahan yang berasal dari pihak lain",1800,Brangus,150
+PTN036,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Dahlianti,Perempuan,42,"Dusun Barat, Lam Ilie Mesjid",SD,2020,Lahan yang berasal dari pihak lain,4000,Ciherang beruang,87
+PTN037,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Adian,Perempuan,65,"Dusun Barat, Lam Ilie Mesjid",SD,1990,Lahan milik sendiri,3000,Beulerang,150
+PTN038,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Nurjani,Perempuan,55,"Dusun Timur, Lam Ilie Mesjid",SMA/SMK,2016,Lahan yang berasal dari pihak lain,800,Beulerang,150
+PTN039,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Anda Yani,Perempuan,43,"Dusun Barat, Lam Ilie Mesjid",SMA/SMK,2002,Lahan milik sendiri,1000,CBD Murni,90
+PTN040,Aceh,Aceh Besar,Indrapuri,Lam Ilie Mesjid,Muzaiyyanah,Perempuan,41,"Dusun Barat, Lam Ilie Mesjid",D2,2014,Lahan yang berasal dari pihak lain,4000,Beulerang,150
+PTN041,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Bakhtiar,Laki-laki,55,Lambada Peukan,SMA/SMK,2010,Lahan yang berasal dari pihak lain,3200,Ciherang,125
+PTN042,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Hasbi,Laki-laki,55,Lambada Peukan,SMA/SMK,2008,Lahan yang berasal dari pihak lain,3500,Ciherang,125
+PTN043,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Nyak Cut,Perempuan,58,Lambada Peukan,SMA/SMK,2009,Lahan yang berasal dari pihak lain,3000,Ciherang,125
+PTN044,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Hasballah,Laki-laki,60,Lambada Peukan,SMA/SMK,2007,Lahan yang berasal dari pihak lain,2700,Ciherang,125
+PTN045,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Muttaqien,Laki-laki,39,Lambada Peukan,S1,2010,Lahan yang berasal dari pihak lain,5000,Ciherang beruang,87
+PTN046,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Ramlah,Perempuan,60,Lambada Peukan,SMA/SMK,2008,Lahan yang berasal dari pihak lain,3500,Ciherang beruang,87
+PTN047,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Hubron,Laki-laki,62,Lambada Peukan,SMP,2010,Lahan yang berasal dari pihak lain,3000,Ciherang beruang,87
+PTN048,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Sulaiman,Perempuan,62,Lambada Peukan,SMA/SMK,2010,Lahan yang berasal dari pihak lain,3200,CBD Murni,90
+PTN049,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Armia Idris,Laki-laki,65,Lambada Peukan,SMP,2008,Lahan yang berasal dari pihak lain,3500,CBD Murni,90
+PTN050,Aceh,Aceh Besar,Darussalam,Lambada Peukan,Alwi,Laki-laki,48,Lambada Peukan,SMA/SMK,2018,Lahan yang berasal dari pihak lain,8000,Mustajab,120

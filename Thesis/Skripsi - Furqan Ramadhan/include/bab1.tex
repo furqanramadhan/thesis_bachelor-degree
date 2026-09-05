@@ -1,0 +1,59 @@
+% \fancyhf{} 
+% \fancyfoot[C]{\thepage}
+
+\chapter{PENDAHULUAN}
+% \thispagestyle{plain} % Halaman pertama bab menggunakan gaya plain
+
+\section{Latar Belakang}
+    Perubahan iklim menjadi masalah lingkungan universal diakibatkan oleh aktivitas manusia, sehingga memunculkan tren pemanasan global \citep{rahmayanti2022}. Laporan \textit{Intergovernmental Panel on Climate Change} (IPCC) AR6 \textit{Synthesis Report} 2023 menyebutkan suhu rata-rata dunia meningkat sebesar 1.5°C dengan potensi melebihi 2°C. Jika tidak ada pengurangan emisi yang signifikan, maka berisiko memicu dampak lingkungan lebih ekstrem \citep{ipcc2023}. 
+    
+    Berbagai faktor pemanasan global disebabkan oleh aktivitas manusia. Penggunaan bahan bakar fosil turut memperparah emisi gas rumah kaca (GRK). Berbagai jenis gas terakumulasi mencakup CO$_2$, CH$_4$, NO$_2$, SO$_2$, dan CFC membentuk lapisan atmosfer sehingga menahan radiasi inframerah menyebabkan panas tidak dapat dipantulkan kembali ke luar angkasa \citep{azadi2021}. Dampaknya terlihat pada kenaikan intensitas bencana hidrometeorologis. Menurut Indeks Risiko Bencana Indonesia (IRBI), pada tahun 2024 sebanyak 1.255 kasus banjir di Indonesia \citep{bnpb2025}.
+        
+    Indonesia sebagai negara kepulauan di garis khatulistiwa menghadapi tantangan sektor pertanian akibat perubahan iklim. Salah satu daerah yang memiliki peran penting dalam ketahanan pangan nasional adalah Provinsi Aceh. Terletak di ujung barat Indonesia, Aceh adalah salah satu penyumbang hasil pangan nasional. Berdasarkan data dari Badan Pusat Statistik (BPS) tahun 2024, Provinsi Aceh mencatat total produksi padi sebesar 1.659.966,28 ton \citep{bpsindonesia2024}.
+
+    Kabupaten Aceh Besar secara khusus berperan sebagai penyangga produksi pangan bagi Kota Banda Aceh dan pusat administrasi pertanian di wilayah Aceh, menunjukkan dinamika produksi padi cukup signifikan. Adapun produksi padi di Kabupaten Aceh Besar periode 2018–2022, tahun 2018 produksi mencapai puncak tertinggi sebesar 232.540,64 ton, mengalami penurunan pada tahun 2019 dan 2020, masing-masing menjadi 187.596,67 ton dan 179.856,23 ton. Meski sempat meningkat kembali pada 2021, produksi kembali turun selama 2022 dan mencapai titik terendah pada 2023, sebesar 155.477,39 ton \citep{bpsaceh2022-2018}. Fluktuasi tersebut mencerminkan banyak faktor yang mempengaruhi produktivitas, di antaranya perubahan iklim dengan dampaknya pada pola curah hujan, ketersediaan air, serta risiko bencana alam. Semua faktor tersebut secara langsung memengaruhi hasil panen dan ketahanan pangan di Kabupaten Aceh Besar.
+
+    Saat ini, teknologi informasi telah menjadi pusat aktivitas manusia, namun sering kali informasi terlambat diterima karena keterbatasan fasilitas media informasi \citep{Khoirunnisa2019}. Variasi dalam data diakibatkan oleh posisi sensor berada serta waktu pengambilan data. Sistem mencatat data secara otomatis sehingga pengamat cukup mengakses aplikasi web, melihat data menggunakan modul AWS di unit Philippine \textit{Atmospheric, Geophysical and Astronomical Services Administration} (PAGASA) menggunakan modul GSM, dan perangkat lunak yaitu Apache Web Server, MySQL dan PHP \textit{Scripts} \citep{cesar2019}.
+
+    Berbagai studi telah menekankan pentingnya penggunaan metode \textit{smoothing} untuk mengurangi \textit{noise} dan meningkatkan kualitas data \textit{time-series}. Penelitian \cite{wust2017} menunjukkan bahwa metode \textit{cubic spline} banyak digunakan dalam ilmu atmosfer untuk menyaring fluktuasi serta memperoleh representasi data lebih halus dengan tetap mempertahankan pola utama. Selanjutnya metode \textit{Generalized Cross-Validation} (GCV) digunakan untuk memilih parameter \textit{smoothing} pada model \textit{smoothing spline} nonparametrik, di mana nilai GCV minimum menunjukkan kualitas smoothing terbaik dan pemilihan parameter tidak sensitif terhadap variasi jumlah serta posisi knot \citep{maharani2021}. Temuan-temuan tersebut mendukung penerapan teknik \textit{smoothing} dalam penelitian ini untuk meningkatkan kualitas data iklim sebelum dilakukan tahap peramalan.
+    
+    \Saya{} mengambil pendekatan melalui pengembangan sistem otomasi pemrosesan data iklim dari dua sumber utama, yaitu BMKG dan NASA POWER. \textit{Pipeline} yang dibangun mencakup validasi data, deteksi \textit{outlier}, imputasi nilai hilang, penghalusan data, dan evaluasi kualitas menggunakan metrik GCV dan pelestarian tren. Penelitian dilakukan oleh tiga anggota tim, \saya{} bertugas dalam merancang dan mengimplementasikan pembersihan data serta mengintegrasikannya ke sistem berbasis REST API dan \textit{scheduler}. Dua rekan lainnya berfokus pada tahap analisis data, masing-masing menggunakan pendekatan \textit{Holt-Winters Exponential Smoothing} dan \textit{Long Short-Term Memory (LSTM)} untuk pembangunan model \textit{forecasting} penyusunan kalender tanam digital. Sistem diharapkan mampu menyajikan rekomendasi jadwal kalender tanam padi dan pengambilan keputusan di bidang pertanian di Kabupaten Aceh Besar.
+
+%-----------------------------------------------------------------------------%
+\section{Rumusan Masalah}
+%-----------------------------------------------------------------------------%
+Berdasarkan latar belakang berikut, disusun rumusan masalah dalam penelitian ini:
+\begin{enumerate}
+    \item Diperlukan rancangan pemrosesan data iklim secara dinamis dari sumber BMKG, dan NASA POWER di Kabupaten Aceh Besar menggunakan metode \textit{smoothing} untuk mengurangi \textit{noise} dan meningkatkan kualitas data.
+
+    \item Diperlukan implementasi otomasi sistem dengan metode \textit{smoothing} yang dapat dijalankan secara berkala melalui bantuan \textit{scheduler} agar data dapat dimuat menggunakan API sehingga terintegrasi ke \textit{database} MongoDB.
+
+    \item Diperlukan pengujian integrasi sistem untuk memastikan setiap komponen \textit{backend} (manajemen \textit{dataset}, preprocessing, dan penjadwalan) berjalan sesuai spesifikasi.
+
+\end{enumerate}
+
+
+%-----------------------------------------------------------------------------%
+\section{Tujuan Penelitian}
+%-----------------------------------------------------------------------------%
+    Berdasarkan rumusan masalah, tujuan penelitian ini adalah:
+%-----------------------------------------------------------------------------%
+\begin{enumerate}
+    \item Menerapkan metode \textit{smoothing} data iklim dari sumber BMKG, dan NASA POWER di Kabupaten Aceh Besar untuk meningkatkan kualitas data.
+
+    \item Merancang dan mengimplementasikan sistem otomasi pemrosesan data iklim dengan metode \textit{smoothing} yang dapat dijalankan secara berkala melalui bantuan \textit{scheduler}, serta menyediakan API agar data dapat dimuat dan terintegrasi ke dalam \textit{database} MongoDB.
+    
+    \item Melakukan pengujian integrasi dan fungsionalitas sistem untuk menjamin bahwa proses otomasi pemrosesan data iklim berjalan sesuai rancangan dan menghasilkan data siap pakai untuk pemodelan.
+\end{enumerate}
+%-----------------------------------------------------------------------------%
+
+\section{Manfaat Penelitian}
+Manfaat yang diharapkan dari penelitian ini adalah sebagai berikut:
+\begin{enumerate}
+    \item Mendukung pengelolaan data iklim BMKG dan NASA POWER secara terpusat melalui \textit{REST API}.
+    \item Menghasilkan \textit{dataset} iklim hasil \textit{preprocessing} yang konsisten dan siap digunakan untuk pemodelan \textit{forecasting} menggunakan metode Holt-Winters dan Long Short-Term Memory (LSTM).
+    \item Menjadi dasar pengembangan kalender tanam digital berbasis data iklim untuk mendukung pengambilan keputusan di sektor pertanian Kabupaten Aceh Besar.
+\end{enumerate}
+
+\begin{comment}
+\end{comment}

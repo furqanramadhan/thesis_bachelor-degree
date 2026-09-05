@@ -755,107 +755,88 @@ print(f"Total periode yang divisualisasikan: {total_count}")
 
 print("SEMUA VISUALISASI SELESAI!")
 
+# Visualisasi 7: Distribusi Harga Jual Gabah per Kg berdasarkan Kabupaten (dengan Range)
+plt.figure(figsize=(12, 6))
 
-# Visualisasi 7: Distribusi Harga Jual Gabah per Kg berdasarkan Kabupaten
-plt.figure(figsize=(14, 6))
-
-# Bersihkan dan konversi data harga jual ke numeric (improved handling)
+# Bersihkan dan konversi data harga jual ke numeric
 def clean_harga_data_improved(value):
     if pd.isna(value):
         return None
     
-    # Convert to string and strip whitespace
     cleaned = str(value).strip()
     
-    # Handle empty string, 'nan', or dash explicitly
     if cleaned == '' or cleaned.lower() == 'nan' or cleaned == '-':
         return None
     
     try:
-        # Direct conversion since data is already in numeric format (6500, 7000, etc.)
         return float(cleaned)
     except (ValueError, TypeError):
         return None
 
-# Bersihkan data harga jual dengan fungsi yang diperbaiki
+# Bersihkan data harga jual
 df_periode['harga_jual_clean'] = df_periode['harga_jual_perkg'].apply(clean_harga_data_improved)
 
-# Format harga untuk display tanpa kategorisasi - langsung pakai nilai exact
-def format_harga_display(harga):
+# Kategorisasi harga ke dalam range (Opsi B: Range Rp 1.500)
+def kategorisasi_harga_range(harga):
     if pd.isna(harga) or harga is None:
         return 'Tidak Diketahui'
+    elif harga <= 6500:
+        return 'Rp 5.000 - 6.500'
+    elif harga <= 8000:
+        return 'Rp 6.501 - 8.000'
     else:
-        return f'Rp {int(harga):,}'.replace(',', '.')
+        return 'Rp 8.001 - 9.500'
 
-# Membuat kolom harga display menggunakan nilai exact
-df_periode['harga_display'] = df_periode['harga_jual_clean'].apply(format_harga_display)
+# Buat kolom kategori range harga
+df_periode['kategori_harga_range'] = df_periode['harga_jual_clean'].apply(kategorisasi_harga_range)
 
-# Penting: Kita perlu mengambil nilai unik per petani, bukan per periode
-# Ambil data petani unik dan harga jual mereka
-petani_harga_jual = df_periode[['id_petani', 'kabupaten', 'harga_display']].drop_duplicates(subset=['id_petani'])
+# Debug: Cek distribusi kategori harga
+print("\nDistribusi kategori harga (dengan range):")
+print(df_periode['kategori_harga_range'].value_counts())
 
-# Membuat crosstab untuk harga jual exact berdasarkan kabupaten (data petani unik)
-harga_by_kabupaten = pd.crosstab(petani_harga_jual['kabupaten'], petani_harga_jual['harga_display'])
+# Ambil data petani unik dan kategori harga mereka
+petani_harga_jual = df_periode[['id_petani', 'kabupaten', 'kategori_harga_range']].drop_duplicates(subset=['id_petani'])
 
-# Urutkan kolom berdasarkan nilai numerik harga (dari rendah ke tinggi)
-def extract_numeric_value(harga_str):
-    if harga_str == 'Tidak Diketahui':
-        return 999999  # Put at the end
-    try:
-        # Extract numeric value from "Rp 6.500" format
-        return float(harga_str.replace('Rp ', '').replace('.', ''))
-    except:
-        return 999999
+# Debug
+print(f"\nJumlah total petani unik: {len(petani_harga_jual)}")
+print(f"Distribusi kategori harga per petani unik:")
+print(petani_harga_jual['kategori_harga_range'].value_counts())
 
-# Sort columns by numeric value
-sorted_columns = sorted(harga_by_kabupaten.columns, key=extract_numeric_value)
+# Membuat crosstab untuk kategori harga berdasarkan kabupaten
+harga_by_kabupaten = pd.crosstab(petani_harga_jual['kabupaten'], petani_harga_jual['kategori_harga_range'])
 
-# Remove 'Tidak Diketahui' from the sorted columns
-if 'Tidak Diketahui' in sorted_columns:
-    sorted_columns.remove('Tidak Diketahui')
+# Urutkan kolom berdasarkan urutan range harga
+harga_order = ['Rp 5.000 - 6.500', 'Rp 6.501 - 8.000', 'Rp 8.001 - 9.500', 'Tidak Diketahui']
+available_harga = [h for h in harga_order if h in harga_by_kabupaten.columns]
+harga_by_kabupaten = harga_by_kabupaten[available_harga]
 
-# Filter dataframe to only include the sorted columns (excluding 'Tidak Diketahui')
-harga_by_kabupaten = harga_by_kabupaten[sorted_columns]
-
-# Gunakan warna solid untuk variasi warna setiap harga exact
-solid_colors = [
-    '#2ECC71',  # Green - 5000 (terendah)
-    '#58D68D',  # Light Green - 6000
-    '#F4D03F',  # Yellow - 6500  
-    '#F39C12',  # Orange - 6700
-    '#E67E22',  # Dark Orange - 6900
-    '#E74C3C',  # Red - 7000
-    '#C0392B',  # Dark Red - 8000
-    '#922B21'   # Very Dark Red - 8500 (tertinggi)
-]
-
-# If there are more columns than colors, cycle through the colors
-n_columns = len(harga_by_kabupaten.columns)
-color_list = [solid_colors[i % len(solid_colors)] for i in range(n_columns)]
+# Gunakan warna gradasi untuk range harga (dari hijau ke merah)
+colors = [COLOR_PALETTE['green'], COLOR_PALETTE['orange'], COLOR_PALETTE['red'], COLOR_PALETTE['gray']]
 
 # Membuat plot
 ax = harga_by_kabupaten.plot(
     kind='bar', 
     width=0.6,
-    color=color_list
+    color=colors[:len(available_harga)]
 )
 
-# Calculate total count for percentage calculation
+# Calculate total count
 total_count = sum([rect.get_height() for container in ax.containers for rect in container])
 
-# Add labels with count and percentage in frames
+# Clear existing labels
+for container in ax.containers:
+    ax.bar_label(container, labels=[''] * len(container), padding=5)
+
+# Add labels with count in frames
 for container in ax.containers:
     for i, rect in enumerate(container):
         height = rect.get_height()
         if height > 0:
-            percentage = (height / total_count) * 100
-            label_text = f'{int(height)}'  # Only show count
+            label_text = f'{int(height)}'
             
-            # Position for the annotation
             x = rect.get_x() + rect.get_width()/2
-            y = height + 0.5  # Adjust this value based on your data scale
+            y = height + 0.5
             
-            # Create text with frame
             ax.annotate(
                 label_text, 
                 xy=(x, y),
@@ -874,17 +855,22 @@ for container in ax.containers:
             )
 
 # Percantik plot
-plt.title('Distribusi Harga Jual Gabah per Kg berdasarkan Kabupaten', fontsize=14)
+plt.title('Distribusi Range Harga Jual Gabah per Kg berdasarkan Kabupaten', fontsize=14)
 plt.xlabel('Kabupaten', fontsize=12)
 plt.ylabel('Jumlah Petani', fontsize=12)
 plt.xticks(rotation=45)
-plt.legend(title='Gabah per Kg', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
+plt.legend(
+    title='Range Harga Gabah per Kg',
+    bbox_to_anchor=(1.02, 1),
+    loc='upper left',
+    framealpha=0.9,
+    fontsize=10
+)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 
 # Dynamic Y-axis scaling
 y_max = harga_by_kabupaten.values.max()
 
-# Buat interval yang dinamis berdasarkan nilai maksimum
 if y_max <= 10:
     interval = 1
     y_limit = y_max + 2
@@ -898,13 +884,12 @@ else:
     interval = 10
     y_limit = y_max + 10
 
-# Set y-axis dengan scaling dinamis
 y_ticks = np.arange(0, y_limit + interval, interval)
 plt.yticks(y_ticks)
 plt.ylim(0, y_limit)
 
 plt.tight_layout()
-plt.savefig('13_distribusi_harga_jual_gabah_kabupaten_petani_unik.png', dpi=300, bbox_inches='tight')
+plt.savefig('13_distribusi_harga_jual_gabah_kabupaten_petani_unik_range.png', dpi=300, bbox_inches='tight')
 
 
 # Visualisasi 8: Distribusi Status Pengelolaan berdasarkan Kabupaten
@@ -1944,3 +1929,641 @@ plt.subplots_adjust(right=0.7)  # Wider margin for the legend
 plt.savefig('20_distribusi_pengendalian_gulma_kabupaten.png', dpi=300, bbox_inches='tight')
 
 print("\nVisualisasi 14 selesai!")
+
+# Visualisasi: Distribusi Jenis Pupuk berdasarkan Kabupaten (Pie Chart)
+
+# Fungsi untuk normalisasi kombinasi pupuk
+def normalize_pupuk_combination(value):
+    """
+    Normalisasi kombinasi pupuk agar urutan tidak mempengaruhi hasil
+    """
+    if pd.isna(value):
+        return 'Tidak ada'
+    
+    # Convert to string and strip whitespace
+    cleaned = str(value).strip()
+    
+    # Handle empty string or dash
+    if cleaned == '' or cleaned == '-':
+        return 'Tidak ada'
+    
+    # Remove quotes if present
+    cleaned = cleaned.replace('"', '').strip()
+    
+    # Split by comma
+    pupuk_list = [p.strip() for p in cleaned.split(',')]
+    
+    # Remove empty strings
+    pupuk_list = [p for p in pupuk_list if p]
+    
+    # Define standard order for sorting
+    standard_order = [
+        'Pupuk urea',
+        'NPK',
+        'Pupuk SP-36',
+        'KCL',
+        'Pupuk Kandang',
+        'Pupuk kompos',
+        'Phonska',
+        'Mutiara',
+        'ZA',
+        'Tidak ada'
+    ]
+    
+    # Sort pupuk_list based on standard_order
+    def get_order_index(pupuk_name):
+        try:
+            return standard_order.index(pupuk_name)
+        except ValueError:
+            return 999  # Put unknown items at the end
+    
+    pupuk_list_sorted = sorted(pupuk_list, key=get_order_index)
+    
+    # Join back with comma and space
+    normalized = ', '.join(pupuk_list_sorted)
+    
+    return normalized if normalized else 'Tidak ada'
+
+# Bersihkan dan normalisasi data jenis pupuk
+df_periode['jenis_pupuk_normalized'] = df_periode['jenis_pupuk'].apply(normalize_pupuk_combination)
+
+# Debug: Cek distribusi jenis pupuk setelah normalisasi
+print("\nDistribusi jenis pupuk setelah normalisasi:")
+print(df_periode['jenis_pupuk_normalized'].value_counts())
+
+# Ambil data petani unik dan jenis pupuk mereka
+petani_jenis_pupuk = df_periode[['id_petani', 'kabupaten', 'jenis_pupuk_normalized']].drop_duplicates(subset=['id_petani'])
+
+print(f"\nJumlah total petani unik: {len(petani_jenis_pupuk)}")
+
+# Pilih kabupaten untuk divisualisasikan (contoh: Aceh Besar)
+kabupaten_dipilih = 'Aceh Besar'
+
+# Filter data untuk kabupaten yang dipilih
+data_kabupaten = petani_jenis_pupuk[petani_jenis_pupuk['kabupaten'] == kabupaten_dipilih]
+
+print(f"\nJumlah petani di {kabupaten_dipilih}: {len(data_kabupaten)}")
+print(f"\nDistribusi jenis pupuk di {kabupaten_dipilih}:")
+print(data_kabupaten['jenis_pupuk_normalized'].value_counts())
+
+# Hitung frekuensi setiap kombinasi pupuk
+pupuk_counts = data_kabupaten['jenis_pupuk_normalized'].value_counts()
+
+# Buat pie chart
+plt.figure(figsize=(12, 8))
+
+# Siapkan data untuk pie chart
+labels = pupuk_counts.index.tolist()
+sizes = pupuk_counts.values.tolist()
+total = sum(sizes)
+
+# Siapkan warna solid dari COLOR_PALETTE
+color_list = [
+    COLOR_PALETTE['blue'],
+    COLOR_PALETTE['red'],
+    COLOR_PALETTE['cyan'],
+    COLOR_PALETTE['orange'],
+    COLOR_PALETTE['green'],
+    COLOR_PALETTE['purple'],
+    COLOR_PALETTE['yellow'],
+    COLOR_PALETTE['pink'],
+    COLOR_PALETTE['teal'],
+    COLOR_PALETTE['indigo'],
+    COLOR_PALETTE['lime'],
+    COLOR_PALETTE['amber'],
+    COLOR_PALETTE['brown'],
+    COLOR_PALETTE['gray']
+]
+
+# Extend color list if needed
+while len(color_list) < len(labels):
+    color_list.extend(color_list)
+
+colors = color_list[:len(labels)]
+
+# Buat pie chart tanpa label (akan dibuat manual)
+wedges, texts = plt.pie(
+    sizes,
+    labels=None,  # label manual, bukan di sini
+    colors=colors,
+    startangle=90,
+    textprops={'fontsize': 10, 'weight': 'bold'}
+)
+
+# Tambahkan label jumlah di tengah tiap slice dengan bubble (frame)
+for i, (wedge, size) in enumerate(zip(wedges, sizes)):
+    # Hitung posisi tengah slice
+    ang = (wedge.theta2 + wedge.theta1) / 2
+    x = np.cos(np.deg2rad(ang)) * 0.6  # 0.6 untuk posisi di tengah radius
+    y = np.sin(np.deg2rad(ang)) * 0.6
+    
+    # Tambahkan label jumlah dengan frame/bubble
+    plt.annotate(
+        f'{size}',
+        xy=(x, y),
+        xytext=(0, 0),
+        textcoords='offset points',
+        ha='center', va='center',
+        bbox=dict(
+            boxstyle="round,pad=0.3",
+            fc='white',
+            ec='gray',
+            lw=1,
+            alpha=0.9
+        ),
+        fontsize=9,
+        fontweight='bold'
+    )
+
+# Tambahkan legend di luar pie chart dengan nama kombinasi pupuk
+plt.legend(
+    labels,
+    title='Jenis Pupuk',
+    bbox_to_anchor=(1.05, 1),
+    loc='upper left',
+    fontsize=9,
+    framealpha=0.9
+)
+
+# Judul
+plt.title(f'Jenis Pupuk - Kabupaten {kabupaten_dipilih}', fontsize=14, weight='bold', pad=20)
+
+# Equal aspect ratio ensures that pie is drawn as a circle
+plt.axis('equal')
+
+plt.tight_layout()
+plt.savefig(f'21_jenis_pupuk_{kabupaten_dipilih.lower().replace(" ", "_")}.png', dpi=300, bbox_inches='tight')
+
+print(f"\nVisualisasi Jenis Pupuk untuk {kabupaten_dipilih} selesai!")
+print(f"Total petani: {total}")
+
+# ===================================================================
+# BONUS: Buat untuk semua kabupaten sekaligus
+# ===================================================================
+
+print("\n" + "="*80)
+print("MEMBUAT PIE CHART UNTUK SEMUA KABUPATEN")
+print("="*80)
+
+# Daftar kabupaten unik
+list_kabupaten = petani_jenis_pupuk['kabupaten'].unique()
+list_kabupaten = [k for k in list_kabupaten if k != 'Tidak Diketahui']
+
+print(f"\nKabupaten yang akan divisualisasikan: {list_kabupaten}")
+
+# Loop untuk setiap kabupaten
+for kabupaten in list_kabupaten:
+    # Filter data untuk kabupaten ini
+    data_kab = petani_jenis_pupuk[petani_jenis_pupuk['kabupaten'] == kabupaten]
+    
+    # Hitung frekuensi
+    pupuk_counts_kab = data_kab['jenis_pupuk_normalized'].value_counts()
+    
+    # Skip jika tidak ada data
+    if len(pupuk_counts_kab) == 0:
+        print(f"Skipping {kabupaten} - tidak ada data")
+        continue
+    
+    # Buat figure
+    plt.figure(figsize=(12, 8))
+    
+    # Data untuk pie chart
+    labels_kab = pupuk_counts_kab.index.tolist()
+    sizes_kab = pupuk_counts_kab.values.tolist()
+    total_kab = sum(sizes_kab)
+    
+    # Warna
+    colors_kab = color_list[:len(labels_kab)]
+    
+    # Buat pie chart tanpa label (akan dibuat manual)
+    wedges, texts = plt.pie(
+        sizes_kab,
+        labels=None,  # label manual via legend
+        colors=colors_kab,
+        startangle=90,
+        textprops={'fontsize': 10, 'weight': 'bold'}
+    )
+    
+    # Tambahkan label jumlah di tengah tiap slice dengan bubble
+    for i, (wedge, size) in enumerate(zip(wedges, sizes_kab)):
+        # Hitung posisi tengah slice
+        ang = (wedge.theta2 + wedge.theta1) / 2
+        x = np.cos(np.deg2rad(ang)) * 0.6  # 0.6 untuk posisi di tengah radius
+        y = np.sin(np.deg2rad(ang)) * 0.6
+        
+        # Tambahkan label jumlah dengan frame/bubble
+        plt.annotate(
+            f'{size}',
+            xy=(x, y),
+            xytext=(0, 0),
+            textcoords='offset points',
+            ha='center', va='center',
+            bbox=dict(
+                boxstyle="round,pad=0.3",
+                fc='white',
+                ec='gray',
+                lw=1,
+                alpha=0.9
+            ),
+            fontsize=9,
+            fontweight='bold'
+        )
+    
+    # Tambahkan legend di luar pie chart
+    plt.legend(
+        labels_kab,
+        title='Jenis Pupuk',
+        bbox_to_anchor=(1.05, 1),
+        loc='upper left',
+        fontsize=9,
+        framealpha=0.9
+    )
+    
+    # Judul
+    plt.title(f'Jenis Pupuk - Kabupaten {kabupaten}', fontsize=14, weight='bold', pad=20)
+    plt.axis('equal')
+    
+    plt.tight_layout()
+    
+    # Simpan dengan nama file yang sesuai
+    filename = f'99_jenis_pupuk_{kabupaten.lower().replace(" ", "_")}.png'
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"✓ {kabupaten}: {total_kab} petani - {len(labels_kab)} kombinasi pupuk")
+
+
+print(f"\nVisualisasi Jenis Pupuk untuk {kabupaten_dipilih} selesai!")
+print(f"Total petani: {total}")
+
+
+# Visualisasi: Distribusi Jenis Hama berdasarkan Kabupaten (Pie Chart)
+
+# Fungsi untuk normalisasi kombinasi hama
+def normalize_hama_combination(value):
+    """
+    Normalisasi kombinasi hama agar urutan tidak mempengaruhi hasil
+    """
+    if pd.isna(value):
+        return 'Tidak ada'
+    
+    # Convert to string and strip whitespace
+    cleaned = str(value).strip()
+    
+    # Handle empty string or dash
+    if cleaned == '' or cleaned == '-':
+        return 'Tidak ada'
+    
+    # Remove quotes if present
+    cleaned = cleaned.replace('"', '').strip()
+    
+    # Split by comma
+    hama_list = [h.strip() for h in cleaned.split(',')]
+    
+    # Remove empty strings
+    hama_list = [h for h in hama_list if h]
+    
+    # Define standard order for sorting
+    standard_order = [
+        'Tikus',
+        'Wereng',
+        'Tulo/burung pipit',
+        'penggerek batang padi',
+        'walang sangit',
+        'Hama putih',
+        'Belalang',
+        'Kepinding',
+        'Siput Murbai/Keong',
+        'Tidak ada'
+    ]
+    
+    # Sort hama_list based on standard_order
+    def get_order_index(hama_name):
+        try:
+            return standard_order.index(hama_name)
+        except ValueError:
+            return 999  # Put unknown items at the end
+    
+    hama_list_sorted = sorted(hama_list, key=get_order_index)
+    
+    # Join back with comma and space
+    normalized = ', '.join(hama_list_sorted)
+    
+    return normalized if normalized else 'Tidak ada'
+
+# Bersihkan dan normalisasi data jenis hama
+df_periode['jenis_hama_normalized'] = df_periode['jenis_hama'].apply(normalize_hama_combination)
+
+# Debug: Cek distribusi jenis hama setelah normalisasi
+print("\nDistribusi jenis hama setelah normalisasi:")
+print(df_periode['jenis_hama_normalized'].value_counts())
+
+# Ambil data petani unik dan jenis hama mereka
+petani_jenis_hama = df_periode[['id_petani', 'kabupaten', 'jenis_hama_normalized']].drop_duplicates(subset=['id_petani'])
+
+print(f"\nJumlah total petani unik: {len(petani_jenis_hama)}")
+
+# ===================================================================
+# BUAT PIE CHART UNTUK SEMUA KABUPATEN
+# ===================================================================
+
+print("\n" + "="*80)
+print("MEMBUAT PIE CHART JENIS HAMA UNTUK SEMUA KABUPATEN")
+print("="*80)
+
+# Daftar kabupaten unik
+list_kabupaten = petani_jenis_hama['kabupaten'].unique()
+list_kabupaten = [k for k in list_kabupaten if k != 'Tidak Diketahui']
+
+print(f"\nKabupaten yang akan divisualisasikan: {list_kabupaten}")
+
+# Siapkan warna solid dari COLOR_PALETTE
+color_list = [
+    COLOR_PALETTE['blue'],
+    COLOR_PALETTE['red'],
+    COLOR_PALETTE['cyan'],
+    COLOR_PALETTE['orange'],
+    COLOR_PALETTE['green'],
+    COLOR_PALETTE['purple'],
+    COLOR_PALETTE['yellow'],
+    COLOR_PALETTE['pink'],
+    COLOR_PALETTE['teal'],
+    COLOR_PALETTE['indigo'],
+    COLOR_PALETTE['lime'],
+    COLOR_PALETTE['amber'],
+    COLOR_PALETTE['brown'],
+    COLOR_PALETTE['gray']
+]
+
+# Loop untuk setiap kabupaten
+for kabupaten in list_kabupaten:
+    # Filter data untuk kabupaten ini
+    data_kab = petani_jenis_hama[petani_jenis_hama['kabupaten'] == kabupaten]
+    
+    # Hitung frekuensi
+    hama_counts_kab = data_kab['jenis_hama_normalized'].value_counts()
+    
+    # Skip jika tidak ada data
+    if len(hama_counts_kab) == 0:
+        print(f"Skipping {kabupaten} - tidak ada data")
+        continue
+    
+    # Buat figure
+    plt.figure(figsize=(12, 8))
+    
+    # Data untuk pie chart
+    labels_kab = hama_counts_kab.index.tolist()
+    sizes_kab = hama_counts_kab.values.tolist()
+    total_kab = sum(sizes_kab)
+    
+    # Warna
+    # Extend color list if needed
+    colors_kab = color_list.copy()
+    while len(colors_kab) < len(labels_kab):
+        colors_kab.extend(color_list)
+    colors_kab = colors_kab[:len(labels_kab)]
+    
+    # Buat pie chart tanpa label (akan dibuat manual)
+    wedges, texts = plt.pie(
+        sizes_kab,
+        labels=None,  # label manual via legend
+        colors=colors_kab,
+        startangle=90,
+        textprops={'fontsize': 10, 'weight': 'bold'}
+    )
+    
+    # Tambahkan label jumlah di tengah tiap slice dengan bubble
+    for i, (wedge, size) in enumerate(zip(wedges, sizes_kab)):
+        # Hitung posisi tengah slice
+        ang = (wedge.theta2 + wedge.theta1) / 2
+        x = np.cos(np.deg2rad(ang)) * 0.6  # 0.6 untuk posisi di tengah radius
+        y = np.sin(np.deg2rad(ang)) * 0.6
+        
+        # Tambahkan label jumlah dengan frame/bubble
+        plt.annotate(
+            f'{size}',
+            xy=(x, y),
+            xytext=(0, 0),
+            textcoords='offset points',
+            ha='center', va='center',
+            bbox=dict(
+                boxstyle="round,pad=0.3",
+                fc='white',
+                ec='gray',
+                lw=1,
+                alpha=0.9
+            ),
+            fontsize=9,
+            fontweight='bold'
+        )
+    
+    # Tambahkan legend di luar pie chart
+    plt.legend(
+        labels_kab,
+        title='Jenis Hama',
+        bbox_to_anchor=(1.05, 1),
+        loc='upper left',
+        fontsize=9,
+        framealpha=0.9
+    )
+    
+    # Judul
+    plt.title(f'Jenis Hama - Kabupaten {kabupaten}', fontsize=14, weight='bold', pad=20)
+    plt.axis('equal')
+    
+    plt.tight_layout()
+    
+    # Simpan dengan nama file yang sesuai
+    filename = f'22_jenis_hama_{kabupaten.lower().replace(" ", "_")}.png'
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"✓ {kabupaten}: {total_kab} petani - {len(labels_kab)} kombinasi hama")
+    
+
+# Visualisasi: Distribusi Jenis Penyakit Padi berdasarkan Kabupaten (Pie Chart)
+
+# Fungsi untuk normalisasi kombinasi penyakit
+def normalize_penyakit_combination(value):
+    """
+    Normalisasi kombinasi penyakit agar urutan tidak mempengaruhi hasil
+    """
+    if pd.isna(value):
+        return 'TIDAK ADA'
+    
+    # Convert to string and strip whitespace
+    cleaned = str(value).strip()
+    
+    # Handle empty string or dash
+    if cleaned == '' or cleaned == '-':
+        return 'TIDAK ADA'
+    
+    # Handle various forms of "tidak ada"
+    if cleaned.upper() in ['TIDAK ADA', 'TIDAK', 'TIDAKADA']:
+        return 'TIDAK ADA'
+    
+    # Remove quotes if present
+    cleaned = cleaned.replace('"', '').strip()
+    
+    # Split by comma
+    penyakit_list = [p.strip() for p in cleaned.split(',')]
+    
+    # Remove empty strings
+    penyakit_list = [p for p in penyakit_list if p]
+    
+    # Define standard order for sorting
+    standard_order = [
+        'Blas',
+        'Hawar daun bakteri',
+        'Tungro',
+        'Bercak daun',
+        'Hawar pelepah daun',
+        'Busuk batang',
+        'TIDAK ADA'
+    ]
+    
+    # Sort penyakit_list based on standard_order
+    def get_order_index(penyakit_name):
+        try:
+            return standard_order.index(penyakit_name)
+        except ValueError:
+            # Try case-insensitive match
+            for idx, std_name in enumerate(standard_order):
+                if std_name.upper() == penyakit_name.upper():
+                    return idx
+            return 999  # Put unknown items at the end
+    
+    penyakit_list_sorted = sorted(penyakit_list, key=get_order_index)
+    
+    # Join back with comma and space
+    normalized = ', '.join(penyakit_list_sorted)
+    
+    return normalized if normalized else 'TIDAK ADA'
+
+# Bersihkan dan normalisasi data jenis penyakit
+df_periode['jenis_penyakit_normalized'] = df_periode['penyakit_padi'].apply(normalize_penyakit_combination)
+# Debug: Cek distribusi jenis penyakit setelah normalisasi
+print("\nDistribusi jenis penyakit setelah normalisasi:")
+print(df_periode['jenis_penyakit_normalized'].value_counts())
+
+# Ambil data petani unik dan jenis penyakit mereka
+petani_jenis_penyakit = df_periode[['id_petani', 'kabupaten', 'jenis_penyakit_normalized']].drop_duplicates(subset=['id_petani'])
+
+print(f"\nJumlah total petani unik: {len(petani_jenis_penyakit)}")
+
+# ===================================================================
+# BUAT PIE CHART UNTUK SEMUA KABUPATEN
+# ===================================================================
+
+print("\n" + "="*80)
+print("MEMBUAT PIE CHART JENIS PENYAKIT PADI UNTUK SEMUA KABUPATEN")
+print("="*80)
+
+# Daftar kabupaten unik
+list_kabupaten = petani_jenis_penyakit['kabupaten'].unique()
+list_kabupaten = [k for k in list_kabupaten if k != 'Tidak Diketahui']
+
+print(f"\nKabupaten yang akan divisualisasikan: {list_kabupaten}")
+
+# Siapkan warna solid dari COLOR_PALETTE
+color_list = [
+    COLOR_PALETTE['blue'],
+    COLOR_PALETTE['red'],
+    COLOR_PALETTE['cyan'],
+    COLOR_PALETTE['orange'],
+    COLOR_PALETTE['green'],
+    COLOR_PALETTE['purple'],
+    COLOR_PALETTE['yellow'],
+    COLOR_PALETTE['pink'],
+    COLOR_PALETTE['teal'],
+    COLOR_PALETTE['indigo'],
+    COLOR_PALETTE['lime'],
+    COLOR_PALETTE['amber'],
+    COLOR_PALETTE['brown'],
+    COLOR_PALETTE['gray']
+]
+
+# Loop untuk setiap kabupaten
+for kabupaten in list_kabupaten:
+    # Filter data untuk kabupaten ini
+    data_kab = petani_jenis_penyakit[petani_jenis_penyakit['kabupaten'] == kabupaten]
+    
+    # Hitung frekuensi
+    penyakit_counts_kab = data_kab['jenis_penyakit_normalized'].value_counts()
+    
+    # Skip jika tidak ada data
+    if len(penyakit_counts_kab) == 0:
+        print(f"Skipping {kabupaten} - tidak ada data")
+        continue
+    
+    # Buat figure
+    plt.figure(figsize=(12, 8))
+    
+    # Data untuk pie chart
+    labels_kab = penyakit_counts_kab.index.tolist()
+    sizes_kab = penyakit_counts_kab.values.tolist()
+    total_kab = sum(sizes_kab)
+    
+    # Warna
+    # Extend color list if needed
+    colors_kab = color_list.copy()
+    while len(colors_kab) < len(labels_kab):
+        colors_kab.extend(color_list)
+    colors_kab = colors_kab[:len(labels_kab)]
+    
+    # Buat pie chart tanpa label (akan dibuat manual)
+    wedges, texts = plt.pie(
+        sizes_kab,
+        labels=None,  # label manual via legend
+        colors=colors_kab,
+        startangle=90,
+        textprops={'fontsize': 10, 'weight': 'bold'}
+    )
+    
+    # Tambahkan label jumlah di tengah tiap slice dengan bubble
+    for i, (wedge, size) in enumerate(zip(wedges, sizes_kab)):
+        # Hitung posisi tengah slice
+        ang = (wedge.theta2 + wedge.theta1) / 2
+        x = np.cos(np.deg2rad(ang)) * 0.6  # 0.6 untuk posisi di tengah radius
+        y = np.sin(np.deg2rad(ang)) * 0.6
+        
+        # Tambahkan label jumlah dengan frame/bubble
+        plt.annotate(
+            f'{size}',
+            xy=(x, y),
+            xytext=(0, 0),
+            textcoords='offset points',
+            ha='center', va='center',
+            bbox=dict(
+                boxstyle="round,pad=0.3",
+                fc='white',
+                ec='gray',
+                lw=1,
+                alpha=0.9
+            ),
+            fontsize=9,
+            fontweight='bold'
+        )
+    
+    # Tambahkan legend di luar pie chart
+    plt.legend(
+        labels_kab,
+        title='Jenis Penyakit Padi',
+        bbox_to_anchor=(1.05, 1),
+        loc='upper left',
+        fontsize=9,
+        framealpha=0.9
+    )
+    
+    # Judul
+    plt.title(f'Jenis Penyakit Padi - Kabupaten {kabupaten}', fontsize=14, weight='bold', pad=20)
+    plt.axis('equal')
+    
+    plt.tight_layout()
+    
+    # Simpan dengan nama file yang sesuai
+    filename = f'23_jenis_penyakit_{kabupaten.lower().replace(" ", "_")}.png'
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"✓ {kabupaten}: {total_kab} petani - {len(labels_kab)} kombinasi penyakit")

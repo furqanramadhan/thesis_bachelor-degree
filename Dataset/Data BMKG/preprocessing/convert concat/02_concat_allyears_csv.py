@@ -58,6 +58,21 @@ def merge_csv_files(csv_directory):
     print("Menggabungkan semua data...")
     combined_df = pd.concat(all_dfs, ignore_index=True)
     
+    initial_count = len(combined_df)
+    duplicates = combined_df[combined_df.duplicated(subset=['Date'], keep=False)]
+
+    if not duplicates.empty:
+        print(f"Duplikasi terdeteksi saat merge!")
+        print(f"Jumlah: {len(duplicates)} baris")
+        dup_dates = duplicates['Date'].unique()
+        print(f" Tanggal: {sorted([d.strftime('%Y-%m-%d') for d in dup_dates])}")
+        
+    combined_df = combined_df.drop_duplicates(subset=['Date'], keep='first')
+    final_count = len(combined_df)
+
+    if initial_count != final_count:
+        print(f"{initial_count - final_count} baris duplikat dihapus dari hasil merge")
+    
     # Urutkan berdasarkan tanggal
     combined_df = combined_df.sort_values(by='Date').reset_index(drop=True)
     
@@ -65,7 +80,7 @@ def merge_csv_files(csv_directory):
 
 def main():
     # Direktori yang berisi file CSV
-    csv_directory = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Utara/Stasiun Meteorologi Malikussaleh/CSV'
+    csv_directory = '/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data BMKG/Lokasi/Kab. Aceh Besar/Stasiun Klimatologi Aceh/CSV'
     
     # Output file untuk dataset gabungan
     output_file = os.path.join(csv_directory, "BMKG_Data_All.csv")

@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99e (TeX Live 2026/Arch Linux)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: skripsi.aux
+The style file: style/jifbibstyle.bst
+A level-1 auxiliary file: include/bebas-plagiasi.aux
+A level-1 auxiliary file: include/surat-pernyataan.aux
+A level-1 auxiliary file: include/abstrak-indonesia.aux
+A level-1 auxiliary file: include/abstrak-english.aux
+A level-1 auxiliary file: include/kata-pengantar.aux
+A level-1 auxiliary file: include/daftar-singkatan.aux
+A level-1 auxiliary file: include/bab1.aux
+A level-1 auxiliary file: include/bab2.aux
+A level-1 auxiliary file: include/bab3.aux
+A level-1 auxiliary file: include/bab4.aux
+A level-1 auxiliary file: include/bab5.aux
+A level-1 auxiliary file: include/lampiran.aux
+Database file #1: daftar-pustaka.bib
+Warning--can't use both volume and number fields in andrasto2023
+You've used 49 entries,
+            2246 wiz_defined-function locations,
+            874 strings with 15369 characters,
+and the built_in function-call counts, 20225 in all, are:
+= -- 1963
+> -- 855
+< -- 29
++ -- 293
+- -- 289
+* -- 1807
+:= -- 3547
+add.period$ -- 194
+call.type$ -- 49
+change.case$ -- 384
+chr.to.int$ -- 49
+cite$ -- 50
+duplicate$ -- 726
+empty$ -- 1458
+format.name$ -- 356
+if$ -- 4029
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 48
+newline$ -- 291
+num.names$ -- 149
+pop$ -- 314
+preamble$ -- 1
+purify$ -- 389
+quote$ -- 0
+skip$ -- 505
+stack$ -- 0
+substring$ -- 1238
+swap$ -- 55
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 282
+warning$ -- 1
+while$ -- 145
+width$ -- 0
+write$ -- 724
+(There was 1 warning)

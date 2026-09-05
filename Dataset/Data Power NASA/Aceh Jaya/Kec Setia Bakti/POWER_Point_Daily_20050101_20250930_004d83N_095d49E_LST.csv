@@ -1,7 +1,7 @@
 -BEGIN HEADER-
 NASA/POWER Source Native Resolution Daily Data 
 Dates (month/day/year): 01/01/2005 through 09/30/2025 in LST
-Location: latitude  4.8333   longitude 95.4868 
+Location: latitude  4.7639   longitude 95.5762 
 elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = 513.22 meters
 The value for missing source data that cannot be computed or is outside of the sources availability range: -999 
 parameter(s): 
@@ -7593,4 +7593,4 @@ YEAR,DOY,T2M_MIN,T2M_MAX,T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,WS10M,WS10M_MAX,
 2025,270,22.3,28.29,24.55,80.74,0.64,19.69,2.49,4.88,285.4
 2025,271,22.07,26.13,23.75,85.08,13.54,20.82,3.81,5.65,234.0
 2025,272,21.7,24.78,22.84,88.95,5.3,11.69,4.48,6.53,199.0
-2025,273,20.79,27.28,23.86,80.92,0.22,16.27,2.52,4.47,193.3
+2025,273,20.79,27.28,23.86,80.92,0.22,18.3,2.52,4.47,193.3

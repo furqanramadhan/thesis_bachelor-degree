@@ -228,29 +228,16 @@ class NASAPowerTemperaturePreprocessor:
         valid_data = self.data[self.data['Date'].notna() & self.data['T2M'].notna()].sort_values('Date')
         
         if not valid_data.empty:
-            # Full time series
+            # Full time series (only line, no dots, no legend)
             plt.plot(valid_data['Date'], valid_data['T2M'],
-                    color='green', alpha=0.7, linewidth=1.5, label='T2M')
+                    color='blue', alpha=0.7, linewidth=1.5)
             
-            # Highlight extreme events
-            extreme_hot = valid_data['T2M'] > 32
-            extreme_cold = valid_data['T2M'] < 22
-            
-            if extreme_hot.any():
-                hot_data = valid_data[extreme_hot]
-                plt.scatter(hot_data['Date'], hot_data['T2M'],
-                          color='red', s=20, alpha=0.6, label=f'Sangat Panas (>32°C): {len(hot_data)} hari')
-            
-            if extreme_cold.any():
-                cold_data = valid_data[extreme_cold]
-                plt.scatter(cold_data['Date'], cold_data['T2M'],
-                          color='blue', s=20, alpha=0.6, label=f'Dingin (<22°C): {len(cold_data)} hari')
+            # (No scatter for extreme events, no legend)
             
             plt.ylabel('Temperatur (°C)', fontsize=12)
             plt.xlabel('Tahun', fontsize=12)
-            plt.title('NASA POWER: Temperature at 2 Meters (T2M) Time Series', fontsize=13, fontweight='bold')
             plt.grid(True, alpha=0.3)
-            plt.legend()
+            # plt.legend()  # Legend removed
         
         plt.tight_layout()
         
@@ -261,43 +248,172 @@ class NASAPowerTemperaturePreprocessor:
         
         plt.show()
         
-        # PLOT 2: Boxplot distribusi bulanan
+      
+              # PLOT 2: Boxplot distribusi bulanan
         print("🔄 Plot #2: Distribusi Bulanan Temperatur")
         
-        plt.figure(figsize=(14, 8))
-        
-        # Prepare monthly data
-        months = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-        month_labels = ['Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei',
-                        'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov']
-        
-        monthly_data = []
-        for month in months:
-            month_temp = self.data[self.data['month'] == month]['T2M'].dropna()
-            monthly_data.append(month_temp if not month_temp.empty else pd.Series(dtype=float))
-        
-        if any(len(m) > 0 for m in monthly_data):
-            box_plot = plt.boxplot(monthly_data, labels=month_labels, patch_artist=True)
+        # Create month names in order (Dec - Jan - Feb - ... - Nov)
+        month_order = ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']
+        month_names = {12: 'Dec', 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 
+                       6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov'}
+
+        # Map month numbers to names
+        self.data['Month_Name'] = self.data['month'].map(month_names)
+
+        # Prepare data for boxplot
+        data_by_month = [self.data[self.data['month'] == month]['T2M'].dropna().values 
+                         for month in [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+
+        # Create figure and axis
+        fig, ax = plt.subplots(figsize=(14, 7))
+
+        # Create boxplot
+        bp = ax.boxplot(data_by_month, 
+                        labels=month_order,
+                        patch_artist=True,
+                        notch=False,
+                        showmeans=False,
+                        showfliers=True,
+                        widths=0.6)
+
+        # Use single sky blue color for all boxes
+        sky_blue = '#87CEEB'
+        for patch in bp['boxes']:
+            patch.set_facecolor(sky_blue)
+            patch.set_edgecolor('black')
+            patch.set_linewidth(1)
+
+        # Customize median lines
+        for median in bp['medians']:
+            median.set_color('black')
+            median.set_linewidth(1.5)
+
+        # Customize whiskers and caps
+        for whisker in bp['whiskers']:
+            whisker.set_color('black')
+            whisker.set_linewidth(1)
             
-            # Color the boxes
-            colors = plt.cm.YlOrRd(np.linspace(0.3, 0.9, 12))
-            for patch, color in zip(box_plot['boxes'], colors):
-                patch.set_facecolor(color)
-                patch.set_alpha(0.7)
-        
-        plt.ylabel('Temperatur (°C)', fontsize=12)
-        plt.xlabel('Bulan', fontsize=12)
-        plt.title('Distribusi Temperatur Bulanan NASA POWER (2005-2025)', fontsize=13, fontweight='bold')
-        plt.grid(True, alpha=0.3)
-        plt.xticks(rotation=0)
+        for cap in bp['caps']:
+            cap.set_color('black')
+            cap.set_linewidth(1)
+
+        # Customize fliers (outliers)
+        for flier in bp['fliers']:
+            flier.set_marker('o')
+            flier.set_markerfacecolor('white')
+            flier.set_markeredgecolor('black')
+            flier.set_markersize(5)
+            flier.set_markeredgewidth(0.8)
+
+        # Customize plot
+        ax.set_xlabel('Month', fontsize=11, fontweight='normal')
+        ax.set_ylabel('Temperature (°C)', fontsize=11, fontweight='normal')
+        ax.grid(True, alpha=0.3, linestyle='--', axis='y', color='gray')
+        ax.set_axisbelow(True)
+
+        # Set background color
+        fig.patch.set_facecolor('white')
+
+        # Customize ticks
+        plt.xticks(rotation=0, fontsize=10)
+        plt.yticks(fontsize=10)
+
+        plt.tight_layout()
         
         if save_plots:
-            plt.savefig(f'{output_dir}/02_nasa_monthly_distribution.png', dpi=300, 
+            plt.savefig(f'{output_dir}/02_nasa_monthly_temperature_distribution.png', dpi=300, 
                         bbox_inches='tight', facecolor='white')
-            print("✅ 02_nasa_monthly_distribution.png saved")
+            print("✅ 02_nasa_monthly_temperature_distribution.png saved")
         
         plt.show()
         
+        # Print monthly statistics
+        print("\n=== Monthly Temperature Statistics (°C) ===\n")
+        for i, month in enumerate(month_order):
+            month_num = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11][i]
+            data = self.data[self.data['month'] == month_num]['T2M'].dropna()
+            if len(data) > 0:
+                print(f"{month:>3}: Mean={data.mean():6.2f}, Median={data.median():6.2f}, "
+                      f"Min={data.min():6.2f}, Max={data.max():6.2f}, Std={data.std():6.2f}")
+        
+        # PLOT 2B: Boxplot distribusi tahunan
+        print("\n🔄 Plot #2B: Distribusi Tahunan Temperatur")
+        
+        # Get unique years and prepare data for boxplot
+        years = sorted(self.data['Year'].unique())
+        data_by_year = [self.data[self.data['Year'] == year]['T2M'].dropna().values for year in years]
+
+        # Create figure and axis
+        fig, ax = plt.subplots(figsize=(16, 8))
+
+        # Create boxplot
+        bp = ax.boxplot(data_by_year, 
+                        labels=years,
+                        patch_artist=True,
+                        notch=False,
+                        showmeans=False,
+                        showfliers=True,
+                        widths=0.6)
+
+        # Use single sky blue color for all boxes
+        for patch in bp['boxes']:
+            patch.set_facecolor(sky_blue)
+            patch.set_edgecolor('black')
+            patch.set_linewidth(1)
+
+        # Customize median lines
+        for median in bp['medians']:
+            median.set_color('black')
+            median.set_linewidth(1.5)
+
+        # Customize whiskers and caps
+        for whisker in bp['whiskers']:
+            whisker.set_color('black')
+            whisker.set_linewidth(1)
+            
+        for cap in bp['caps']:
+            cap.set_color('black')
+            cap.set_linewidth(1)
+
+        # Customize fliers (outliers)
+        for flier in bp['fliers']:
+            flier.set_marker('o')
+            flier.set_markerfacecolor('white')
+            flier.set_markeredgecolor('black')
+            flier.set_markersize(5)
+            flier.set_markeredgewidth(0.8)
+
+        # Customize plot
+        ax.set_xlabel('Year', fontsize=12, fontweight='bold')
+        ax.set_ylabel('Temperature (°C)', fontsize=12, fontweight='bold')
+        ax.grid(True, alpha=0.3, linestyle='--', axis='y', color='gray')
+        ax.set_axisbelow(True)
+
+        # Set background color
+        fig.patch.set_facecolor('white')
+
+        # Customize ticks
+        plt.xticks(rotation=45, fontsize=10)
+        plt.yticks(fontsize=10)
+
+        plt.tight_layout()
+        
+        if save_plots:
+            plt.savefig(f'{output_dir}/02b_nasa_annual_temperature_distribution.png', dpi=300, 
+                        bbox_inches='tight', facecolor='white')
+            print("✅ 02b_nasa_annual_temperature_distribution.png saved")
+        
+        plt.show()
+        
+        # Print annual statistics
+        print("\n=== Annual Daily Temperature Statistics (°C) ===\n")
+        for year in years:
+            data = self.data[self.data['Year'] == year]['T2M'].dropna()
+            if len(data) > 0:
+                status = "(Partial)" if year == 2025 else "(Complete)"
+                print(f"{year}: Mean={data.mean():6.2f}, Median={data.median():6.2f}, "
+                      f"Min={data.min():6.2f}, Max={data.max():6.2f}, Std={data.std():6.2f} {status}")
+      
         # PLOT 3: Dekomposisi Deret Waktu (BARU!)
         print("🔄 Plot #3: Dekomposisi Deret Waktu (Trend, Seasonal, Residual)")
         
@@ -333,8 +449,6 @@ class NASAPowerTemperaturePreprocessor:
                 axes[0].plot(decomposition.trend.index, decomposition.trend.values, 
                            color='blue', linewidth=2)
                 axes[0].set_ylabel('Trend (°C)', fontsize=11)
-                axes[0].set_title('Dekomposisi Deret Waktu Temperatur NASA POWER', 
-                                fontsize=13, fontweight='bold')
                 axes[0].grid(True, alpha=0.3)
                 
                 # Seasonal
@@ -344,11 +458,11 @@ class NASAPowerTemperaturePreprocessor:
                 axes[1].grid(True, alpha=0.3)
                 
                 # Residual
-                axes[2].plot(decomposition.resid.index, decomposition.resid.values, 
-                           color='blue', linewidth=0.5, alpha=0.7)
+                axes[2].scatter(decomposition.resid.index, decomposition.resid.values,
+                               color='blue', s=20, alpha=0.6)  # s=20 for larger points
                 axes[2].axhline(y=0, color='black', linestyle='--', linewidth=1)
                 axes[2].set_ylabel('Residual (°C)', fontsize=11)
-                axes[2].set_xlabel('Tahun', fontsize=11)
+                axes[2].set_xlabel('Year', fontsize=11)
                 axes[2].grid(True, alpha=0.3)
                 
                 plt.tight_layout()
@@ -451,8 +565,8 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     
     try:
-        # Data path - sesuaikan dengan lokasi file NASA POWER Anda
-        data_path = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data Power NASA/Aceh Jaya/Kec Setia Bakti/POWER_Point_Daily_20050101_20250930_004d83N_095d49E_LST.csv"
+        # Data path 
+        data_path = "/run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Dataset/Data Power NASA/Bireun/Kec Kota Juang/POWER_Point_Daily_20050101_20250930_005d19N_096d67E_LST.csv"
         
         # Load data
         print(f"📂 Loading NASA POWER data dari: {data_path}")

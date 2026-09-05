@@ -1,0 +1,120 @@
+============================================================
+STATISTIK DESKRIPTIF DATASET BMKG (ORIGINAL DATA)
+============================================================
+
+📊 VARIABEL: TN
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 80
+   • Count (Valid)     : 7,485
+   • Mean              : 22.86
+   • Std Dev           : 1.33
+   • Min               : 13.00
+   • Q1 (25%)          : 22.10
+   • Median (Q2)       : 23.00
+   • Q3 (75%)          : 23.60
+   • Max               : 28.60
+
+📊 VARIABEL: TX
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 56
+   • Count (Valid)     : 7,509
+   • Mean              : 32.75
+   • Std Dev           : 1.69
+   • Min               : 24.80
+   • Q1 (25%)          : 31.80
+   • Median (Q2)       : 32.80
+   • Q3 (75%)          : 34.00
+   • Max               : 37.60
+
+📊 VARIABEL: TAVG
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 8
+   • Count (Valid)     : 7,557
+   • Mean              : 27.70
+   • Std Dev           : 1.65
+   • Min               : 23.30
+   • Q1 (25%)          : 26.50
+   • Median (Q2)       : 27.50
+   • Q3 (75%)          : 28.90
+   • Max               : 32.90
+
+📊 VARIABEL: RH_AVG
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 2
+   • Count (Valid)     : 7,563
+   • Mean              : 79.86
+   • Std Dev           : 9.41
+   • Min               : 44.00
+   • Q1 (25%)          : 74.00
+   • Median (Q2)       : 81.00
+   • Q3 (75%)          : 87.00
+   • Max               : 100.00
+
+📊 VARIABEL: RR
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 2,770
+   • Count (Valid)     : 4,795
+   • Mean              : 7.56
+   • Std Dev           : 14.02
+   • Min               : 0.00
+   • Q1 (25%)          : 0.00
+   • Median (Q2)       : 1.80
+   • Q3 (75%)          : 8.60
+   • Max               : 180.80
+
+📊 VARIABEL: SS
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 607
+   • Count (Valid)     : 6,958
+   • Mean              : 4.93
+   • Std Dev           : 2.54
+   • Min               : 0.10
+   • Q1 (25%)          : 3.00
+   • Median (Q2)       : 5.10
+   • Q3 (75%)          : 6.90
+   • Max               : 11.50
+
+📊 VARIABEL: FF_X
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 300
+   • Count (Valid)     : 7,265
+   • Mean              : 4.03
+   • Std Dev           : 1.35
+   • Min               : 2.00
+   • Q1 (25%)          : 3.00
+   • Median (Q2)       : 4.00
+   • Q3 (75%)          : 5.00
+   • Max               : 16.00
+
+📊 VARIABEL: DDD_X
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 1,564
+   • Count (Valid)     : 6,001
+   • Mean              : 215.46
+   • Std Dev           : 92.27
+   • Min               : 1.00
+   • Q1 (25%)          : 135.00
+   • Median (Q2)       : 180.00
+   • Q3 (75%)          : 315.00
+   • Max               : 360.00
+
+📊 VARIABEL: FF_AVG
+----------------------------------------
+   • Jumlah Data Total : 7,565
+   • Data Invalid      : 2,304
+   • Count (Valid)     : 5,261
+   • Mean              : 1.98
+   • Std Dev           : 0.74
+   • Min               : 1.00
+   • Q1 (25%)          : 2.00
+   • Median (Q2)       : 2.00
+   • Q3 (75%)          : 2.00
+   • Max               : 6.00
