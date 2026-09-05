@@ -1,0 +1,41 @@
+Notulen Semhas Furqan:
+Pembahas:
+0. abstract tidak ada space alenia baru
+
+hal 2.
+NASA POWER, sehingga menghasilkan clean
+bersih dan siap dianalisis. -> redudansi campuran, pilih bahasa
+
+"dapat di load cepat"
+ -> campuran dan tidak formal (dimuat dengan cepat)
+
+hal.21
+" periode tamam " -> typo
+
+hal.22 
+"Gambar 4.5 menujukkan" -> typo -n
+
+1. kata pengantar (hidayahnya) -> hidayah-Nya
+2. preprocessing ->  banyak tidak mmiring
+3. hal 39 Time-Series, noice -> tidak miring  
+4. hal 54 Forecasting -> tidak miring
+
+
+ada beberapa subbab judul Bahasa asing tidak miring
+
+table tidak rapi melewati batas margin
+
+
+Pak Nazar:
+- -
+
+Pak Dwipa:
+- Perbedaan periode 3 di website zonapetik, antata lstm ama holt winters
+
+Bu Rini:
+-  Smoothing itu apa teori nya(?), harus udah diluar kepala. (jujur gangerti maksudnya🗿)
+
+Pak Miftah:
+-  Gatau apa dbilang, malah storytelling, intinya gda hbungan ama laporan.
+
+Mostly pertanyaan, bukan kritik/saran.

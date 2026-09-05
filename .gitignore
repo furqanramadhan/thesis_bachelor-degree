@@ -1,12 +1,11 @@
-File
+# Ignored folders
 Repository
-Panduan
-~.lock*
-Dataset/BMKG/Stasiun Klimatologi Aceh/.~lock*
-Berkas
 template ppt
 References
 LaTeX Thesis
 Kalender Akademik
 New KKP
-Dataset/Data Power NASA/Grid
+
+# Office/LibreOffice lock files - ignore di semua folder & subfolder
+**/.~lock.*#
+**/~$*

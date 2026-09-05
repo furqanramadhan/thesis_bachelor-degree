@@ -1,0 +1,61 @@
+List Desa di Kecamatan Beberapa Kabupaten Sampel
+https://peta.web.id/peta/kec/baktiya-270
+
+1. Aceh Utara
+a. Lhoksukon: 5.051701, 97.318123
+- Beuringin LB (coral)
+- Meunasah Teungoh LT (orange)
+b. Baktiya: 5.0901929, 97.4056928
+- Cot Kumbang (biru)
+- Meudang Ara (merah)
+
+2. Bireun
+a. Simpang Mamplam : 5.1007814, 96.418385
+- Blang Mane Barat
+- Arongan
+b. Peusangan : 5.2008992, 96.7601057
+- Blang Asan
+- Pante Gajah
+
+3. Aceh Timur
+a. Peureulak Kota: 4.809286, 97.892303
+1. Seuneubok Peusangan
+2. Balee buya
+
+b. Ranto Peureulak: 4.7466594, 97.7199454
+ 1. Bhom Lama
+ 2. Tampak
+
+4. Aceh Besar
+a. Indrapuri: 5.4218918, 95.4463322
+- Lam Ilie Mesjid
+- Reukih Kepula
+b. Montasik: 5.4803,95.4594
+- Atong
+- Mata Ie
+c. Darussalam: 5.5945451, 95.4201377
+- Lamreh
+- Krueng Kalee
+
+5. Aceh Jaya
+a. Jaya/Lamno: 5.1526721,95.1509617
+- Lhuet
+b. Setia Bakti: 4.8333007,95.4867971
+- Lhok Bot
+c. Pasie Raya : 4.6136123, 95.8614504
+- Pasie Teubue
+d. Teunom: 4.4999535, 95.7700208
+- Rambong Payong
+
+
+6. Pidie
+a. Pidie : 5.3759998,95.9148038
+b. Indrajaya: 5.3114261,95.8978653
+
+7. Aceh Utara
+a. Lhoksukon: 5.051701, 97.318123
+
+8. Bireun
+- Juli: 5.0735373,96.5879472
+- Kota Juang: 5.190849, 96.6728368
+

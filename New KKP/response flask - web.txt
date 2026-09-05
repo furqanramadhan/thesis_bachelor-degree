@@ -1,0 +1,971 @@
+INFO:routes.two_level_api:🍚🔬 Starting Two-Level Food Security Analysis
+INFO:routes.two_level_api:📊 AUTO-ALIGNED Parameters:
+INFO:routes.two_level_api:   NASA Climate: 2018-2024
+INFO:routes.two_level_api:   BPS Production: 2018-2024
+INFO:routes.two_level_api:   Temporal overlap: 2018-2024
+INFO:services.temporal_analysis_service:Temporal Analysis Service initialized
+INFO:services.food_security_analyzer:Food Security Analyzer initialized (Phase 1 - Climate Based)
+INFO:services.temporal_analysis_service:Temporal Analysis Service initialized
+INFO:services.food_security_analyzer:Food Security Analyzer initialized (Phase 1 - Climate Based)
+INFO:services.area_weight_service:Loading GeoJSON from: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Repository/tumbuh-baik/apps/flask/data/geojson/aceh_nasa_kecamatan.geojson
+INFO:services.area_weight_service:Loaded 10 kecamatan from GeoJSON
+INFO:services.area_weight_service:Converted CRS to UTM 46N for accurate area calculation
+INFO:services.area_weight_service:Calculated weights for AcehBesar: 3 kecamatan, 302.1 km²
+INFO:services.area_weight_service:Calculated weights for AcehJaya: 2 kecamatan, 1481.4 km²
+INFO:services.area_weight_service:Calculated weights for AcehUtara: 1 kecamatan, 142.0 km²
+INFO:services.area_weight_service:Calculated weights for Bireuen: 2 kecamatan, 394.1 km²
+INFO:services.area_weight_service:Calculated weights for Pidie: 2 kecamatan, 35.5 km²
+INFO:services.area_weight_service:Area weights calculated for 5 kabupaten
+INFO:services.kecamatan_kabupatan_mapping_service:Kecamatan-Kabupaten Mapping Service initialized with GeoJSON area data
+INFO:services.two_level_food_security_analyzer:Two-Level Food Security Analyzer initialized with real GeoJSON area weights
+INFO:routes.two_level_api:🌍 Step 1: Performing spatial food security analysis...
+INFO:services.geojson_loader:Loading kecamatan GeoJSON from: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Repository/tumbuh-baik/apps/flask/data/geojson/aceh_nasa_kecamatan.geojson
+INFO:services.geojson_loader:Successfully loaded 10 kecamatan NASA matches.
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Besar Kec Indrapuri: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Besar Kec Indrapuri
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Indrapuri
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Indrapuri: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Besar Kec Montasik: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Besar Kec Montasik
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Montasik
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Montasik: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Besar Kec Darussalam: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Besar Kec Darussalam
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Darussalam
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Darussalam: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Jaya Kec Setia Bakti: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Jaya Kec Setia Bakti
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 91.6 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Sampoiniet
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.72, Stability=96.28
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=150.62, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=4.62, Stability=95.38
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=23.83, Stability=76.17
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=37.42, Stability=62.58
+INFO:services.food_security_analyzer:Food security analysis complete for Sampoiniet: FSCI=72.7 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Jaya Kec Teunom: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Jaya Kec Teunom
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 90.2 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Teunom
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.10, Stability=96.90
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=164.78, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.93, Stability=94.07
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=23.83, Stability=76.17
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=32.60, Stability=67.40
+INFO:services.food_security_analyzer:Food security analysis complete for Teunom: FSCI=74.9 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Pidie Kec Pidie: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Pidie Kec Pidie
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Grong-Grong
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Grong-Grong: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Pidie Kec Indrajaya: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Pidie Kec Indrajaya
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Delima
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Delima: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from NASA Aceh Utara Kec Lhoksukon: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from NASA Aceh Utara Kec Lhoksukon
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 99.4 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Lhoksukon
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.10, Stability=96.90
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=174.83, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.13, Stability=94.87
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=28.45, Stability=71.55
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=31.37, Stability=68.63
+INFO:services.food_security_analyzer:Food security analysis complete for Lhoksukon: FSCI=76.8 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Data Nasa Bireun Kec Juli: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Data Nasa Bireun Kec Juli
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 93.5 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Peudada
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.18, Stability=96.82
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=171.27, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=4.42, Stability=95.58
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=24.87, Stability=75.13
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=23.73, Stability=76.27
+INFO:services.food_security_analyzer:Food security analysis complete for Peudada: FSCI=76.2 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Data Nasa Bireun Kec Kota Juang_cleaned: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Data Nasa Bireun Kec Kota Juang_cleaned
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 93.5 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Jeumpa
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=2.61, Stability=97.39
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=171.27, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=3.02, Stability=96.98
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=13.63, Stability=86.37
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=13.29, Stability=86.71
+INFO:services.food_security_analyzer:Food security analysis complete for Jeumpa: FSCI=77.2 (Lumbung Pangan Sekunder)
+INFO:routes.two_level_api:✅ Level 1 complete: 10 NASA locations analyzed
+INFO:routes.two_level_api:🏛 Step 2: Performing two-level analysis with BPS validation...
+INFO:services.two_level_food_security_analyzer:Starting two-level food security analysis
+INFO:services.two_level_food_security_analyzer:Input: 10 NASA location results
+INFO:services.two_level_food_security_analyzer:BPS period: 2018-2024
+INFO:services.two_level_food_security_analyzer:Level 1: Indrapuri → Indrapuri (FSCI: 74.54) [AcehBesar]
+INFO:services.two_level_food_security_analyzer:Level 1: Montasik → Montasik (FSCI: 74.54) [AcehBesar]
+INFO:services.two_level_food_security_analyzer:Level 1: Darussalam → Darussalam (FSCI: 74.54) [AcehBesar]
+INFO:services.two_level_food_security_analyzer:Level 1: Setia Bakti → Sampoiniet (FSCI: 72.71) [AcehJaya]
+INFO:services.two_level_food_security_analyzer:Level 1: Teunom → Teunom (FSCI: 74.92) [AcehJaya]
+INFO:services.two_level_food_security_analyzer:Level 1: Pidie → Grong-Grong (FSCI: 74.54) [Pidie]
+INFO:services.two_level_food_security_analyzer:Level 1: Indrajaya → Delima (FSCI: 74.54) [Pidie]
+INFO:services.two_level_food_security_analyzer:Level 1: Lhoksukon → Lhoksukon (FSCI: 76.81) [AcehUtara]
+INFO:services.two_level_food_security_analyzer:Level 1: Juli → Peudada (FSCI: 76.18) [Bireuen]
+INFO:services.two_level_food_security_analyzer:Level 1: Kota Juang → Jeumpa (FSCI: 77.23) [Bireuen]
+INFO:services.two_level_food_security_analyzer:Level 1 complete: 10 kecamatan analyses
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for AcehBesar: 3 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for AcehBesar: FSCI=74.54, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Aceh Besar (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Aceh Besar (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+ERROR:services.bps_api_service:HTTP error fetching BPS data: HTTPSConnectionPool(host='webapi.bps.go.id', port=443): Max retries exceeded with url: /v1/api/interoperabilitas/datasource/simdasi/id/25/tahun/2018/id_tabel/d3ZjM280TU9FanlkdDRETUV5aVdndz09/wilayah/1100000/key/d83593d2486e73d9e28f059008bcfdcc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x79206e9d6510>: Failed to resolve 'webapi.bps.go.id' ([Errno -3] Temporary failure in name resolution)"))
+WARNING:services.bps_api_service:Failed to fetch 2018 data: HTTPSConnectionPool(host='webapi.bps.go.id', port=443): Max retries exceeded with url: /v1/api/interoperabilitas/datasource/simdasi/id/25/tahun/2018/id_tabel/d3ZjM280TU9FanlkdDRETUV5aVdndz09/wilayah/1100000/key/d83593d2486e73d9e28f059008bcfdcc (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x79206e9d6510>: Failed to resolve 'webapi.bps.go.id' ([Errno -3] Temporary failure in name resolution)"))
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Aceh Besar: 6/7 years
+WARNING:services.bps_api_service:Missing years: [2018]
+INFO:services.two_level_food_security_analyzer:BPS data for Aceh Besar: 6 years, latest: 178319t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for AcehBesar: FSCI=74.5, Production=178319t, Correlation=0.700
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for AcehJaya: 2 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for AcehJaya: FSCI=73.63, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Aceh Jaya (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Aceh Jaya (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Aceh Jaya: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Aceh Jaya: 7 years, latest: 52637t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for AcehJaya: FSCI=73.6, Production=52637t, Correlation=0.395
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for Pidie: 2 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for Pidie: FSCI=74.54, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Pidie (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Pidie (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Pidie: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Pidie: 7 years, latest: 239555t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for Pidie: FSCI=74.5, Production=239555t, Correlation=0.853
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for AcehUtara: 1 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for AcehUtara: FSCI=76.81, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Aceh Utara (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Aceh Utara (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Aceh Utara: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Aceh Utara: 7 years, latest: 344304t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for AcehUtara: FSCI=76.8, Production=344304t, Correlation=0.907
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for Bireuen: 2 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for Bireuen: FSCI=76.39, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Bireuen (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Bireuen (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Bireuen: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Bireuen: 7 years, latest: 160179t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for Bireuen: FSCI=76.4, Production=160179t, Correlation=0.637
+INFO:services.two_level_food_security_analyzer:Level 2 complete: 5 kabupaten analyses
+INFO:services.two_level_food_security_analyzer:Two-level analysis complete: 10 kecamatan → 5 kabupaten
+INFO:routes.two_level_api:✅ Two-level analysis complete: 10 kecamatan → 5 kabupaten
+INFO:werkzeug:127.0.0.1 - - [10/Dec/2025 23:55:35] "GET /api/v1/two-level/analysis?year_start=2018&year_end=2024&bps_start_year=2018&bps_end_year=2024&season=all&aggregation=mean&districts=all HTTP/1.1" 200 -
+INFO:routes.two_level_api:🍚🔬 Starting Two-Level Food Security Analysis
+INFO:routes.two_level_api:📊 AUTO-ALIGNED Parameters:
+INFO:routes.two_level_api:   NASA Climate: 2018-2024
+INFO:routes.two_level_api:   BPS Production: 2018-2024
+INFO:routes.two_level_api:   Temporal overlap: 2018-2024
+INFO:services.temporal_analysis_service:Temporal Analysis Service initialized
+INFO:services.food_security_analyzer:Food Security Analyzer initialized (Phase 1 - Climate Based)
+INFO:services.temporal_analysis_service:Temporal Analysis Service initialized
+INFO:services.food_security_analyzer:Food Security Analyzer initialized (Phase 1 - Climate Based)
+INFO:services.area_weight_service:Loading GeoJSON from: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Repository/tumbuh-baik/apps/flask/data/geojson/aceh_nasa_kecamatan.geojson
+INFO:services.area_weight_service:Loaded 10 kecamatan from GeoJSON
+INFO:services.area_weight_service:Converted CRS to UTM 46N for accurate area calculation
+INFO:services.area_weight_service:Calculated weights for AcehBesar: 3 kecamatan, 302.1 km²
+INFO:services.area_weight_service:Calculated weights for AcehJaya: 2 kecamatan, 1481.4 km²
+INFO:services.area_weight_service:Calculated weights for AcehUtara: 1 kecamatan, 142.0 km²
+INFO:services.area_weight_service:Calculated weights for Bireuen: 2 kecamatan, 394.1 km²
+INFO:services.area_weight_service:Calculated weights for Pidie: 2 kecamatan, 35.5 km²
+INFO:services.area_weight_service:Area weights calculated for 5 kabupaten
+INFO:services.kecamatan_kabupatan_mapping_service:Kecamatan-Kabupaten Mapping Service initialized with GeoJSON area data
+INFO:services.two_level_food_security_analyzer:Two-Level Food Security Analyzer initialized with real GeoJSON area weights
+INFO:routes.two_level_api:🌍 Step 1: Performing spatial food security analysis...
+INFO:services.geojson_loader:Loading kecamatan GeoJSON from: /run/media/cryptedlm/local_d/Kuliah/Tugas Akhir/Repository/tumbuh-baik/apps/flask/data/geojson/aceh_nasa_kecamatan.geojson
+INFO:services.geojson_loader:Successfully loaded 10 kecamatan NASA matches.
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Besar Kec Indrapuri: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Besar Kec Indrapuri
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Indrapuri
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Indrapuri: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Besar Kec Montasik: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Besar Kec Montasik
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Montasik
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Montasik: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Besar Kec Darussalam: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Besar Kec Darussalam
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Darussalam
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Darussalam: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Jaya Kec Setia Bakti: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Jaya Kec Setia Bakti
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 91.6 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Sampoiniet
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.72, Stability=96.28
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=150.62, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=4.62, Stability=95.38
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=23.83, Stability=76.17
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=37.42, Stability=62.58
+INFO:services.food_security_analyzer:Food security analysis complete for Sampoiniet: FSCI=72.7 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Aceh Jaya Kec Teunom: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Aceh Jaya Kec Teunom
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 90.2 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Teunom
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.10, Stability=96.90
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=164.78, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.93, Stability=94.07
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=23.83, Stability=76.17
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=32.60, Stability=67.40
+INFO:services.food_security_analyzer:Food security analysis complete for Teunom: FSCI=74.9 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Pidie Kec Pidie: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Pidie Kec Pidie
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Grong-Grong
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Grong-Grong: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Nasa Pidie Kec Indrajaya: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Nasa Pidie Kec Indrajaya
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 92.9 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Delima
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.09, Stability=96.91
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=160.61, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.30, Stability=94.70
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=22.93, Stability=77.07
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=43.35, Stability=56.65
+INFO:services.food_security_analyzer:Food security analysis complete for Delima: FSCI=74.5 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from NASA Aceh Utara Kec Lhoksukon: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from NASA Aceh Utara Kec Lhoksukon
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 99.4 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Lhoksukon
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.10, Stability=96.90
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=174.83, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=5.13, Stability=94.87
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=28.45, Stability=71.55
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=31.37, Stability=68.63
+INFO:services.food_security_analyzer:Food security analysis complete for Lhoksukon: FSCI=76.8 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Data Nasa Bireun Kec Juli: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Data Nasa Bireun Kec Juli
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 93.5 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Peudada
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=3.18, Stability=96.82
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=171.27, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=4.42, Stability=95.58
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=24.87, Stability=75.13
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=23.73, Stability=76.27
+INFO:services.food_security_analyzer:Food security analysis complete for Peudada: FSCI=76.2 (Lumbung Pangan Sekunder)
+INFO:services.climate_data_service:Loading climate data from Data Nasa Bireun Kec Kota Juang_cleaned: 2018-2024
+INFO:services.climate_data_service:Loaded 2557 records from Data Nasa Bireun Kec Kota Juang_cleaned
+INFO:services.climate_data_service:Aggregated 9 climate parameters using mean
+INFO:services.rice_analyzer_service:Calculating rice suitability with enhanced evaluation
+INFO:services.rice_analyzer_service:Suitability calculated: 93.5 (Sangat Sesuai) - Confidence: very_high
+INFO:services.food_security_analyzer:Starting food security analysis for Jeumpa
+WARNING:services.temporal_analysis_service:No date column found, created synthetic date range
+INFO:services.temporal_analysis_service:Stability analysis for T2M: CV=2.61, Stability=97.39
+INFO:services.temporal_analysis_service:Stability analysis for PRECTOTCORR: CV=171.27, Stability=0.00
+INFO:services.temporal_analysis_service:Stability analysis for RH2M: CV=3.02, Stability=96.98
+INFO:services.temporal_analysis_service:Stability analysis for ALLSKY_SFC_SW_DWN: CV=13.63, Stability=86.37
+INFO:services.temporal_analysis_service:Stability analysis for WS10M: CV=13.29, Stability=86.71
+INFO:services.food_security_analyzer:Food security analysis complete for Jeumpa: FSCI=77.2 (Lumbung Pangan Sekunder)
+INFO:routes.two_level_api:✅ Level 1 complete: 10 NASA locations analyzed
+INFO:routes.two_level_api:🏛 Step 2: Performing two-level analysis with BPS validation...
+INFO:services.two_level_food_security_analyzer:Starting two-level food security analysis
+INFO:services.two_level_food_security_analyzer:Input: 10 NASA location results
+INFO:services.two_level_food_security_analyzer:BPS period: 2018-2024
+INFO:services.two_level_food_security_analyzer:Level 1: Indrapuri → Indrapuri (FSCI: 74.54) [AcehBesar]
+INFO:services.two_level_food_security_analyzer:Level 1: Montasik → Montasik (FSCI: 74.54) [AcehBesar]
+INFO:services.two_level_food_security_analyzer:Level 1: Darussalam → Darussalam (FSCI: 74.54) [AcehBesar]
+INFO:services.two_level_food_security_analyzer:Level 1: Setia Bakti → Sampoiniet (FSCI: 72.71) [AcehJaya]
+INFO:services.two_level_food_security_analyzer:Level 1: Teunom → Teunom (FSCI: 74.92) [AcehJaya]
+INFO:services.two_level_food_security_analyzer:Level 1: Pidie → Grong-Grong (FSCI: 74.54) [Pidie]
+INFO:services.two_level_food_security_analyzer:Level 1: Indrajaya → Delima (FSCI: 74.54) [Pidie]
+INFO:services.two_level_food_security_analyzer:Level 1: Lhoksukon → Lhoksukon (FSCI: 76.81) [AcehUtara]
+INFO:services.two_level_food_security_analyzer:Level 1: Juli → Peudada (FSCI: 76.18) [Bireuen]
+INFO:services.two_level_food_security_analyzer:Level 1: Kota Juang → Jeumpa (FSCI: 77.23) [Bireuen]
+INFO:services.two_level_food_security_analyzer:Level 1 complete: 10 kecamatan analyses
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for AcehBesar: 3 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for AcehBesar: FSCI=74.54, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Aceh Besar (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Aceh Besar (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Aceh Besar: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Aceh Besar: 7 years, latest: 178319t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for AcehBesar: FSCI=74.5, Production=178319t, Correlation=0.700
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for AcehJaya: 2 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for AcehJaya: FSCI=73.63, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Aceh Jaya (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Aceh Jaya (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Aceh Jaya: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Aceh Jaya: 7 years, latest: 52637t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for AcehJaya: FSCI=73.6, Production=52637t, Correlation=0.395
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for Pidie: 2 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for Pidie: FSCI=74.54, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Pidie (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Pidie (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Pidie: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Pidie: 7 years, latest: 239555t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for Pidie: FSCI=74.5, Production=239555t, Correlation=0.853
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for AcehUtara: 1 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for AcehUtara: FSCI=76.81, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Aceh Utara (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Aceh Utara (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Aceh Utara: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Aceh Utara: 7 years, latest: 344304t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for AcehUtara: FSCI=76.8, Production=344304t, Correlation=0.907
+INFO:services.two_level_food_security_analyzer:Processing Level 2 for Bireuen: 2 kecamatan
+INFO:services.two_level_food_security_analyzer:Aggregated metrics for Bireuen: FSCI=76.39, weights_sum=1.000
+INFO:services.two_level_food_security_analyzer:Fetching BPS data for Bireuen (2018-2024)
+INFO:services.bps_api_service:Fetching historical data for Bireuen (2018-2024)
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2018
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 232540.64 ton padi
+INFO:services.bps_api_service:✅ Pidie: 259042.12 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 166766.79 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 375153.85 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 65841.73 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2019
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 187596.67 ton padi
+INFO:services.bps_api_service:✅ Pidie: 248059.62 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 171161.97 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 396467.64 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 47252.94 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2020
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 179856.23 ton padi
+INFO:services.bps_api_service:✅ Pidie: 246564.18 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 184943.58 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 388190.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 54913.79 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2021
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 201408.49 ton padi
+INFO:services.bps_api_service:✅ Pidie: 203344.76 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 150400.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 360353.40 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 49550.64 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2022
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 200097.22 ton padi
+INFO:services.bps_api_service:✅ Pidie: 188438.42 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 137057.19 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 323839.47 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 42784.33 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2023
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 152831.03 ton padi
+INFO:services.bps_api_service:✅ Pidie: 225934.01 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 133428.17 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 236839.84 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 53843.97 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Fetching BPS rice production data for year 2024
+INFO:services.bps_api_service:Processing 24 kabupaten records from BPS
+INFO:services.bps_api_service:✅ Aceh Besar: 178318.81 ton padi
+INFO:services.bps_api_service:✅ Pidie: 239555.09 ton padi
+INFO:services.bps_api_service:✅ Bireuen: 160178.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Utara: 344303.81 ton padi
+INFO:services.bps_api_service:✅ Aceh Jaya: 52636.91 ton padi
+INFO:services.bps_api_service:Successfully fetched production data for 5 kabupaten
+INFO:services.bps_api_service:Historical data for Bireuen: 7/7 years
+INFO:services.two_level_food_security_analyzer:BPS data for Bireuen: 7 years, latest: 160179t
+INFO:services.two_level_food_security_analyzer:Level 2 complete for Bireuen: FSCI=76.4, Production=160179t, Correlation=0.637
+INFO:services.two_level_food_security_analyzer:Level 2 complete: 5 kabupaten analyses
+INFO:services.two_level_food_security_analyzer:Two-level analysis complete: 10 kecamatan → 5 kabupaten
+INFO:routes.two_level_api:✅ Two-level analysis complete: 10 kecamatan → 5 kabupaten

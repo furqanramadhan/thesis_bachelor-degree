@@ -1,0 +1,74 @@
+🆕 NEW FILES TO CREATE
+1. Hook Files
+📂 apps/nextjs/src/hooks/
+├── 📄 use-food-security-analysis.tsx         # Main hook for food security data
+├── 📄 use-two-level-analysis.tsx             # Hook for two-level analysis
+└── 📄 use-correlation-analysis.tsx           # Hook for correlation scatter plots
+2. Two-Level Analysis Components
+📂 apps/nextjs/src/components/two-level/
+├── 📄 TwoLevelMap.tsx                        # Dual-layer visualization (Kecamatan + Kabupaten)
+├── 📄 TwoLevelFilters.tsx                    # BPS + Climate date filters
+├── 📄 KabupatenDetails.tsx                   # Detailed kabupaten information panel
+├── 📄 KecamatanList.tsx                      # List of constituent kecamatan
+└── 📄 index.ts                               # Export all two-level components
+3. Chart Components
+📂 apps/nextjs/src/components/charts/
+├── 📄 CorrelationScatter.tsx                 # Climate vs Production scatter plot
+├── 📄 EfficiencyMatrix.tsx                   # Performance gap analysis
+├── 📄 FSCIComponents.tsx                     # PCI/PSI/CRS breakdown charts
+├── 📄 TimeSeriesChart.tsx                    # Trends over time
+└── 📄 index.ts                               # Export all chart components
+4. Dashboard Components
+📂 apps/nextjs/src/components/dashboard/
+├── 📄 MetricsCards.tsx                       # KPI summary cards (FSCI averages, etc.)
+├── 📄 RankingTable.tsx                       # Sortable kabupaten rankings
+├── 📄 PolicyPanel.tsx                        # Investment recommendations
+├── 📄 InvestmentPriority.tsx                 # Priority mapping visualization
+└── 📄 index.ts                               # Export all dashboard components
+5. Shared/Common Components
+📂 apps/nextjs/src/components/shared/
+├── 📄 DataToggle.tsx                         # Layer switching controls
+├── 📄 ExportButtons.tsx                      # Enhanced export functionality
+├── 📄 LoadingStates.tsx                      # Better loading UX components
+├── 📄 ErrorBoundary.tsx                      # Error handling wrapper
+└── 📄 index.ts                               # Export all shared components
+6. Utility Files
+📂 apps/nextjs/src/lib/
+├── 📄 food-security.utils.ts                 # FSCI color schemes, classifications
+├── 📄 chart.utils.ts                         # Chart configuration helpers
+└── 📄 export.utils.ts                        # Enhanced export utilities
+7. New Pages
+📂 apps/nextjs/src/app/dashboard/food-security-analysis/
+├── 📄 page.tsx                               # Main food security dashboard
+├── 📂 two-level/
+│   └── 📄 page.tsx                           # Two-level analysis page
+├── 📂 correlation/
+│   └── 📄 page.tsx                           # Correlation analysis page
+└── 📂 policy-insights/
+    └── 📄 page.tsx                           # Policy recommendations page
+
+🔄 EXISTING FILES TO MODIFY
+1. Spatial Components (Refactor to Food Security)
+📂 apps/nextjs/src/components/spatial/
+├── 🔄 SpatialMap.tsx                         # Transform to FoodSecurityMap.tsx
+├── 🔄 SpatialFilters.tsx                     # Transform to FoodSecurityFilters.tsx
+├── 🔄 MapLegend.tsx                          # Update to FSCILegend.tsx
+├── 🔄 MetadataPanel.tsx                      # Update for FSCI components
+├── 🔄 ExportCsvButton.tsx                    # Update to use new export functions
+└── 🔄 index.ts                               # Update exports for food security focus
+2. API Integration (Already Done)
+📂 apps/nextjs/src/lib/fetch/
+└── ✅ spatial.map.fetch.tsx                  # Already updated with food security functions
+3. Page Structure
+📂 apps/nextjs/src/app/dashboard/
+└── 🔄 spatial-analysis/ → food-security-analysis/  # Rename directory & update content
+4. Navigation & Layout
+5. Type Definitions (If Separate)
+
+
+dashboard/_components/spatial/
+├── FSCIMap.tsx           # Main interactive FSCI map
+├── FSCIFilters.tsx       # Analysis parameter controls
+├── FSCILegend.tsx        # FSCI score legend
+├── FSCIMetadataPanel.tsx # Regional metadata display
+└── index.ts              # Export all spatial components

@@ -1,0 +1,58 @@
+List Desa di Kecamatan Beberapa Kabupaten Sampel
+https://peta.web.id/peta/kec/baktiya-270
+
+1. Aceh Utara
+a. Lhoksukon: 5.0323933,97.31531
+- Beuringin LB
+- Meunasah Teungoh LT
+
+2. Bireun
+a. Juli : 5.1872539,96.6991391
+- Meunasah Tambo
+- Juli Seutuy
+b. Kota Juang : 5.2067313, 96.711344
+- Geulanggang
+- Meunasah Blang
+
+3. Aceh Besar
+a. Indrapuri: 5.4117925,95.4418927
+- Lam Ilie Mesjid
+- Reukih Kepula
+b. Montasik: 5.465827,95.4340119
+- Atong
+- Mata Ie
+c. Darussalam: 5.5859711,95.3913794
+- Lambada Peukan
+
+4. Aceh Jaya
+a. Jaya/Lamno: 5.0804551,95.3515282
+- Lhuet
+b. Setia Bakti: 4.7639286, 95.5762011
+- Lhok Bot
+c. Pasie Raya : 4.4993835,95.8792798
+- Pasie Teubue
+d. Teunom: 4.451494, 95.8573616
+- Rambong Payong
+
+5. Pidie
+a. Pidie : 5.3580667,95.9413261
+- Kampong Baro
+- Jawa Teubeng
+
+b. Indrajaya: 5.3108487,95.9459862
+- Meunasah Drien
+- Blang Lhok Kaju
+
+nasa_coordinates = {
+    "Lhoksukon": (5.0323933, 97.31531),        # Aceh Utara
+    "Juli": (5.1872539, 96.6991391),           # Bireuen
+    "Kota Juang": (5.2067313, 96.711344),      # Bireuen
+    "Indrapuri": (5.4117925, 95.4418927),      # Aceh Besar
+    "Montasik": (5.465827, 95.4340119),        # Aceh Besar
+    "Darussalam": (5.5859711, 95.3913794),     # Aceh Besar
+    "Jaya": (5.0804551, 95.3515282),           # Aceh Jaya (Jaya/Lamno)
+    "Setia Bakti": (4.7639286, 95.5762011),    # Aceh Jaya
+    "Teunom": (4.451494, 95.8573616),          # Aceh Jaya
+    "Pidie": (5.3580667, 95.9413261),          # Pidie
+    "Indrajaya": (5.3108487, 95.9459862)       # Pidie
+}
